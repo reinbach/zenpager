@@ -20,8 +20,7 @@ Following types of systems monitored
 - applications
 
 
-Alert
-~~~~~
+### Alert
 
 Makes use of an escalating system of alerting.
 Methods
@@ -30,7 +29,6 @@ Methods
 - external systems (eg: chatrooms)
 
 
-Dashboard
-~~~~~~~~~
+### Dashboard
 
 Current and historical view of Monitor and Alert components
