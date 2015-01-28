@@ -1,23 +1,27 @@
-#ZenPager
+ZenPager
+========
 
 A monitor and alert system for small to medium sized companies.
 
 
-##System Components
+System Components
+-----------------
 
 - Monitor
 - Alert
 - Dashboard
 
 
-###Monitor
+Monitor
+~~~~~~~
 
 Following types of systems monitored
 - servers (able to interact with nagios-plugins)
 - applications
 
 
-###Alert
+Alert
+~~~~~
 
 Makes use of an escalating system of alerting.
 Methods
@@ -26,6 +30,7 @@ Methods
 - external systems (eg: chatrooms)
 
 
-###Dashboard
+Dashboard
+~~~~~~~~~
 
 Current and historical view of Monitor and Alert components
