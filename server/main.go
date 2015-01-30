@@ -10,10 +10,11 @@ import (
 	"git.ironlabs.com/greg/zenpager/alert"
 	"git.ironlabs.com/greg/zenpager/dashboard"
 	"git.ironlabs.com/greg/zenpager/monitor"
+	"git.ironlabs.com/greg/zenpager/template"
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home Sweet Home")
+	template.Render(w, "home.html", template.Context{Title: "Welcome!"})
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -21,10 +22,13 @@ func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	goji.Get("/monitor/add/", monitor.Add)
-	goji.Get("/alert/", alert.Send)
-	goji.Get("/dashboard/", dashboard.View)
+	http.Handle("/monitor/", monitor.Router())
+	http.Handle("/alert/", alert.Router())
+	http.Handle("/dashboard/", dashboard.Router())
+	http.HandleFunc(template.STATIC_URL, template.StaticHandler)
 	goji.Get("/", Home)
 	goji.NotFound(NotFound)
+
+	go monitor.Monitor()
 	goji.Serve()
 }

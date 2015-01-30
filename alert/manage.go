@@ -1,4 +1,4 @@
-package monitor
+package alert
 
 import (
 	"fmt"
@@ -8,5 +8,5 @@ import (
 )
 
 func List(c web.C, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "List all monitor checks in place")
+	fmt.Fprintf(w, "List all alerts in place")
 }
