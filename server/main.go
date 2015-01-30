@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji"
@@ -18,7 +17,7 @@ func Home(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Not Found (404)")
+	template.Render(w, "intro/404.html", template.Context{Title: "404"})
 }
 
 func main() {
