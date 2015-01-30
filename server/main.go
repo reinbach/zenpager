@@ -14,7 +14,7 @@ import (
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "home.html", template.Context{Title: "Welcome!"})
+	template.Render(w, "intro/home.html", template.Context{Title: "Welcome!"})
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
