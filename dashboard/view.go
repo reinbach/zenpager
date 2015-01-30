@@ -1,12 +1,17 @@
 package dashboard
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
+
+	"git.ironlabs.com/greg/zenpager/template"
 )
 
 func View(c web.C, w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Dashboard Display")
+	template.Render(
+		w,
+		"dashboard/index.html",
+		template.Context{Title: "Dashboard"},
+	)
 }
