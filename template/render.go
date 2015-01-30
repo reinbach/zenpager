@@ -11,11 +11,6 @@ import (
 	"time"
 )
 
-type Context struct {
-	Title  string
-	Static string
-}
-
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	static_file := r.URL.Path[len(STATIC_URL):]
 	if len(static_file) != 0 {
@@ -53,14 +48,14 @@ func CreateTemplateList(tmpl string) []string {
 	return tmpl_list
 }
 
-func Render(w http.ResponseWriter, tmpl string, context Context) {
-	context.Static = STATIC_URL
+func Render(w http.ResponseWriter, tmpl string, ctx Context) {
+	ctx.Add("Static", STATIC_URL)
 	tmpl_list := CreateTemplateList(tmpl)
 	t, err := template.ParseFiles(tmpl_list...)
 	if err != nil {
 		log.Print("template parsing error: ", err)
 	}
-	err = t.Execute(w, context)
+	err = t.Execute(w, ctx.Values)
 	if err != nil {
 		log.Print("template executing error: ", err)
 	}

@@ -13,11 +13,11 @@ import (
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "intro/home.html", template.Context{Title: "Welcome!"})
+	template.Render(w, "intro/home.html", template.Context{})
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "intro/404.html", template.Context{Title: "404"})
+	template.Render(w, "intro/404.html", template.Context{})
 }
 
 func main() {
