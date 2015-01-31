@@ -4,6 +4,8 @@ import (
 	"strings"
 
 	"github.com/zenazn/goji/web"
+
+	"git.ironlabs.com/greg/zenpager/auth"
 )
 
 var (
@@ -16,6 +18,7 @@ func Route(path string) string {
 
 func Router() *web.Mux {
 	mux := web.New()
+	mux.Use(auth.Middleware)
 	mux.Get(Route("/"), View)
 	return mux
 }
