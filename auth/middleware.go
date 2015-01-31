@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
@@ -11,16 +10,13 @@ import (
 
 func Middleware(c *web.C, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		// check for user/cookie/session
-		// if no user, then set anonymous
-		user, err := r.Cookie("user")
-		if err != nil {
-			fmt.Println("Noooo: ", err)
+		if user, err := session.GetValue(r, "user"); err == nil {
+			if user != "Anonymous" {
+				// go and check whether user is valid
+			}
 		} else {
-			fmt.Println("user: ", user.Value)
+			session.SetCookieHandler(w, r, "user", "Anonymous")
 		}
-		cookie := session.CreateCookie(r, "user", "Anonymous")
-		http.SetCookie(w, &cookie)
 		h.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)

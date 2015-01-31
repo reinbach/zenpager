@@ -1,32 +1,66 @@
 package session
 
 import (
+	"errors"
+	"fmt"
 	"net"
 	"net/http"
-	"strings"
 	"time"
+
+	"github.com/gorilla/securecookie"
 )
 
-func CreateCookie(r *http.Request, name, value string) http.Cookie {
-	host, _, _ := net.SplitHostPort(r.Host)
-	raw := strings.Join([]string{name, value}, "")
-	unparsed := []string{raw}
-	expires := time.Now().AddDate(0, 0, 1)
-	rawexpires := expires.Format(time.UnixDate)
-	maxage := 86400
-	cookie := http.Cookie{
-		name,
-		value,
-		"/",
-		host,
-		expires,
-		rawexpires,
-		maxage,
-		true, // Secure
-		true, // HttpOnly
-		raw,
-		unparsed,
-	}
+var (
+	//TODO make hashKey, blockKey set in config file
+	hashKey  = []byte("3abe23ea4caabd558499d9f54f5798e7")
+	blockKey = []byte("fe7c14dfa57ff69b4e6a274686ebb71e")
+	s        = securecookie.New(hashKey, blockKey)
+	n        = "session"
+)
 
+func CreateCookie(r *http.Request, encoded string) *http.Cookie {
+	expires := time.Now().AddDate(0, 0, 1)
+	cookie := &http.Cookie{
+		Name:    n,
+		Value:   encoded,
+		Expires: expires,
+		// MaxAge: 86400,
+		// Secure: true,
+		// HttpOnly: true,
+	}
+	host, _, _ := net.SplitHostPort(r.Host)
+	if host != "localhost" {
+		cookie.Domain = host
+	}
 	return cookie
+}
+
+func GetValue(r *http.Request, key string) (interface{}, error) {
+	session := ReadCookieHandler(r)
+	if value, prs := session[key]; prs == true {
+		return value, nil
+	}
+	return nil, errors.New(fmt.Sprintf("%v does not exist", key))
+}
+
+func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) {
+	session := ReadCookieHandler(r)
+	session[k] = v
+	if encoded, err := s.Encode(n, session); err == nil {
+		cookie := CreateCookie(r, encoded)
+		http.SetCookie(w, cookie)
+	} else {
+		fmt.Println("Cookie encoding issue: ", err)
+		fmt.Printf("Random Key: %x\n", securecookie.GenerateRandomKey(16))
+	}
+}
+
+func ReadCookieHandler(r *http.Request) map[string]string {
+	session := make(map[string]string)
+	if cookie, err := r.Cookie(n); err == nil {
+		if err = s.Decode(n, cookie.Value, &session); err == nil {
+			return session
+		}
+	}
+	return session
 }
