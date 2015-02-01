@@ -5,9 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -15,7 +15,7 @@ import (
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	static_file := r.URL.Path[len(STATIC_URL):]
 	if len(static_file) != 0 {
-		f, err := http.Dir(STATIC_ROOT).Open(static_file)
+		f, err := http.Dir(GetAbsDir(STATIC_ROOT)).Open(static_file)
 		if err == nil {
 			content := io.ReadSeeker(f)
 			http.ServeContent(w, r, static_file, time.Now(), content)
@@ -25,13 +25,20 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func TemplateDirAbs() string {
-	_, filename, _, _ := runtime.Caller(1)
-	return path.Join(path.Dir(filename), TEMPLATE_DIR)
+func GetAbsDir(d string) string {
+	p, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// this sucks need better way to get abs path to base package
+	if p[len(p)-len(PARENT_PACKGE):] != PARENT_PACKGE {
+		p = path.Dir(p)
+	}
+	return path.Join(p, "template", d)
 }
 
 func CreateTemplateList(tmpl string) []string {
-	d := TemplateDirAbs()
+	d := GetAbsDir(TEMPLATE_DIR)
 	tmpl_list := []string{
 		filepath.Join(d, "base.html"),
 	}
