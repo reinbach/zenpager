@@ -43,16 +43,22 @@ func GetValue(r *http.Request, key string) (interface{}, error) {
 	return nil, errors.New(fmt.Sprintf("%v does not exist", key))
 }
 
-func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) {
+func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error {
 	session := ReadCookieHandler(r)
 	session[k] = v
 	if encoded, err := s.Encode(n, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		http.SetCookie(w, cookie)
 	} else {
-		fmt.Println("Cookie encoding issue: ", err)
-		fmt.Printf("Random Key: %x\n", securecookie.GenerateRandomKey(16))
+		return errors.New(
+			fmt.Sprintf(
+				"Cookie encoding issue: %v\nRandom Key: %x\n",
+				err,
+				securecookie.GenerateRandomKey(16),
+			),
+		)
 	}
+	return nil
 }
 
 func ReadCookieHandler(r *http.Request) map[string]string {
