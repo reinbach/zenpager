@@ -1,12 +1,13 @@
 package template
 
 import (
-	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -24,9 +25,15 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
+func TemplateDirAbs() string {
+	_, filename, _, _ := runtime.Caller(1)
+	return path.Join(path.Dir(filename), TEMPLATE_DIR)
+}
+
 func CreateTemplateList(tmpl string) []string {
+	d := TemplateDirAbs()
 	tmpl_list := []string{
-		fmt.Sprintf("%sbase.html", TEMPLATE_DIR),
+		filepath.Join(d, "base.html"),
 	}
 
 	// for each dir down from base template dir
@@ -37,14 +44,12 @@ func CreateTemplateList(tmpl string) []string {
 	base := ""
 	for _, b := range bases {
 		base = filepath.Join(base, b)
-		basefile, _ := filepath.Abs(filepath.Join(TEMPLATE_DIR, base,
-			"base.html"))
-		f, _ := filepath.Glob(basefile)
+		f, _ := filepath.Glob(filepath.Join(d, base, "base.html"))
 		if f != nil {
 			tmpl_list = append(tmpl_list, f[0])
 		}
 	}
-	tmpl_list = append(tmpl_list, filepath.Join(TEMPLATE_DIR, tmpl))
+	tmpl_list = append(tmpl_list, filepath.Join(d, tmpl))
 	return tmpl_list
 }
 
