@@ -16,6 +16,9 @@ func TestCreateCookie(t *testing.T) {
 	if c.Value != v {
 		t.Errorf("Expected session value to be %v, got %v", v, c.Value)
 	}
+	if c.Path != "/" {
+		t.Errorf("Expected session path to be /, got %v", c.Path)
+	}
 }
 
 func TestSetCookieHandler(t *testing.T) {

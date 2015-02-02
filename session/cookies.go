@@ -24,6 +24,7 @@ func CreateCookie(r *http.Request, encoded string) *http.Cookie {
 		Name:    n,
 		Value:   encoded,
 		Expires: expires,
+		Path:    "/",
 		// MaxAge: 86400,
 		// Secure: true,
 		// HttpOnly: true,
