@@ -17,6 +17,9 @@ func (v *Validation) Valid() bool {
 }
 
 func (v *Validation) AddError(field, msg string) {
+	if v.Errors == nil {
+		v.Errors = make(map[string]interface{}, 1)
+	}
 	v.Errors[field] = msg
 }
 
