@@ -8,17 +8,13 @@ import (
 	"git.ironlabs.com/greg/zenpager/auth"
 )
 
-var (
-	ROUTE_PREFIX = "/dashboard"
-)
-
-func Route(path string) string {
-	return strings.Join([]string{ROUTE_PREFIX, path}, "")
+func Route(u, p string) string {
+	return strings.Join([]string{u, p}, "")
 }
 
-func Router() *web.Mux {
+func Router(u string) *web.Mux {
 	mux := web.New()
 	mux.Use(auth.Middleware)
-	mux.Get(Route("/"), View)
+	mux.Get(Route(u, "/"), View)
 	return mux
 }
