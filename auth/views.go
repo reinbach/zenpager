@@ -19,10 +19,15 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			// otherwise default with dashboard
 			user := r.PostFormValue("email")
 			session.SetCookieHandler(w, r, "user", user)
-			http.RedirectHandler("/dashboard/", http.StatusFound)
+			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		}
 	} else {
 		fmt.Println("Issue processing form...")
 	}
 	template.Render(w, "auth/login.html", template.Context{})
+}
+
+func Logout(c web.C, w http.ResponseWriter, r *http.Request) {
+	session.DeleteCookieHandler(w, r, "user")
+	http.Redirect(w, r, "/dashboard/", http.StatusFound)
 }

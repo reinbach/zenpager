@@ -18,5 +18,6 @@ func Router() *web.Mux {
 	mux := web.New()
 	mux.Get(Route("/login/"), Login)
 	mux.Post(Route("/login/"), Login)
+	mux.Get(Route("/logout/"), Logout)
 	return mux
 }
