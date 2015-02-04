@@ -46,7 +46,11 @@ func GetValue(r *http.Request, key string) (interface{}, error) {
 
 func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error {
 	session := ReadCookieHandler(r)
-	session[k] = v
+	if v == "" {
+		delete(session, k)
+	} else {
+		session[k] = v
+	}
 	if encoded, err := s.Encode(n, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		http.SetCookie(w, cookie)
@@ -60,6 +64,10 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error
 		)
 	}
 	return nil
+}
+
+func DeleteCookieHandler(w http.ResponseWriter, r *http.Request, k string) error {
+	return SetCookieHandler(w, r, k, "")
 }
 
 func ReadCookieHandler(r *http.Request) map[string]string {
