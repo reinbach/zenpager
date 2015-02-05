@@ -44,7 +44,7 @@ func GetValue(r *http.Request, key string) (interface{}, error) {
 	return nil, errors.New(fmt.Sprintf("%v does not exist", key))
 }
 
-func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) {
+func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error {
 	session := ReadCookieHandler(r)
 	if v == "" {
 		delete(session, k)
@@ -63,6 +63,7 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) {
 			),
 		)
 	}
+	return nil
 }
 
 func DeleteCookieHandler(w http.ResponseWriter, r *http.Request, k string) error {
