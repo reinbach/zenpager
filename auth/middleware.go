@@ -11,7 +11,7 @@ import (
 
 func Middleware(c *web.C, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		if user, err := session.GetValue(r, "user"); err == nil {
+		if user, err := session.GetValue(r, USER_KEY); err == nil {
 			// set user c
 			log.Printf("user: %v\n", user)
 		} else {
