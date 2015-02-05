@@ -1,4 +1,9 @@
 package session
 
-func flash(w http.ResponseWriter, r *http.Request, m interface{}) {
+import (
+	"net/http"
+)
+
+func AddFlash(w http.ResponseWriter, r *http.Request, m interface{}) {
+	//set cookie for flash
 }

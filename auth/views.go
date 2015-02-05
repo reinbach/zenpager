@@ -23,7 +23,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {
 			//
-			session.flash(w, r, v.Errors)
+			session.AddFlash(w, r, v.Errors)
 		}
 	} else {
 		fmt.Println("Issue processing form...")
