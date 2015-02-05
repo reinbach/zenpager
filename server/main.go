@@ -45,10 +45,10 @@ func ContextMiddleware(c *web.C, h http.Handler) http.Handler {
 }
 
 func main() {
-	goji.Handle("/monitor/*", monitor.Router("/monitor"))
-	goji.Handle("/alert/*", alert.Router("/alert"))
-	goji.Handle("/dashboard/*", dashboard.Router("/dashboard"))
-	goji.Handle("/auth/*", auth.Router("/auth"))
+	goji.Handle("/monitor/*", monitor.Router())
+	goji.Handle("/alert/*", alert.Router())
+	goji.Handle("/dashboard/*", dashboard.Router())
+	goji.Handle("/auth/*", auth.Router())
 	http.HandleFunc(template.STATIC_URL, template.StaticHandler)
 	goji.Get("/", Home)
 	goji.NotFound(NotFound)

@@ -6,12 +6,16 @@ import (
 	"github.com/zenazn/goji/web"
 )
 
-func Route(u, p string) string {
-	return strings.Join([]string{u, p}, "")
+var (
+	PATH_PREFIX = "/monitor"
+)
+
+func Route(p string) string {
+	return strings.Join([]string{PATH_PREFIX, p}, "")
 }
 
-func Router(u string) *web.Mux {
+func Router() *web.Mux {
 	mux := web.New()
-	mux.Get(Route(u, "/"), List)
+	mux.Get(Route("/"), List)
 	return mux
 }
