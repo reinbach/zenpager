@@ -21,19 +21,19 @@ func TestCreateCookie(t *testing.T) {
 	}
 }
 
-func TestSetCookieHandler(t *testing.T) {
+func TestSetCookie(t *testing.T) {
 	k := "key"
 	v := "value"
 	r, _ := http.NewRequest("GET", "", nil)
 	w := httptest.NewRecorder()
-	err := SetCookieHandler(w, r, k, v)
+	err := SetCookie(w, r, k, v)
 	if err != nil {
 		t.Errorf("Unexpected error %v", err)
 	}
 }
 
-func TestReadCookieHandler(t *testing.T) {
-	session := make(map[string]string)
+func TestReadCookie(t *testing.T) {
+	session := make(map[string]interface{})
 	k := "key"
 	v := "value"
 	session[k] = v
@@ -41,7 +41,7 @@ func TestReadCookieHandler(t *testing.T) {
 	if encoded, err := s.Encode(n, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		r.AddCookie(cookie)
-		c := ReadCookieHandler(r)
+		c := ReadCookie(r)
 		if c[k] != v {
 			t.Errorf("Expected cookie back, got %v", c)
 		}
@@ -51,7 +51,7 @@ func TestReadCookieHandler(t *testing.T) {
 }
 
 func TestGetValueValid(t *testing.T) {
-	session := make(map[string]string)
+	session := make(map[string]interface{})
 	k := "key"
 	v := "value"
 	session[k] = v
@@ -72,7 +72,7 @@ func TestGetValueValid(t *testing.T) {
 }
 
 func TestGetValueInValid(t *testing.T) {
-	session := make(map[string]string)
+	session := make(map[string]interface{})
 	k := "key"
 	v := "value"
 	session[k] = v

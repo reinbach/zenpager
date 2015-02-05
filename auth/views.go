@@ -12,6 +12,13 @@ import (
 )
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
+	ctx := template.Context{}
+	msg := session.GetFlash(w, r)
+	ctx.Add("Msg", msg)
+	template.Render(w, "auth/login.html", ctx)
+}
+
+func Authenticate(c web.C, w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err == nil {
 		v := form.Validate(r, []string{"email", "password"})
 		if v.Valid() == true {
@@ -19,19 +26,18 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			// check for next field and redirect to it
 			// otherwise default with dashboard
 			user := r.PostFormValue("email")
-			session.SetCookieHandler(w, r, USER_KEY, user)
+			session.SetCookie(w, r, USER_KEY, user)
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {
-			//
-			session.AddFlash(w, r, v.Errors)
+			session.AddFlash(w, r, "Form failed validation!")
 		}
 	} else {
 		fmt.Println("Issue processing form...")
 	}
-	template.Render(w, "auth/login.html", template.Context{})
+	http.Redirect(w, r, Route("/login/"), http.StatusFound)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
-	session.DeleteCookieHandler(w, r, USER_KEY)
+	session.DeleteCookie(w, r, USER_KEY)
 	http.Redirect(w, r, "/dashboard/", http.StatusFound)
 }

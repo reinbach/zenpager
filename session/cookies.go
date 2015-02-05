@@ -37,15 +37,15 @@ func CreateCookie(r *http.Request, encoded string) *http.Cookie {
 }
 
 func GetValue(r *http.Request, key string) (interface{}, error) {
-	session := ReadCookieHandler(r)
+	session := ReadCookie(r)
 	if value, prs := session[key]; prs == true {
 		return value, nil
 	}
 	return nil, errors.New(fmt.Sprintf("%v does not exist", key))
 }
 
-func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error {
-	session := ReadCookieHandler(r)
+func SetCookie(w http.ResponseWriter, r *http.Request, k string, v interface{}) error {
+	session := ReadCookie(r)
 	if v == "" {
 		delete(session, k)
 	} else {
@@ -66,12 +66,12 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, k, v string) error
 	return nil
 }
 
-func DeleteCookieHandler(w http.ResponseWriter, r *http.Request, k string) error {
-	return SetCookieHandler(w, r, k, "")
+func DeleteCookie(w http.ResponseWriter, r *http.Request, k string) error {
+	return SetCookie(w, r, k, "")
 }
 
-func ReadCookieHandler(r *http.Request) map[string]string {
-	session := make(map[string]string)
+func ReadCookie(r *http.Request) map[string]interface{} {
+	session := make(map[string]interface{}, 1)
 	if cookie, err := r.Cookie(n); err == nil {
 		if err = s.Decode(n, cookie.Value, &session); err == nil {
 			return session
