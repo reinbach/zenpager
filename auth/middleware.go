@@ -16,7 +16,7 @@ func Middleware(c *web.C, h http.Handler) http.Handler {
 			log.Printf("user: %v\n", user)
 		} else {
 			// redirect to login page
-			http.Redirect(w, r, "/auth/login/", http.StatusFound)
+			http.Redirect(w, r, Route("/login/"), http.StatusFound)
 		}
 		h.ServeHTTP(w, r)
 	}
