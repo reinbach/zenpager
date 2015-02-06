@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
@@ -13,7 +12,7 @@ import (
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	ctx := template.Context{}
-	msg := session.GetFlash(w, r)
+	msg := session.GetMessages(w, r)
 	ctx.Add("Msg", msg)
 	template.Render(w, "auth/login.html", ctx)
 }
@@ -29,10 +28,10 @@ func Authenticate(c web.C, w http.ResponseWriter, r *http.Request) {
 			session.SetCookie(w, r, USER_KEY, user)
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {
-			session.AddFlash(w, r, "Form failed validation!")
+			session.AddMessage(w, r, "Form failed validation!")
 		}
 	} else {
-		fmt.Println("Issue processing form...")
+		session.AddMessage(w, r, "Issue processing form.")
 	}
 	http.Redirect(w, r, Route("/login/"), http.StatusFound)
 }
