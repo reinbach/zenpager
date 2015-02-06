@@ -14,6 +14,7 @@ import (
 	"git.ironlabs.com/greg/zenpager/dashboard"
 	"git.ironlabs.com/greg/zenpager/database"
 	"git.ironlabs.com/greg/zenpager/monitor"
+	"git.ironlabs.com/greg/zenpager/session"
 	"git.ironlabs.com/greg/zenpager/template"
 )
 
@@ -55,6 +56,7 @@ func main() {
 
 	db = database.Connect(datasource)
 	goji.Use(ContextMiddleware)
+	goji.Use(session.Middleware)
 
 	go monitor.Monitor()
 	goji.Serve()
