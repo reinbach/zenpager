@@ -4,6 +4,8 @@ import (
 	"strings"
 
 	"github.com/zenazn/goji/web"
+
+	"git.ironlabs.com/greg/zenpager/session"
 )
 
 var (
@@ -19,5 +21,6 @@ func Router() *web.Mux {
 	mux.Get(Route("/login/"), Login)
 	mux.Post(Route("/login/"), Authenticate)
 	mux.Get(Route("/logout/"), Logout)
+	mux.Use(session.Middleware)
 	return mux
 }

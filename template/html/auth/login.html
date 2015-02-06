@@ -1,7 +1,7 @@
 {{ define "page-content" }}
   <h1 class="cover-heading">Sign In</h1>
   <div class="col-md-6 col-md-offset-3">
-    {{ range .Msg }}
+    {{ range .Messages }}
       <div class="alert alert-danger">{{ . }}</div>
     {{ end }}
     <form method="post" action="/auth/login/" class="text-left">

@@ -10,8 +10,8 @@ func TestCreateCookie(t *testing.T) {
 	v := "encoded"
 	r, _ := http.NewRequest("GET", "", nil)
 	c := CreateCookie(r, v)
-	if c.Name != n {
-		t.Errorf("Expected session name to be %v, got %v", n, c.Name)
+	if c.Name != COOKIE_KEY {
+		t.Errorf("Expected session name to be %v, got %v", COOKIE_KEY, c.Name)
 	}
 	if c.Value != v {
 		t.Errorf("Expected session value to be %v, got %v", v, c.Value)
@@ -38,7 +38,7 @@ func TestReadCookie(t *testing.T) {
 	v := "value"
 	session[k] = v
 	r, _ := http.NewRequest("GET", "", nil)
-	if encoded, err := s.Encode(n, session); err == nil {
+	if encoded, err := s.Encode(COOKIE_KEY, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		r.AddCookie(cookie)
 		c := ReadCookie(r)
@@ -56,7 +56,7 @@ func TestGetValueValid(t *testing.T) {
 	v := "value"
 	session[k] = v
 	r, _ := http.NewRequest("GET", "", nil)
-	if encoded, err := s.Encode(n, session); err == nil {
+	if encoded, err := s.Encode(COOKIE_KEY, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		r.AddCookie(cookie)
 		if v2, err := GetValue(r, k); err == nil {
@@ -77,7 +77,7 @@ func TestGetValueInValid(t *testing.T) {
 	v := "value"
 	session[k] = v
 	r, _ := http.NewRequest("GET", "", nil)
-	if encoded, err := s.Encode(n, session); err == nil {
+	if encoded, err := s.Encode(COOKIE_KEY, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		r.AddCookie(cookie)
 		if v2, err := GetValue(r, "else"); err == nil {

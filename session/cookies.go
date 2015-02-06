@@ -15,13 +15,14 @@ var (
 	hashKey  = []byte("3abe23ea4caabd558499d9f54f5798e7")
 	blockKey = []byte("fe7c14dfa57ff69b4e6a274686ebb71e")
 	s        = securecookie.New(hashKey, blockKey)
-	n        = "session"
 )
+
+type Session map[string]interface{}
 
 func CreateCookie(r *http.Request, encoded string) *http.Cookie {
 	expires := time.Now().AddDate(0, 0, 1)
 	cookie := &http.Cookie{
-		Name:    n,
+		Name:    COOKIE_KEY,
 		Value:   encoded,
 		Expires: expires,
 		Path:    "/",
@@ -51,7 +52,7 @@ func SetCookie(w http.ResponseWriter, r *http.Request, k string, v interface{}) 
 	} else {
 		session[k] = v
 	}
-	if encoded, err := s.Encode(n, session); err == nil {
+	if encoded, err := s.Encode(COOKIE_KEY, session); err == nil {
 		cookie := CreateCookie(r, encoded)
 		http.SetCookie(w, cookie)
 	} else {
@@ -70,10 +71,10 @@ func DeleteCookie(w http.ResponseWriter, r *http.Request, k string) error {
 	return SetCookie(w, r, k, "")
 }
 
-func ReadCookie(r *http.Request) map[string]interface{} {
-	session := make(map[string]interface{}, 1)
-	if cookie, err := r.Cookie(n); err == nil {
-		if err = s.Decode(n, cookie.Value, &session); err == nil {
+func ReadCookie(r *http.Request) Session {
+	session := Session{}
+	if cookie, err := r.Cookie(COOKIE_KEY); err == nil {
+		if err = s.Decode(COOKIE_KEY, cookie.Value, &session); err == nil {
 			return session
 		}
 	}

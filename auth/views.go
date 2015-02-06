@@ -11,7 +11,7 @@ import (
 )
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
-	ctx := template.NewContext(w, r)
+	ctx := template.NewContext(&c, w, r)
 	template.Render(w, "auth/login.html", ctx)
 }
 
@@ -26,10 +26,10 @@ func Authenticate(c web.C, w http.ResponseWriter, r *http.Request) {
 			session.SetCookie(w, r, USER_KEY, user)
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {
-			session.AddMessage(w, r, "Form failed validation!")
+			session.AddMessage(&c, w, r, "Form failed validation!")
 		}
 	} else {
-		session.AddMessage(w, r, "Issue processing form.")
+		session.AddMessage(&c, w, r, "Issue processing form.")
 	}
 	http.Redirect(w, r, Route("/login/"), http.StatusFound)
 }

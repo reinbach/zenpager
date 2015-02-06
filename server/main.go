@@ -23,11 +23,11 @@ var (
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "intro/home.html", template.NewContext(w, r))
+	template.Render(w, "intro/home.html", template.NewContext(&c, w, r))
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "intro/404.html", template.NewContext(w, r))
+	template.Render(w, "intro/404.html", template.NewContext(&c, w, r))
 }
 
 // ContextMiddleware creates a new go.net/context and
