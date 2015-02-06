@@ -60,7 +60,7 @@ func CreateTemplateList(tmpl string) []string {
 	return tmpl_list
 }
 
-func Render(w http.ResponseWriter, tmpl string, ctx Context) {
+func Render(w http.ResponseWriter, tmpl string, ctx *Context) {
 	ctx.Add("Static", STATIC_URL)
 	tmpl_list := CreateTemplateList(tmpl)
 	t, err := template.ParseFiles(tmpl_list...)

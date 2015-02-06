@@ -42,5 +42,5 @@ func TestStaticHandlerInValid(t *testing.T) {
 
 func TestRender(t *testing.T) {
 	w := httptest.NewRecorder()
-	Render(w, "intro/home.html", Context{})
+	Render(w, "intro/home.html", &Context{})
 }

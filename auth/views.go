@@ -11,9 +11,7 @@ import (
 )
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
-	ctx := template.Context{}
-	msg := session.GetMessages(w, r)
-	ctx.Add("Msg", msg)
+	ctx := template.NewContext(w, r)
 	template.Render(w, "auth/login.html", ctx)
 }
 
