@@ -11,27 +11,25 @@ import (
 )
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
-	ctx := template.NewContext(&c, w, r)
-	template.Render(w, "auth/login.html", ctx)
-}
-
-func Authenticate(c web.C, w http.ResponseWriter, r *http.Request) {
-	if err := r.ParseForm(); err == nil {
-		v := form.Validate(r, []string{"email", "password"})
-		if v.Valid() == true {
-			// authenticate user
-			// check for next field and redirect to it
-			// otherwise default with dashboard
-			user := r.PostFormValue("email")
-			session.SetCookie(w, r, USER_KEY, user)
-			http.Redirect(w, r, "/dashboard/", http.StatusFound)
+	ctx := template.NewContext()
+	if r.Method == "POST" {
+		if err := r.ParseForm(); err == nil {
+			v := form.Validate(r, []string{"email", "password"})
+			if v.Valid() == true {
+				// authenticate user
+				// check for next field and redirect to it
+				// otherwise default with dashboard
+				user := r.PostFormValue("email")
+				session.SetCookie(w, r, USER_KEY, user)
+				http.Redirect(w, r, "/dashboard/", http.StatusFound)
+			} else {
+				session.AddMessage(&c, w, r, "Form failed validation!")
+			}
 		} else {
-			session.AddMessage(&c, w, r, "Form failed validation!")
+			session.AddMessage(&c, w, r, "Issue processing form.")
 		}
-	} else {
-		session.AddMessage(&c, w, r, "Issue processing form.")
 	}
-	http.Redirect(w, r, Route("/login/"), http.StatusFound)
+	template.Render(c, w, r, "auth/login.html", ctx)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

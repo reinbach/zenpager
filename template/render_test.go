@@ -5,6 +5,8 @@ import (
 	"net/http/httptest"
 	"path"
 	"testing"
+
+	"github.com/zenazn/goji/web"
 )
 
 func TestCreateTemplateList(t *testing.T) {
@@ -41,6 +43,8 @@ func TestStaticHandlerInValid(t *testing.T) {
 }
 
 func TestRender(t *testing.T) {
+	c := web.C{}
 	w := httptest.NewRecorder()
-	Render(w, "intro/home.html", &Context{})
+	r, _ := http.NewRequest("GET", "/", nil)
+	Render(c, w, r, "intro/home.html", &Context{})
 }
