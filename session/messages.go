@@ -25,7 +25,7 @@ func GetMessageContext(c *web.C) []string {
 func DeleteMessageContext(c *web.C, w http.ResponseWriter, r *http.Request) {
 	delete(c.Env, MESSAGES_KEY)
 	if err := SetCookie(w, r, MESSAGES_KEY, ""); err != nil {
-		log.Println("Failed to delete flash messages: ", err)
+		log.Println("Failed to delete messages: ", err)
 	}
 }
 
@@ -34,7 +34,7 @@ func AddMessage(c *web.C, w http.ResponseWriter, r *http.Request, m string) {
 	messages = append(messages, m)
 	c.Env[MESSAGES_KEY] = messages
 	if err := SetCookie(w, r, MESSAGES_KEY, messages); err != nil {
-		log.Println("Failed to set flash message: ", err)
+		log.Println("Failed to set message: ", err)
 	}
 }
 
