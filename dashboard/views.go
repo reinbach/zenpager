@@ -9,5 +9,5 @@ import (
 )
 
 func View(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(w, "dashboard/index.html", template.NewContext(&c, w, r))
+	template.Render(c, w, r, "dashboard/index.html", template.NewContext())
 }

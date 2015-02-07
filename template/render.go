@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/zenazn/goji/web"
 )
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
@@ -60,8 +62,10 @@ func CreateTemplateList(tmpl string) []string {
 	return tmpl_list
 }
 
-func Render(w http.ResponseWriter, tmpl string, ctx *Context) {
+func Render(c web.C, w http.ResponseWriter, r *http.Request, tmpl string, ctx *Context) {
 	ctx.Add("Static", STATIC_URL)
+	ctx.GetMessages(c, w, r)
+
 	tmpl_list := CreateTemplateList(tmpl)
 	t, err := template.ParseFiles(tmpl_list...)
 	if err != nil {

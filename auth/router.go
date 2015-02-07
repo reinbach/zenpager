@@ -17,7 +17,7 @@ func Route(p string) string {
 func Router() *web.Mux {
 	mux := web.New()
 	mux.Get(Route("/login/"), Login)
-	mux.Post(Route("/login/"), Authenticate)
+	mux.Post(Route("/login/"), Login)
 	mux.Get(Route("/logout/"), Logout)
 	return mux
 }

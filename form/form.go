@@ -1,7 +1,6 @@
 package form
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -27,14 +26,11 @@ func NewValidation() *Validation {
 	return &Validation{}
 }
 
-func Validate(r *http.Request, f []string) *Validation {
-	var val string
+func Validate(r *http.Request, f []Field) *Validation {
 	v := NewValidation()
 	for _, field := range f {
-		// field.Validate()
-		val = r.PostFormValue(field)
-		if val == "" {
-			v.AddError(field, fmt.Sprintf("%v is required", field))
+		if valid, msg := field.Validate(r); valid == false {
+			v.AddError(field.Name, msg)
 		}
 	}
 	return v
