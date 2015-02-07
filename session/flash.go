@@ -7,48 +7,39 @@ import (
 	"github.com/zenazn/goji/web"
 )
 
-var (
-	f = "flash"
-)
-
-func GetMessageContext(c *web.C) Session {
-	if session, exists := c.Env[SESSION_KEY]; exists == true {
-		return session.(Session)
+func GetMessageSession(c *web.C) []string {
+	session := c.Env[SESSION_KEY].(Session)
+	if messages, exists := session[MESSAGES_KEY]; exists == true {
+		return messages.([]string)
 	}
-	return Session{}
+	return []string{}
+}
+
+func GetMessageContext(c *web.C) []string {
+	if messages, exists := c.Env[MESSAGES_KEY]; exists == true {
+		return messages.([]string)
+	}
+	return []string{}
 }
 
 func DeleteMessageContext(c *web.C, w http.ResponseWriter, r *http.Request) {
-	if _, exists := c.Env[SESSION_KEY]; exists == true {
-		session := c.Env[SESSION_KEY].(Session)
-		delete(session, f)
-		c.Env[SESSION_KEY] = session
-	}
-	if err := SetCookie(w, r, f, ""); err != nil {
+	delete(c.Env, MESSAGES_KEY)
+	if err := SetCookie(w, r, MESSAGES_KEY, ""); err != nil {
 		log.Println("Failed to delete flash messages: ", err)
 	}
-
 }
 
 func AddMessage(c *web.C, w http.ResponseWriter, r *http.Request, m string) {
-	v := []string{}
-	session := GetMessageContext(c)
-	if value, exists := session[f]; exists == true {
-		v = append(value.([]string), m)
-	} else {
-		v = append(v, m)
-	}
-	if err := SetCookie(w, r, f, v); err != nil {
+	messages := GetMessageContext(c)
+	messages = append(messages, m)
+	c.Env[MESSAGES_KEY] = messages
+	if err := SetCookie(w, r, MESSAGES_KEY, messages); err != nil {
 		log.Println("Failed to set flash message: ", err)
 	}
 }
 
 func GetMessages(c *web.C, w http.ResponseWriter, r *http.Request) []string {
-	var msg []string
-	session := GetMessageContext(c)
-	if v, exists := session[f]; exists == true {
-		msg = v.([]string)
-		DeleteMessageContext(c, w, r)
-	}
-	return msg
+	messages := GetMessageContext(c)
+	DeleteMessageContext(c, w, r)
+	return messages
 }
