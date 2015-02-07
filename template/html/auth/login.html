@@ -5,13 +5,15 @@
       <div class="alert alert-danger">{{ . }}</div>
     {{ end }}
     <form method="post" action="/auth/login/" class="text-left">
-      <div class="form-group">
+      <div class="form-group {{ if .Form.Errors.email }}has-error{{ end }}">
         <label for="email">Email address</label>
         <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+        {{ if .Form.Errors.email }}<p class="help-block">{{ .Form.Errors.email }}</p>{{ end }}
       </div>
-      <div class="form-group">
+      <div class="form-group {{ if .Form.Errors.password }}has-error{{ end }}">
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" placeholder="Password" name="password">
+        {{ if .Form.Errors.password }}<p class="help-block">{{ .Form.Errors.password }}</p>{{ end }}
       </div>
       <button type="submit" class="btn btn-default">Sign In</button>
     </form>
