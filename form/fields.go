@@ -3,6 +3,7 @@ package form
 import (
 	"fmt"
 	"net/http"
+	"net/mail"
 )
 
 type Field struct {
@@ -20,8 +21,8 @@ type Validator interface {
 type Email struct{}
 
 func (e Email) Validate(f *Field, v string) (bool, string) {
-	if v[len(v)-3:] != ".com" {
-		return false, fmt.Sprintf("%v requires .com", f.Name)
+	if _, err := mail.ParseAddress(v); err != nil {
+		return false, "Require valid email address."
 	}
 	return true, ""
 }
@@ -29,7 +30,7 @@ func (e Email) Validate(f *Field, v string) (bool, string) {
 func (f *Field) Validate(r *http.Request) (bool, string) {
 	v := r.PostFormValue(f.Name)
 	if f.Required == true && v == "" {
-		return false, fmt.Sprintf("%v is required", f.Name)
+		return false, fmt.Sprintf("%v is required.", f.Name)
 	}
 	for _, validator := range f.Validators {
 		if valid, msg := validator.Validate(f, v); valid == false {
