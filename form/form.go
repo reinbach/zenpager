@@ -28,10 +28,14 @@ func NewForm() *Form {
 
 func Validate(r *http.Request, f []Field) *Form {
 	form := NewForm()
-	for _, field := range f {
-		if valid, msg := field.Validate(r); valid == false {
-			form.AddError(field.Name, msg)
+	if err := r.ParseForm(); err != nil {
+		for _, field := range f {
+			if valid, msg := field.Validate(r); valid == false {
+				form.AddError(field.Name, msg)
+			}
 		}
+	} else {
+		form.AddError("all", "Issue processing form data.")
 	}
 	return form
 }

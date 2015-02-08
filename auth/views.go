@@ -29,22 +29,18 @@ var (
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	ctx := template.NewContext()
 	if r.Method == "POST" {
-		if err := r.ParseForm(); err == nil {
-			fields := Fields{Email, Password}
-			f := form.Validate(r, fields)
-			if f.IsValid() == true {
-				// authenticate user
-				// check for next field and redirect to it
-				// otherwise default with dashboard
-				user := r.PostFormValue("email")
-				session.SetCookie(w, r, USER_KEY, user)
-				http.Redirect(w, r, "/dashboard/", http.StatusFound)
-			} else {
-				ctx.Add("Form", f)
-				session.AddMessage(&c, w, r, "Form failed validation!")
-			}
+		fields := Fields{Email, Password}
+		f := form.Validate(r, fields)
+		if f.IsValid() == true {
+			// authenticate user
+			// check for next field and redirect to it
+			// otherwise default with dashboard
+			user := r.PostFormValue("email")
+			session.SetCookie(w, r, USER_KEY, user)
+			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {
-			session.AddMessage(&c, w, r, "Issue processing form.")
+			ctx.Add("Form", f)
+			session.AddMessage(&c, w, r, "Form failed validation!")
 		}
 	}
 	template.Render(c, w, r, "auth/login.html", ctx)
