@@ -7,7 +7,7 @@
     <form method="post" action="/auth/login/" class="text-left">
       <div class="form-group {{ if .Form.Errors.email }}has-error{{ end }}">
         <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" value="{{ .Form.Fields.email.Value }}">
         {{ if .Form.Errors.email }}<p class="help-block">{{ .Form.Errors.email }}</p>{{ end }}
       </div>
       <div class="form-group {{ if .Form.Errors.password }}has-error{{ end }}">

@@ -28,15 +28,15 @@ func (e Email) Validate(f *Field, v string) (bool, string) {
 	return true, ""
 }
 
-func (f *Field) Validate(r *http.Request) (bool, string) {
+func (f *Field) Validate(r *http.Request) (string, bool, string) {
 	v := r.PostFormValue(f.Name)
 	if f.Required == true && v == "" {
-		return false, fmt.Sprintf("%v is required.", f.Name)
+		return v, false, fmt.Sprintf("%v is required.", f.Name)
 	}
 	for _, validator := range f.Validators {
 		if valid, msg := validator.Validate(f, v); valid == false {
-			return valid, msg
+			return v, valid, msg
 		}
 	}
-	return true, ""
+	return v, true, ""
 }

@@ -1,11 +1,13 @@
 package form
 
 import (
+	"fmt"
 	"net/http"
 )
 
 type Form struct {
 	Errors map[string]interface{}
+	Fields map[string]interface{}
 }
 
 func (f *Form) IsValid() bool {
@@ -22,17 +24,27 @@ func (f *Form) AddError(field, msg string) {
 	f.Errors[field] = msg
 }
 
+func (f *Form) AddField(field Field) {
+	if f.Fields == nil {
+		f.Fields = make(map[string]interface{}, 1)
+	}
+	f.Fields[field.Name] = field
+}
+
 func NewForm() *Form {
 	return &Form{}
 }
 
 func Validate(r *http.Request, f []Field) *Form {
 	form := NewForm()
-	if err := r.ParseForm(); err != nil {
+	if err := r.ParseForm(); err == nil {
 		for _, field := range f {
-			if valid, msg := field.Validate(r); valid == false {
+			value, valid, msg := field.Validate(r)
+			if valid == false {
 				form.AddError(field.Name, msg)
 			}
+			field.Value = value
+			form.AddField(field)
 		}
 	} else {
 		form.AddError("all", "Issue processing form data.")
