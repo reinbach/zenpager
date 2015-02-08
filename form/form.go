@@ -8,18 +8,18 @@ type Form struct {
 	Errors map[string]interface{}
 }
 
-func (v *Form) IsValid() bool {
-	if len(v.Errors) == 0 {
+func (f *Form) IsValid() bool {
+	if len(f.Errors) == 0 {
 		return true
 	}
 	return false
 }
 
-func (v *Form) AddError(field, msg string) {
-	if v.Errors == nil {
-		v.Errors = make(map[string]interface{}, 1)
+func (f *Form) AddError(field, msg string) {
+	if f.Errors == nil {
+		f.Errors = make(map[string]interface{}, 1)
 	}
-	v.Errors[field] = msg
+	f.Errors[field] = msg
 }
 
 func NewForm() *Form {
