@@ -4,34 +4,34 @@ import (
 	"net/http"
 )
 
-type Validation struct {
+type Form struct {
 	Errors map[string]interface{}
 }
 
-func (v *Validation) Valid() bool {
+func (v *Form) IsValid() bool {
 	if len(v.Errors) == 0 {
 		return true
 	}
 	return false
 }
 
-func (v *Validation) AddError(field, msg string) {
+func (v *Form) AddError(field, msg string) {
 	if v.Errors == nil {
 		v.Errors = make(map[string]interface{}, 1)
 	}
 	v.Errors[field] = msg
 }
 
-func NewValidation() *Validation {
-	return &Validation{}
+func NewForm() *Form {
+	return &Form{}
 }
 
-func Validate(r *http.Request, f []Field) *Validation {
-	v := NewValidation()
+func Validate(r *http.Request, f []Field) *Form {
+	form := NewForm()
 	for _, field := range f {
 		if valid, msg := field.Validate(r); valid == false {
-			v.AddError(field.Name, msg)
+			form.AddError(field.Name, msg)
 		}
 	}
-	return v
+	return form
 }

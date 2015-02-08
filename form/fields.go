@@ -10,6 +10,7 @@ type Field struct {
 	Name       string
 	Required   bool
 	Validators []Validator
+	Value      string
 }
 
 type Validators []Validator

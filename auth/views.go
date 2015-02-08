@@ -17,10 +17,12 @@ var (
 		Name:       "email",
 		Required:   true,
 		Validators: form.Validators{form.Email{}},
+		Value:      "",
 	}
 	Password = form.Field{
 		Name:     "password",
 		Required: true,
+		Value:    "",
 	}
 )
 
@@ -29,8 +31,8 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		if err := r.ParseForm(); err == nil {
 			fields := Fields{Email, Password}
-			v := form.Validate(r, fields)
-			if v.Valid() == true {
+			f := form.Validate(r, fields)
+			if f.IsValid() == true {
 				// authenticate user
 				// check for next field and redirect to it
 				// otherwise default with dashboard
@@ -38,7 +40,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 				session.SetCookie(w, r, USER_KEY, user)
 				http.Redirect(w, r, "/dashboard/", http.StatusFound)
 			} else {
-				ctx.Add("Form", v)
+				ctx.Add("Form", f)
 				session.AddMessage(&c, w, r, "Form failed validation!")
 			}
 		} else {
