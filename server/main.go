@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	datasource = "postgres://postgres@localhost/zenpager"
+	datasource = "postgres://postgres@localhost/zenpager?sslmode=disable"
 	db         *sql.DB
 )
 

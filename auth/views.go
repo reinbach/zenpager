@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
 
+	"git.ironlabs.com/greg/zenpager/database"
 	"git.ironlabs.com/greg/zenpager/form"
 	"git.ironlabs.com/greg/zenpager/session"
 	"git.ironlabs.com/greg/zenpager/template"
@@ -35,7 +37,11 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			// authenticate user
 			// check for next field and redirect to it
 			// otherwise default with dashboard
-			user := r.PostFormValue("email")
+			user := User{
+				Email:    f.GetValue("email"),
+				Password: f.GetValue("password"),
+			}
+			user.Login(c)
 			session.SetCookie(w, r, USER_KEY, user)
 			http.Redirect(w, r, "/dashboard/", http.StatusFound)
 		} else {

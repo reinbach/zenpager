@@ -30,6 +30,11 @@ func (f *Form) AddField(field Field) {
 	f.Fields[field.Name] = field
 }
 
+func (f *Form) GetValue(field string) string {
+	v := f.Fields[field].(Field)
+	return v.GetValue()
+}
+
 func NewForm() *Form {
 	return &Form{}
 }

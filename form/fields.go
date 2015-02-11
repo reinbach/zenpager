@@ -13,6 +13,10 @@ type Field struct {
 	Value      string
 }
 
+func (f *Field) GetValue() string {
+	return f.Value
+}
+
 type Validators []Validator
 
 type Validator interface {

@@ -5,7 +5,9 @@ import (
 	"log"
 
 	"code.google.com/p/go.net/context"
+	webctx "github.com/goji/context"
 	_ "github.com/lib/pq"
+	"github.com/zenazn/goji/web"
 )
 
 const (
@@ -24,10 +26,7 @@ func NewContext(ctx context.Context, db *sql.DB) context.Context {
 	return context.WithValue(ctx, DB_KEY, db)
 }
 
-func FromContext(ctx context.Context) *sql.DB {
-	db, ok := ctx.Value(DB_KEY).(sql.DB)
-	if !ok {
-		log.Fatalf("Expected Database connecting in context, got: %v", db)
-	}
-	return &db
+func FromContext(c web.C) *sql.DB {
+	ctx := webctx.FromC(c)
+	return ctx.Value(DB_KEY).(*sql.DB)
 }
