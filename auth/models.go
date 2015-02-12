@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"database/sql"
 	"fmt"
+	"log"
 
 	"github.com/zenazn/goji/web"
 
@@ -22,12 +24,16 @@ type UserDB interface {
 
 func (u *User) Login(c web.C) bool {
 	db := database.FromContext(c)
-	err := db.QueryRow("SELECT * FROM auth_user where email = $1", user)
-	defer rows.Close()
-	if err != nil {
-		fmt.Println("Db Query error: ", err)
+	var password string
+	err := db.QueryRow("SELECT password FROM auth_user where email = $1",
+		u.Email).Scan(&password)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("No user with that Email.")
+	case err != nil:
+		log.Fatal(err)
 	}
-	fmt.Println("rows: ", rows)
+	return database.Validate(u.Password, password)
 }
 
 // GetUser retrieves a specific user from the

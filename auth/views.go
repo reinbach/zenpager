@@ -1,12 +1,10 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/database"
 	"git.ironlabs.com/greg/zenpager/form"
 	"git.ironlabs.com/greg/zenpager/session"
 	"git.ironlabs.com/greg/zenpager/template"
