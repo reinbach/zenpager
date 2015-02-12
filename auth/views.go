@@ -39,13 +39,16 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 				Email:    f.GetValue("email"),
 				Password: f.GetValue("password"),
 			}
-			user.Login(c)
-			session.SetCookie(w, r, USER_KEY, user)
-			http.Redirect(w, r, "/dashboard/", http.StatusFound)
+			if user.Login(c) {
+				session.SetCookie(w, r, USER_KEY, user)
+				http.Redirect(w, r, "/dashboard/", http.StatusFound)
+			} else {
+				session.AddMessage(&c, w, r, "Invalid User")
+			}
 		} else {
-			ctx.Add("Form", f)
 			session.AddMessage(&c, w, r, "Form failed validation!")
 		}
+		ctx.Add("Form", f)
 	}
 	template.Render(c, w, r, "auth/login.html", ctx)
 }
