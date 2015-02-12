@@ -2,3 +2,4 @@ github.com/gorilla/securecookie     f0559d009e6943011cd1ba6eb16195cf5e0ed326
 github.com/zenazn/goji              v0.9.0
 code.google.com/p/go.net/context
 github.com/goji/context
+golang.org/x/crypto/bcrypt
