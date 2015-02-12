@@ -36,6 +36,10 @@ func (u *User) Login(c web.C) bool {
 	return database.Validate(u.Password, password)
 }
 
+func (u *User) Create() bool {
+
+}
+
 // GetUser retrieves a specific user from the
 // database for the given ID.
 func GetUser(c web.C, id int64) (*User, error) {
