@@ -32,9 +32,6 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		fields := Fields{Email, Password}
 		f := form.Validate(r, fields)
 		if f.IsValid() == true {
-			// authenticate user
-			// check for next field and redirect to it
-			// otherwise default with dashboard
 			user := User{
 				Email:    f.GetValue("email"),
 				Password: f.GetValue("password"),
@@ -45,8 +42,6 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			} else {
 				session.AddMessage(&c, w, r, "Invalid User")
 			}
-		} else {
-			session.AddMessage(&c, w, r, "Form failed validation!")
 		}
 		ctx.Add("Form", f)
 	}
