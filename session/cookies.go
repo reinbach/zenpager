@@ -14,7 +14,6 @@ import (
 )
 
 var (
-	//TODO make hashKey, blockKey set in config file
 	cfg      = config.GetConfig()
 	hashKey  = []byte(cfg.SESSION_HASHKEY)
 	blockKey = []byte(cfg.SESSION_SECRET)
