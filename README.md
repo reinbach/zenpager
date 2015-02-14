@@ -61,22 +61,22 @@ Setup up the database and run the relevant sql scripts against it.
 
 Create a `config.toml` file at the root of the project. For example;
 
-   [postgresql]
-   name = "zenpager"
-   user = "postgres"
-   password = ""
-   host = "localhost"
-   sslmode = "disable"
+    [postgresql]
+    name = "zenpager"
+    user = "postgres"
+    password = ""
+    host = "localhost"
+    sslmode = "disable"
 
 ### Create user
 
 Run the following command to create a user in the system;
 
-   make createuser
+    make createuser
 
 
 ## Run
 
 To run the application, use the following command;
 
-   make run
+    make run
