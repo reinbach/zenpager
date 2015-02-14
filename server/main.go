@@ -19,8 +19,7 @@ import (
 )
 
 var (
-	datasource = "postgres://postgres@localhost/zenpager?sslmode=disable"
-	db         *sql.DB
+	db *sql.DB
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -54,7 +53,7 @@ func main() {
 	goji.Get("/", Home)
 	goji.NotFound(NotFound)
 
-	db = database.Connect(datasource)
+	db = database.Connect()
 	goji.Use(ContextMiddleware)
 	goji.Use(session.Middleware)
 

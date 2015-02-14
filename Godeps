@@ -3,3 +3,4 @@ github.com/zenazn/goji              v0.9.0
 code.google.com/p/go.net/context
 github.com/goji/context
 golang.org/x/crypto/bcrypt
+github.com/pelletier/go-toml
