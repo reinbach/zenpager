@@ -5,19 +5,20 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
-	"path"
 	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/zenazn/goji/web"
+
+	"git.ironlabs.com/greg/zenpager/utils"
 )
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	static_file := r.URL.Path[len(STATIC_URL):]
+	static_dir := utils.GetAbsDir("template", STATIC_ROOT)
 	if len(static_file) != 0 {
-		f, err := http.Dir(GetAbsDir(STATIC_ROOT)).Open(static_file)
+		f, err := http.Dir(static_dir).Open(static_file)
 		if err == nil {
 			content := io.ReadSeeker(f)
 			http.ServeContent(w, r, static_file, time.Now(), content)
@@ -27,20 +28,8 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func GetAbsDir(d string) string {
-	p, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	// this sucks need better way to get abs path to base package
-	if p[len(p)-len(PARENT_PACKGE):] != PARENT_PACKGE {
-		p = path.Dir(p)
-	}
-	return path.Join(p, "template", d)
-}
-
 func CreateTemplateList(tmpl string) []string {
-	d := GetAbsDir(TEMPLATE_DIR)
+	d := utils.GetAbsDir("template", TEMPLATE_DIR)
 	tmpl_list := []string{
 		filepath.Join(d, "base.html"),
 	}
