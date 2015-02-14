@@ -47,7 +47,7 @@ func GetValue(r *http.Request, key string) (interface{}, error) {
 
 func SetCookie(w http.ResponseWriter, r *http.Request, k string, v interface{}) error {
 	session := ReadCookie(r)
-	if v == "" {
+	if v == nil {
 		delete(session, k)
 	} else {
 		session[k] = v
@@ -68,7 +68,7 @@ func SetCookie(w http.ResponseWriter, r *http.Request, k string, v interface{}) 
 }
 
 func DeleteCookie(w http.ResponseWriter, r *http.Request, k string) error {
-	return SetCookie(w, r, k, "")
+	return SetCookie(w, r, k, nil)
 }
 
 func ReadCookie(r *http.Request) Session {

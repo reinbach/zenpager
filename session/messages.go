@@ -24,7 +24,7 @@ func GetMessageContext(c *web.C) []string {
 
 func DeleteMessageContext(c *web.C, w http.ResponseWriter, r *http.Request) {
 	delete(c.Env, MESSAGES_KEY)
-	if err := SetCookie(w, r, MESSAGES_KEY, ""); err != nil {
+	if err := SetCookie(w, r, MESSAGES_KEY, nil); err != nil {
 		log.Println("Failed to delete messages: ", err)
 	}
 }
