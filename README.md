@@ -48,3 +48,35 @@ Current and historical view of Monitor and Alert components
 #### Functionality
 - receive stats
 - view stats
+
+
+## Installation / Setup
+
+### Database
+
+Setup up the database and run the relevant sql scripts against it.
+(TODO have a migration script the runs all the sql scripts)
+
+### Config File
+
+Create a `config.toml` file at the root of the project. For example;
+
+   [postgresql]
+   name = "zenpager"
+   user = "postgres"
+   password = ""
+   host = "localhost"
+   sslmode = "disable"
+
+### Create user
+
+Run the following command to create a user in the system;
+
+   make createuser
+
+
+## Run
+
+To run the application, use the following command;
+
+   make run
