@@ -1,4 +1,4 @@
-package cli
+package main
 
 import (
 	"fmt"
@@ -15,24 +15,25 @@ var (
 
 func GetPassword() {
 	fmt.Println("Password: ")
-	fmt.ScanIn(&password)
+	fmt.Scanln(&password)
 	fmt.Println("Confirm Password: ")
-	fmt.ScanIn(&password_confirm)
+	fmt.Scanln(&password_confirm)
 }
 
 func main() {
 	// Create a user in the system
 	fmt.Println("Email address: ")
-	fmt.ScanIn(&email)
+	fmt.Scanln(&email)
 
 	for password == "" && password != password_confirm {
 		GetPassword()
 	}
 
-	user := User{
+	user := auth.User{
 		Email:    email,
-		Password: password,
+		Password: database.Encrypt(password),
 	}
-	user.Create()
+	db := database.Connect(datasource)
+	user.Create(db)
 	fmt.Println("User has been created.")
 }

@@ -36,8 +36,15 @@ func (u *User) Login(c web.C) bool {
 	return database.Validate(u.Password, password)
 }
 
-func (u *User) Create() bool {
-
+func (u *User) Create(db *sql.DB) bool {
+	r, err := db.Exec("INSERT INTO auth_user (Email, Password) VALUES($1, $2)",
+		u.Email, u.Password)
+	if err != nil {
+		log.Printf("Failed to create user record. ", err)
+	} else {
+		log.Printf("Created user record: ", r)
+	}
+	return true
 }
 
 // GetUser retrieves a specific user from the
