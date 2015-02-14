@@ -1,6 +1,9 @@
 run:
 	@go run server/main.go
 
+createuser:
+	@go run cli/user.go
+
 #TODO loop through all dirs and run test on them
 test:
 	@go test -coverprofile=coverage.alert.out ./alert

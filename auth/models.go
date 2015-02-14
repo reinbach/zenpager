@@ -2,7 +2,6 @@ package auth
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/zenazn/goji/web"
@@ -33,27 +32,16 @@ func (u *User) Login(c web.C) bool {
 	case err != nil:
 		log.Fatal(err)
 	}
-	return database.Validate(u.Password, password)
+	return database.EncryptMatch(password, u.Password)
 }
 
 func (u *User) Create(db *sql.DB) bool {
-	r, err := db.Exec("INSERT INTO auth_user (Email, Password) VALUES($1, $2)",
+	_, err := db.Exec("INSERT INTO auth_user (Email, Password) VALUES($1, $2)",
 		u.Email, u.Password)
 	if err != nil {
 		log.Printf("Failed to create user record. ", err)
-	} else {
-		log.Printf("Created user record: ", r)
+		return false
 	}
+	log.Printf("Created user record.")
 	return true
-}
-
-// GetUser retrieves a specific user from the
-// database for the given ID.
-func GetUser(c web.C, id int64) (*User, error) {
-	var db = database.FromContext(c)
-	fmt.Println("db: ", db)
-	var user = new(User)
-	user.ID = 1
-	user.Email = "test@example.com"
-	return user, nil
 }

@@ -14,18 +14,18 @@ var (
 )
 
 func GetPassword() {
-	fmt.Println("Password: ")
+	fmt.Print("Password: ")
 	fmt.Scanln(&password)
-	fmt.Println("Confirm Password: ")
+	fmt.Print("Confirm Password: ")
 	fmt.Scanln(&password_confirm)
 }
 
 func main() {
 	// Create a user in the system
-	fmt.Println("Email address: ")
+	fmt.Print("Email address: ")
 	fmt.Scanln(&email)
 
-	for password == "" && password != password_confirm {
+	for password == "" || password != password_confirm {
 		GetPassword()
 	}
 
@@ -33,7 +33,10 @@ func main() {
 		Email:    email,
 		Password: database.Encrypt(password),
 	}
-	db := database.Connect(datasource)
-	user.Create(db)
-	fmt.Println("User has been created.")
+	db := database.Connect()
+	if user.Create(db) {
+		fmt.Println("User was created.")
+	} else {
+		fmt.Println("There was an issue creating the user.")
+	}
 }

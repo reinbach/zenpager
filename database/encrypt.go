@@ -13,7 +13,7 @@ func Encrypt(s string) string {
 	return string(hashedString)
 }
 
-func Validate(hashedString, s string) bool {
+func EncryptMatch(hashedString, s string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedString), []byte(s))
 	if err != nil {
 		return false

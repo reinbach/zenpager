@@ -14,8 +14,8 @@ const (
 	DB_KEY string = "database"
 )
 
-func Connect(datasource string) *sql.DB {
-	db, err := sql.Open("postgres", datasource)
+func Connect() *sql.DB {
+	db, err := sql.Open("postgres", GetDatasource())
 	if err != nil {
 		log.Fatal(err)
 	}
