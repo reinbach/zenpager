@@ -3,6 +3,7 @@ package session
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
 	"time"
@@ -56,6 +57,7 @@ func SetCookie(w http.ResponseWriter, r *http.Request, k string, v interface{}) 
 		cookie := CreateCookie(r, encoded)
 		http.SetCookie(w, cookie)
 	} else {
+		log.Println("SetCookie issue: ", err)
 		return errors.New(
 			fmt.Sprintf(
 				"Cookie encoding issue: %v\nRandom Key: %x\n",
