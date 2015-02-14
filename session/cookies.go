@@ -9,12 +9,15 @@ import (
 	"time"
 
 	"github.com/gorilla/securecookie"
+
+	"git.ironlabs.com/greg/zenpager/config"
 )
 
 var (
 	//TODO make hashKey, blockKey set in config file
-	hashKey  = []byte("3abe23ea4caabd558499d9f54f5798e7")
-	blockKey = []byte("fe7c14dfa57ff69b4e6a274686ebb71e")
+	cfg      = config.GetConfig()
+	hashKey  = []byte(cfg.SESSION_HASHKEY)
+	blockKey = []byte(cfg.SESSION_SECRET)
 	s        = securecookie.New(hashKey, blockKey)
 )
 
