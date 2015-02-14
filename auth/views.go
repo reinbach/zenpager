@@ -37,7 +37,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 				Password: f.GetValue("password"),
 			}
 			if user.Login(c) {
-				session.SetCookie(w, r, USER_KEY, user)
+				session.SetCookie(w, r, USER_KEY, user.Email)
 				http.Redirect(w, r, "/dashboard/", http.StatusFound)
 			} else {
 				session.AddMessage(&c, w, r, "Invalid User")
