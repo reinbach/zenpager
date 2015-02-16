@@ -1,0 +1,10 @@
+[postgresql]
+name = "zenpager"
+user = "postgres"
+host = "localhost"
+password = ""
+sslmode = "disabled"
+
+[session]
+hashkey = "hash key"
+secret = "super secret"
