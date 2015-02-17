@@ -11,7 +11,7 @@ import (
 
 func TestUpdateTemplateList(t *testing.T) {
 	l := UpdateTemplateList([]string{"test.html"})
-	if len(l) == 1 {
+	if len(l) != 1 {
 		t.Errorf("Expected list of 1 templates, got %v", len(l))
 	}
 }
