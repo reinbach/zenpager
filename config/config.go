@@ -18,8 +18,8 @@ type Config struct {
 	DB_SSL  string
 
 	// session
-	SESSION_HASHKEY string
-	SESSION_SECRET  string
+	SESSION_HASH_KEY  string
+	SESSION_BLOCK_KEY string
 }
 
 func GetConfig() Config {
@@ -37,8 +37,8 @@ func GetConfig() Config {
 		cfg.DB_SSL = config.Get("postgresql.sslmode").(string)
 
 		// session
-		cfg.SESSION_HASHKEY = config.Get("session.hashkey").(string)
-		cfg.SESSION_SECRET = config.Get("session.secret").(string)
+		cfg.SESSION_HASH_KEY = config.Get("session.hash_key").(string)
+		cfg.SESSION_BLOCK_KEY = config.Get("session.block_key").(string)
 	}
 	return cfg
 }

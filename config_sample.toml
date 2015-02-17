@@ -3,8 +3,8 @@ name = "zenpager"
 user = "postgres"
 host = "localhost"
 password = ""
-sslmode = "disabled"
+sslmode = "disable"
 
 [session]
-hashkey = "hash key"
-secret = "super secret"
+hash_key = ""
+block_key = "super sup secret" # needs to be 16

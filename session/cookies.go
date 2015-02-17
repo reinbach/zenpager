@@ -15,8 +15,8 @@ import (
 
 var (
 	cfg      = config.GetConfig()
-	hashKey  = []byte(cfg.SESSION_HASHKEY)
-	blockKey = []byte(cfg.SESSION_SECRET)
+	hashKey  = []byte(cfg.SESSION_HASH_KEY)
+	blockKey = []byte(cfg.SESSION_BLOCK_KEY)
 	s        = securecookie.New(hashKey, blockKey)
 )
 
