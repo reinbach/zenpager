@@ -45,7 +45,9 @@
         </ul>
       </div>
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-        {% bootstrap_messages %}
+        {{ range .Messages }}
+          <div class="alert alert-info">{{ . }}</div>
+        {{ end }}
         {{ template "page-content" . }}
       </div>
     </div>
