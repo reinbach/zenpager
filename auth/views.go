@@ -13,13 +13,13 @@ import (
 type Fields []form.Field
 
 var (
-	Email = form.Field{
+	email = form.Field{
 		Name:       "email",
 		Required:   true,
 		Validators: form.Validators{form.Email{}},
 		Value:      "",
 	}
-	Password = form.Field{
+	password = form.Field{
 		Name:     "password",
 		Required: true,
 		Value:    "",
@@ -30,7 +30,7 @@ var (
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	ctx := template.NewContext()
 	if r.Method == "POST" {
-		fields := Fields{Email, Password}
+		fields := Fields{email, password}
 		f := form.Validate(r, fields)
 		if f.IsValid() == true {
 			user := User{
