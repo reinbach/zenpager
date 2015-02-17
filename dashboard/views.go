@@ -9,7 +9,11 @@ import (
 )
 
 var (
-	templates = []string{"base.html", "dashboard/base.html"}
+	templates = []string{
+		"base.html",
+		"dashboard/base.html",
+		"dashboard/side.html",
+	}
 )
 
 func View(c web.C, w http.ResponseWriter, r *http.Request) {
