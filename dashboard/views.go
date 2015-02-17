@@ -8,6 +8,11 @@ import (
 	"git.ironlabs.com/greg/zenpager/template"
 )
 
+var (
+	templates = []string{"base.html", "dashboard/base.html"}
+)
+
 func View(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, "dashboard/index.html", template.NewContext())
+	template.Render(c, w, r, append(templates, "dashboard/index.html"),
+		template.NewContext())
 }

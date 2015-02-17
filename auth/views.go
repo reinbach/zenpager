@@ -24,6 +24,7 @@ var (
 		Required: true,
 		Value:    "",
 	}
+	templates = []string{"base.html", "intro/base.html"}
 )
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -45,7 +46,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		}
 		ctx.Add("Form", f)
 	}
-	template.Render(c, w, r, "auth/login.html", ctx)
+	template.Render(c, w, r, append(templates, "auth/login.html"), ctx)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {

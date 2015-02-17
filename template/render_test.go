@@ -9,16 +9,10 @@ import (
 	"github.com/zenazn/goji/web"
 )
 
-func TestCreateTemplateList(t *testing.T) {
-	l := CreateTemplateList("test.html")
-	if len(l) != 2 {
-		t.Errorf("Expected list of 2 templates, got %v", len(l))
-	}
-
-	// test templates in subdir
-	l = CreateTemplateList("intro/home.html")
-	if len(l) != 3 {
-		t.Errorf("Expected list of 3 templates, got %v", len(l))
+func TestUpdateTemplateList(t *testing.T) {
+	l := UpdateTemplateList([]string{"test.html"})
+	if len(l) == 1 {
+		t.Errorf("Expected list of 1 templates, got %v", len(l))
 	}
 }
 
@@ -46,5 +40,5 @@ func TestRender(t *testing.T) {
 	c := web.C{}
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/", nil)
-	Render(c, w, r, "intro/home.html", &Context{})
+	Render(c, w, r, []string{"intro/home.html"}, &Context{})
 }

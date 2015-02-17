@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/zenazn/goji/web"
@@ -28,34 +27,19 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	http.NotFound(w, r)
 }
 
-func CreateTemplateList(tmpl string) []string {
+func UpdateTemplateList(tmpls []string) []string {
 	d := utils.GetAbsDir("template", TEMPLATE_DIR)
-	tmpl_list := []string{
-		filepath.Join(d, "base.html"),
+	for i, v := range tmpls {
+		tmpls[i] = filepath.Join(d, v)
 	}
-
-	// for each dir down from base template dir
-	// check for a base.html file, if there is
-	// one then add it to the list of templates
-	// to be parsed
-	bases := strings.Split(tmpl, "/")
-	base := ""
-	for _, b := range bases {
-		base = filepath.Join(base, b)
-		f, _ := filepath.Glob(filepath.Join(d, base, "base.html"))
-		if f != nil {
-			tmpl_list = append(tmpl_list, f[0])
-		}
-	}
-	tmpl_list = append(tmpl_list, filepath.Join(d, tmpl))
-	return tmpl_list
+	return tmpls
 }
 
-func Render(c web.C, w http.ResponseWriter, r *http.Request, tmpl string, ctx *Context) {
+func Render(c web.C, w http.ResponseWriter, r *http.Request, tmpls []string, ctx *Context) {
 	ctx.Add("Static", STATIC_URL)
 	ctx.GetMessages(c, w, r)
 
-	tmpl_list := CreateTemplateList(tmpl)
+	tmpl_list := UpdateTemplateList(tmpls)
 	t, err := template.ParseFiles(tmpl_list...)
 	if err != nil {
 		log.Print("template parsing error: ", err)
