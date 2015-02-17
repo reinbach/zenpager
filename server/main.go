@@ -15,6 +15,7 @@ import (
 	"git.ironlabs.com/greg/zenpager/database"
 	"git.ironlabs.com/greg/zenpager/monitor"
 	"git.ironlabs.com/greg/zenpager/session"
+	"git.ironlabs.com/greg/zenpager/settings"
 	"git.ironlabs.com/greg/zenpager/template"
 )
 
@@ -48,10 +49,11 @@ func ContextMiddleware(c *web.C, h http.Handler) http.Handler {
 }
 
 func main() {
-	goji.Handle("/monitor/*", monitor.Router())
 	goji.Handle("/alert/*", alert.Router())
-	goji.Handle("/dashboard/*", dashboard.Router())
 	goji.Handle("/auth/*", auth.Router())
+	goji.Handle("/dashboard/*", dashboard.Router())
+	goji.Handle("/monitor/*", monitor.Router())
+	goji.Handle("/settings/*", settings.Router())
 	http.HandleFunc(template.STATIC_URL, template.StaticHandler)
 	goji.Get("/", Home)
 	goji.NotFound(NotFound)

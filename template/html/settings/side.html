@@ -1,0 +1,17 @@
+{{ define "side-content" }}
+  <h1>Settings</h1>
+  <ul class="nav nav-sidebar">
+    <li {{ if .CommandPage }}class="active"{{ end }}>
+      <a href="/settings/commands/">Commands</a>
+    </li>
+    <li {{ if .ContactPage }}class="active"{{ end }}>
+      <a href="/settings/contacts/">Contacts</a>
+    </li>
+    <li {{ if .ServerPage }}class="active"{{ end }}>
+      <a href="/settings/servers/">Servers</a>
+    </li>
+    <li {{ if .TimePeriodPage }}class="active"{{ end }}>
+      <a href="/settings/timeperiods/">Time Periods</a>
+    </li>
+  </ul>
+{{ end }}
