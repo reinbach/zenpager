@@ -15,12 +15,6 @@ type User struct {
 	Password string
 }
 
-type UserDB interface {
-	// GetUser retrieves a specific user from the
-	// database for the given ID.
-	GetUser(id int64) (*User, error)
-}
-
 func (u *User) Login(c web.C) bool {
 	db := database.FromContext(c)
 	var password string
@@ -36,7 +30,7 @@ func (u *User) Login(c web.C) bool {
 }
 
 func (u *User) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO auth_user (Email, Password) VALUES($1, $2)",
+	_, err := db.Exec("INSERT INTO auth_user (email, password) VALUES($1, $2)",
 		u.Email, u.Password)
 	if err != nil {
 		log.Printf("Failed to create user record. ", err)
