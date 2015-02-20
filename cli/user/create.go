@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ func GetPassword() {
 	fmt.Scanln(&password_confirm)
 }
 
-func main() {
+func CreateUser() {
 	// Create a user in the system
 	fmt.Print("Email address: ")
 	fmt.Scanln(&email)

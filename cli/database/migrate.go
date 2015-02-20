@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"database/sql"
@@ -108,7 +108,7 @@ func GetRunSql(db *sql.DB) error {
 	return nil
 }
 
-func main() {
+func Migrate() {
 	filepath.Walk(d, FindSqlFiles)
 
 	db := database.Connect()

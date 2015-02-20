@@ -2,10 +2,10 @@ run:
 	@go run server/main.go
 
 createuser:
-	@go run cli/user.go
+	@go run cli/main.go createuser
 
 migrate:
-	@go run cli/migrate.go
+	@go run cli/main.go migrate
 
 test:
 	@for d in */ ; do \
