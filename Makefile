@@ -4,6 +4,9 @@ run:
 createuser:
 	@go run cli/user.go
 
+migrate:
+	@go run cli/migrate.go
+
 test:
 	@for d in */ ; do \
 		go test -coverprofile=coverage.$${d:0:(-1)}.out ./$${d} ; \
