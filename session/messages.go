@@ -8,9 +8,10 @@ import (
 )
 
 func GetMessageSession(c *web.C) []string {
-	session := c.Env[SESSION_KEY].(Session)
-	if messages, exists := session[MESSAGES_KEY]; exists == true {
-		return messages.([]string)
+	if session, exists := c.Env[SESSION_KEY]; exists == true {
+		if messages, exists := session.(Session)[MESSAGES_KEY]; exists == true {
+			return messages.([]string)
+		}
 	}
 	return []string{}
 }
@@ -32,7 +33,13 @@ func DeleteMessageContext(c *web.C, w http.ResponseWriter, r *http.Request) {
 func AddMessage(c *web.C, w http.ResponseWriter, r *http.Request, m string) {
 	messages := GetMessageContext(c)
 	messages = append(messages, m)
-	c.Env[MESSAGES_KEY] = messages
+	if _, exists := c.Env[MESSAGES_KEY]; exists == true {
+		c.Env[MESSAGES_KEY] = messages
+	} else {
+		c.Env = map[interface{}]interface{}{
+			MESSAGES_KEY: messages,
+		}
+	}
 	if err := SetCookie(w, r, MESSAGES_KEY, messages); err != nil {
 		log.Println("Failed to set message: ", err)
 	}
