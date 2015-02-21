@@ -17,3 +17,13 @@ func TestHome(t *testing.T) {
 		t.Errorf("200 expected, got %v instead", w.Code)
 	}
 }
+
+func TestNotFound(t *testing.T) {
+	r, _ := http.NewRequest("GET", "/404", nil)
+	w := httptest.NewRecorder()
+	c := web.C{}
+	NotFound(c, w, r)
+	if w.Code != http.StatusOK {
+		t.Errorf("200 expected, got %v instead", w.Code)
+	}
+}
