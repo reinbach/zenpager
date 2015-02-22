@@ -19,6 +19,6 @@ func Route(p string) string {
 func Router() *web.Mux {
 	mux := web.New()
 	mux.Use(auth.Middleware)
-	mux.Get(Route("/"), View)
+	mux.Get(Route("/"), HomeView)
 	return mux
 }

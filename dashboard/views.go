@@ -16,7 +16,7 @@ var (
 	}
 )
 
-func View(c web.C, w http.ResponseWriter, r *http.Request) {
+func HomeView(c web.C, w http.ResponseWriter, r *http.Request) {
 	template.Render(c, w, r, append(templates, "dashboard/index.html"),
 		template.NewContext())
 }
