@@ -21,11 +21,11 @@ import (
 
 var (
 	db        *sql.DB
-	templates = []string{"base.html", "intro/base.html"}
+	templates = []string{}
 )
 
 func Home(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, append(templates, "intro/home.html"),
+	template.Render(c, w, r, append(templates, "intro.html"),
 		template.NewContext())
 }
 

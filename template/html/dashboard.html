@@ -11,7 +11,7 @@
     <title>ZenPager</title>
 
     <link href="{{ .Static }}dist/css/vendor.min.css" rel="stylesheet">
-    {{ template "page-css" . }}
+    <link href="{{ .Static }}dist/css/dashboard.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -21,8 +21,6 @@
   </head>
 
   <body>
-    {{ template "content" . }}
     <script src="{{ .Static }}dist/js/vendor.min.js"></script>
-    {{ template "page-js" . }}
   </body>
 </html>

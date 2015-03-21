@@ -4,11 +4,17 @@ var $ = require("gulp-load-plugins")();
 var projectDir = "template/static/";
 var jsFiles = {
     "vendor": bowerFiles({filter: '**/*.js'}),
-    "local": projectDir + "src/js/*.jsx"
+    "local": {
+        "intro": projectDir + "src/js/intro/*.jsx",
+        "dashboard": projectDir + "src/js/dashboard/*.jsx"
+    }
 };
 var cssFiles = {
     "vendor": bowerFiles({filter: '**/*.css'}),
-    "local": projectDir + "src/css/*.scss"
+    "local": {
+        "intro": projectDir + "src/css/intro/*.scss",
+        "dashboard": projectDir + "src/css/dashboard/*.scss"
+    }
 };
 
 // js
@@ -24,11 +30,11 @@ gulp.task('js-vendor', function() {
         .pipe($.notify({message: 'Javascript vendor task complete'}));
 });
 
-gulp.task('js-local', function() {
-    return gulp.src(jsFiles.local)
+function processJSFiles(files, name) {
+    return gulp.src(files)
         .pipe($.sourcemaps.init())
         .pipe($.react({harmony: true}))
-        .pipe($.concat('main.js'))
+        .pipe($.concat(name + '.js'))
         .pipe($.rename({ suffix: '.min' }))
         .pipe($.uglify())
         .pipe($.sourcemaps.write('.'))
@@ -36,7 +42,19 @@ gulp.task('js-local', function() {
         .on('error', function (error) {
             console.error('' + error);
         })
-        .pipe($.notify({message: 'Javascript local task complete'}));
+        .pipe($.notify({message: 'Javascript local ' + name + ' task complete'}));
+}
+
+gulp.task('js-local-intro', function() {
+    processJSFiles(jsFiles.local.intro, 'intro');
+});
+
+gulp.task('js-local-dashboard', function() {
+    processJSFiles(jsFiles.local.dashboard, 'dashboard');
+});
+
+gulp.task('js-local', function() {
+    gulp.start('js-local-intro', 'js-local-dashboard');
 });
 
 gulp.task('js', function() {
@@ -56,20 +74,32 @@ gulp.task('css-vendor', function() {
         .pipe($.notify({message: 'Style vendor task complete'}));
 });
 
-gulp.task('css-local', function() {
-    return gulp.src(cssFiles.local)
-        //.pipe($.sourcemaps.init())
+function processCSSFiles(files, name) {
+    return gulp.src(files)
+        .pipe($.sourcemaps.init())
         .pipe($.autoprefixer({browsers: '> 1%', cascade: false, remove: true}))
-        //.pipe($.concat('main.css'))
+        .pipe($.concat(name + '.css'))
         .pipe($.rename({ suffix: '.min' }))
         .pipe($.sass({errLogToConsole: true}))
-        //.pipe($.sourcemaps.write('.'))
+        .pipe($.sourcemaps.write('.'))
         .pipe($.minifyCss())
         .pipe(gulp.dest(projectDir + 'dist/css'))
         .on('error', function (error) {
             console.error('' + error);
         })
-        .pipe($.notify({message: 'Style local task complete'}));
+        .pipe($.notify({message: 'Style local ' + name + ' task complete'}));
+}
+
+gulp.task('css-local-intro', function() {
+    processCSSFiles(cssFiles.local.intro, 'intro');
+});
+
+gulp.task('css-local-dashboard', function() {
+    processCSSFiles(cssFiles.local.dashboard, 'dashboard');
+});
+
+gulp.task('css-local', function() {
+    gulp.start('css-local-intro', 'css-local-dashboard');
 });
 
 gulp.task('css', function() {
@@ -109,10 +139,12 @@ gulp.task('build', function() {
 // main
 gulp.task('default', function() {
     // watch css
-    gulp.watch(cssFiles.local, ['css-local']);
+    gulp.watch(cssFiles.local.intro, ['css-local-intro']);
+    gulp.watch(cssFiles.local.dashboard, ['css-local-dashboard']);
 
     // watch js
-    gulp.watch(jsFiles.local, ['js-local']);
+    gulp.watch(jsFiles.local.intro, ['js-local-intro']);
+    gulp.watch(jsFiles.local.dashboard, ['js-local-dashboard']);
 });
 
 
