@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 
-	"git.ironlabs.com/greg/zenpager/config"
+	"github.com/reinbach/zenpager/config"
 )
 
 func GetDatasource() string {

@@ -10,7 +10,7 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/utils"
+	"github.com/reinbach/zenpager/utils"
 )
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {

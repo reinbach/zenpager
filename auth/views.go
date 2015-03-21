@@ -5,9 +5,9 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/form"
-	"git.ironlabs.com/greg/zenpager/session"
-	"git.ironlabs.com/greg/zenpager/template"
+	"github.com/reinbach/zenpager/form"
+	"github.com/reinbach/zenpager/session"
+	"github.com/reinbach/zenpager/template"
 )
 
 type Fields []form.Field

@@ -5,7 +5,7 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/auth"
+	"github.com/reinbach/zenpager/auth"
 )
 
 var (

@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
-	"git.ironlabs.com/greg/zenpager/auth"
-	"git.ironlabs.com/greg/zenpager/database"
+	"github.com/reinbach/zenpager/auth"
+	"github.com/reinbach/zenpager/database"
 )
 
 var (

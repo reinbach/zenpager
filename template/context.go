@@ -5,7 +5,7 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/session"
+	"github.com/reinbach/zenpager/session"
 )
 
 type Context struct {

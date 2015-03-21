@@ -10,7 +10,7 @@ import (
 
 	"github.com/gorilla/securecookie"
 
-	"git.ironlabs.com/greg/zenpager/config"
+	"github.com/reinbach/zenpager/config"
 )
 
 var (

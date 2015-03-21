@@ -9,14 +9,14 @@ import (
 	"github.com/zenazn/goji"
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/alert"
-	"git.ironlabs.com/greg/zenpager/auth"
-	"git.ironlabs.com/greg/zenpager/dashboard"
-	"git.ironlabs.com/greg/zenpager/database"
-	"git.ironlabs.com/greg/zenpager/monitor"
-	"git.ironlabs.com/greg/zenpager/session"
-	"git.ironlabs.com/greg/zenpager/settings"
-	"git.ironlabs.com/greg/zenpager/template"
+	"github.com/reinbach/zenpager/alert"
+	"github.com/reinbach/zenpager/auth"
+	"github.com/reinbach/zenpager/dashboard"
+	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/monitor"
+	"github.com/reinbach/zenpager/session"
+	"github.com/reinbach/zenpager/settings"
+	"github.com/reinbach/zenpager/template"
 )
 
 var (

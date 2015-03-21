@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.ironlabs.com/greg/zenpager/database"
-	"git.ironlabs.com/greg/zenpager/utils"
+	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/utils"
 )
 
 type Migration struct {

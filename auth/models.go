@@ -6,7 +6,7 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/database"
+	"github.com/reinbach/zenpager/database"
 )
 
 type User struct {

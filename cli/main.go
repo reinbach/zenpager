@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"git.ironlabs.com/greg/zenpager/cli/database"
-	"git.ironlabs.com/greg/zenpager/cli/user"
+	"github.com/reinbach/zenpager/cli/database"
+	"github.com/reinbach/zenpager/cli/user"
 )
 
 func main() {

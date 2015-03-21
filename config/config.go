@@ -6,7 +6,7 @@ import (
 
 	"github.com/pelletier/go-toml"
 
-	"git.ironlabs.com/greg/zenpager/utils"
+	"github.com/reinbach/zenpager/utils"
 )
 
 type Config struct {

@@ -6,7 +6,7 @@ import (
 
 	"github.com/zenazn/goji/web"
 
-	"git.ironlabs.com/greg/zenpager/session"
+	"github.com/reinbach/zenpager/session"
 )
 
 func Middleware(c *web.C, h http.Handler) http.Handler {
