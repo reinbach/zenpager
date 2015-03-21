@@ -1,2 +1,4 @@
 coverage*
 config.toml
+bower_components/
+node_modules/
