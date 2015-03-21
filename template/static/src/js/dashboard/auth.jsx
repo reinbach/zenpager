@@ -22,8 +22,8 @@ var Login = React.createClass({
         event.preventDefault();
         var { router } = this.context;
         var nextPath = router.getCurrentQuery().nextPath;
-        var email = this.refs.email.getDOMNoe().value;
-        var password = this.refs.password.getDOMNoe().value;
+        var email = this.refs.email.getDOMNode().value;
+        var password = this.refs.password.getDOMNode().value;
         auth.login(email, password, function(loggedIn) {
             if (!loggedIn) {
                 return this.setState({error: true});
@@ -38,13 +38,26 @@ var Login = React.createClass({
     render: function() {
         var errors = this.state.error ? <p>Bad Login Information</p> : '';
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label><input ref="email" placeholder="email" defaultValue=""/></label>
-                <label><input ref="password" placeholder="password"/></label>
-                <br />
-                <button type="submit">Sign In</button>
-                {errors}
-            </form>
+            <div className="col-md-3 col-md-offset-3">
+                <h1>Sign In</h1>
+                <div className="alert alert-danger">{errors}</div>
+                <form onSubmit={this.handleSubmit} className="text-left">
+                    <div className="form-group">
+                        <label>Email Address</label>
+                        <input type="email" className="form-control"
+                               ref="email" placeholder="Enter email"
+                               value={this.props.email} autofocus />
+                        <p className="help-block">{this.props.email_errors}</p>
+                    </div>
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input type="password" className="form-control"
+                               ref="password" placeholder="Password" />
+                        <p className="help-block">{this.props.password_errors}</p>
+                    </div>
+                    <button type="submit" className="btn btn-default">Sign In</button>
+                </form>
+            </div>
         );
     }
 });
@@ -54,7 +67,12 @@ var Logout = React.createClass({
         auth.logout();
     },
     render: function() {
-        return <p>You are now logged out</p>;
+        return (
+            <div className="col-md-3 col-md-offset-3">
+                <h1>Signed Out</h1>
+                <p>You are now signed out!</p>
+            </div>
+        );
     }
 });
 

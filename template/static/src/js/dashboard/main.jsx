@@ -29,7 +29,7 @@ var App = React.createClass({
                         <NavItem href="#">Dashboard</NavItem>
                         <NavItem href="#/settings">Settings</NavItem>
                         <NavItem href="#/profile">Profile</NavItem>
-                        <NavItem href="#/signout">Sign Out</NavItem>
+                        <NavItem href="#/logout">Sign Out</NavItem>
                     </Nav>
                 </Navbar>
                 <RouteHandler/>
@@ -112,7 +112,7 @@ var NotFound = React.createClass({
 var routes = (
     <Route name="app" path="/" handler={App}>
         <Route name="login" handler={Login} />
-        <Route name="lgout" handler={Logout} />
+        <Route name="logout" handler={Logout} />
         <Route name="dashboard" handler={DashboardHolder}>
             <Route name="overview" handler={DashboardOverview} />
             <Route name="servers" handler={DashboardServers} />
