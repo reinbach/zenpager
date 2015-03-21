@@ -26,7 +26,7 @@ var App = React.createClass({
             <div>
                 <Navbar brand="ZenPager" fixedTop fluid inverse>
                     <Nav right>
-                        <NavItem href="#">Dashboard</NavItem>
+                        <NavItem href="#/dashboard/overview">Dashboard</NavItem>
                         <NavItem href="#/settings">Settings</NavItem>
                         <NavItem href="#/profile">Profile</NavItem>
                         <NavItem href="#/logout">Sign Out</NavItem>
