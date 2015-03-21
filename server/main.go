@@ -30,7 +30,7 @@ func Home(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, append(templates, "intro/404.html"),
+	template.Render(c, w, r, append(templates, "404.html"),
 		template.NewContext())
 }
 

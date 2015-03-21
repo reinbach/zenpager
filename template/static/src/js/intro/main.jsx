@@ -3,6 +3,7 @@ var Route = Router.Route;
 var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
 var DefaultRoute = Router.DefaultRoute;
+var NotFoundRoute = Router.NotFoundRoute;
 
 var App = React.createClass({
     render: function() {
@@ -77,12 +78,23 @@ var Dashboard = React.createClass({
     }
 });
 
+var NotFound = React.createClass({
+    render: function() {
+        return (
+            <div className="inner cover">
+                <h1 className="cover-heading">404 Not Found</h1>
+            </div>
+        );
+    }
+});
+
 var routes = (
     <Route name="app" path="/" handler={App}>
-        <Route name="home" handler={Home}/>
+        <Route name="home" handler={Home} />
         <Route name="contact" handler={Contact} />
         <Route name="dashboard" handler={Dashboard} />
-        <DefaultRoute handler={Home}/>
+        <NotFoundRoute handler={NotFound} />
+        <DefaultRoute handler={Home} />
     </Route>
 );
 
