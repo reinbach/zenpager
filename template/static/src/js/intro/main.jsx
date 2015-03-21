@@ -16,7 +16,7 @@ var App = React.createClass({
                                 <h3 className="masthead-brand"><a href="/">ZenPager</a></h3>
                                 <nav>
                                     <ul className="nav masthead-nav">
-                                        <li className="active">
+                                        <li>
                                             <Link to="home">Home</Link>
                                         </li>
                                         <li>
