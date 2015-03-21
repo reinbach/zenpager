@@ -58,12 +58,12 @@ gulp.task('css-vendor', function() {
 
 gulp.task('css-local', function() {
     return gulp.src(cssFiles.local)
-        .pipe($.sourcemaps.init())
+        //.pipe($.sourcemaps.init())
         .pipe($.autoprefixer({browsers: '> 1%', cascade: false, remove: true}))
-        .pipe($.concat('main.css'))
+        //.pipe($.concat('main.css'))
         .pipe($.rename({ suffix: '.min' }))
         .pipe($.sass({errLogToConsole: true}))
-        .pipe($.sourcemaps.write('.'))
+        //.pipe($.sourcemaps.write('.'))
         .pipe($.minifyCss())
         .pipe(gulp.dest(projectDir + 'dist/css'))
         .on('error', function (error) {
