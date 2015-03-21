@@ -23,7 +23,7 @@ var App = React.createClass({
                                             <Link to="contact">Contact</Link>
                                         </li>
                                         <li>
-                                            <Link to="dashboard">Dashboard</Link>
+                                            <a href="/dashboard/">Dashboard</a>
                                         </li>
                                     </ul>
                                 </nav>
@@ -51,7 +51,7 @@ var Home = React.createClass({
                 <h1 className="cover-heading">Monitor What You Will</h1>
                 <p className="lead">A single place to monitor your systems, track the performance of your applications, and be alerted when it matters.</p>
                 <p className="lead">
-                    <Link to="dashboard" className="btn btn-lg btn-success">Dashboard</Link>
+                    <a href="/dashboard/" className="btn btn-lg btn-success">Dashboard</a>
                 </p>
             </div>
         );
@@ -63,16 +63,6 @@ var Contact = React.createClass({
         return (
             <div className="inner cover">
                 <h1 className="cover-heading">Contact</h1>
-            </div>
-        );
-    }
-});
-
-var Dashboard = React.createClass({
-    render: function() {
-        return (
-            <div className="inner cover">
-                <h1 className="cover-heading">Dashboard, need to actually check logged in otherise sign in page.</h1>
             </div>
         );
     }
@@ -92,7 +82,6 @@ var routes = (
     <Route name="app" path="/" handler={App}>
         <Route name="home" handler={Home} />
         <Route name="contact" handler={Contact} />
-        <Route name="dashboard" handler={Dashboard} />
         <NotFoundRoute handler={NotFound} />
         <DefaultRoute handler={Home} />
     </Route>
