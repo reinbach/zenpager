@@ -42,10 +42,10 @@ func Render(c web.C, w http.ResponseWriter, r *http.Request, tmpls []string, ctx
 	tmpl_list := UpdateTemplateList(tmpls)
 	t, err := template.ParseFiles(tmpl_list...)
 	if err != nil {
-		log.Print("template parsing error: ", err)
+		log.Println("template parsing error: ", err)
 	}
 	err = t.Execute(w, ctx.Values)
 	if err != nil {
-		log.Print("template executing error: ", err)
+		log.Println("template executing error: ", err)
 	}
 }
