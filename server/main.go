@@ -19,7 +19,8 @@ import (
 )
 
 var (
-	db *sql.DB
+	db        *sql.DB
+	templates = []string{}
 )
 
 func Intro(c web.C, w http.ResponseWriter, r *http.Request) {
