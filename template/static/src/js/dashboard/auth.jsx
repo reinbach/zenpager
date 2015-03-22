@@ -15,8 +15,37 @@ var Login = React.createClass({
     },
     getInitialState: function() {
         return {
-            error: false
+            error: false,
+            is_valid: false,
+            errors: {
+                email: [],
+                password: []
+            }
         };
+    },
+    handleValidate: function(email, password) {
+        this.state.errors.email = [];
+        this.state.errors.password = [];
+        this.state.is_valid = true;
+        if (email.length == "") {
+            this.state.is_valid = false;
+            this.state.errors.email.push(
+                <FormElementError error="Email Address is required" />
+            );
+        } else if (validateEmail(email) !== true) {
+            this.state.is_valid = false;
+            this.state.errors.email.push(
+                <FormElementError error="Invalid Email Address" />
+            );
+        }
+        if (password.length == "") {
+            this.state.is_valid = false;
+            this.state.errors.password.push(
+                <FormElementError error="Password is required" />
+            );
+        }
+        this.setState({is_valid: this.state.is_valid,
+                       error: this.state.error, errors: this.state.errors});
     },
     handleSubmit: function(event) {
         event.preventDefault();
@@ -24,6 +53,10 @@ var Login = React.createClass({
         var nextPath = router.getCurrentQuery().nextPath;
         var email = this.refs.email.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
+        this.handleValidate(email, password);
+        if (!this.state.is_valid) {
+            return;
+        }
         auth.login(email, password, function(loggedIn) {
             if (!loggedIn) {
                 return this.setState({error: true});
@@ -42,22 +75,30 @@ var Login = React.createClass({
                 <h1>Sign In</h1>
                 <div className="alert alert-danger">{errors}</div>
                 <form onSubmit={this.handleSubmit} className="text-left">
-                    <div className="form-group">
+                    <div className={this.state.errors.email.length ? 'form-group has-error' : 'form-group '}>
                         <label>Email Address</label>
                         <input type="email" className="form-control"
                                ref="email" placeholder="Enter email"
                                value={this.props.email} autofocus />
-                        <p className="help-block">{this.props.email_errors}</p>
+                        {this.state.errors.email}
                     </div>
-                    <div className="form-group">
+                    <div className={this.state.errors.email.length ? 'form-group has-error' : 'form-group '}>
                         <label>Password</label>
                         <input type="password" className="form-control"
                                ref="password" placeholder="Password" />
-                        <p className="help-block">{this.props.password_errors}</p>
+                        {this.state.errors.password}
                     </div>
                     <button type="submit" className="btn btn-default">Sign In</button>
                 </form>
             </div>
+        );
+    }
+});
+
+var FormElementError = React.createClass({
+    render: function() {
+        return (
+            <p className="help-block">{this.props.error}</p>
         );
     }
 });
@@ -122,4 +163,9 @@ function authenticate(email, pass, cb) {
             cb({authenticated: false});
         }
     }, 0);
+}
+
+function validateEmail(email) {
+    var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
 }
