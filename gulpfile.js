@@ -133,7 +133,7 @@ gulp.task('vendor', function() {
 });
 
 gulp.task('build', function() {
-    gulp.start('local', 'vendor');
+    gulp.start('local', 'vendor', 'fonts');
 });
 
 // main
