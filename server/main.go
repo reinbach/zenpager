@@ -64,6 +64,7 @@ func main() {
 	goji.NotFound(NotFound)
 
 	// API v1
+	goji.Handle("/api/v1/auth/*", auth.Routes())
 	goji.Handle("/api/v1/contacts/*", contacts.Routes())
 	goji.Get("/api/v1/contacts",
 		http.RedirectHandler("/api/v1/contacts/", 301))

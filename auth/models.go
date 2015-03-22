@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/zenazn/goji/web"
-
 	"github.com/reinbach/zenpager/database"
 )
 
@@ -15,8 +13,7 @@ type User struct {
 	Password string
 }
 
-func (u *User) Login(c web.C) bool {
-	db := database.FromContext(c)
+func (u *User) Login(db *sql.DB) bool {
 	var password string
 	err := db.QueryRow("SELECT password FROM auth_user where email = $1",
 		u.Email).Scan(&password)

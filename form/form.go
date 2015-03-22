@@ -5,7 +5,7 @@ import (
 )
 
 type Form struct {
-	Errors map[string]interface{}
+	Errors []string
 	Fields map[string]interface{}
 }
 
@@ -16,11 +16,8 @@ func (f *Form) IsValid() bool {
 	return false
 }
 
-func (f *Form) AddError(field, msg string) {
-	if f.Errors == nil {
-		f.Errors = make(map[string]interface{}, 1)
-	}
-	f.Errors[field] = msg
+func (f *Form) AddError(msg string) {
+	f.Errors = append(f.Errors, msg)
 }
 
 func (f *Form) AddField(field Field) {
@@ -45,13 +42,13 @@ func Validate(r *http.Request, f []Field) *Form {
 		for _, field := range f {
 			value, valid, msg := field.Validate(r)
 			if valid == false {
-				form.AddError(field.Name, msg)
+				form.AddError(msg)
 			}
 			field.Value = value
 			form.AddField(field)
 		}
 	} else {
-		form.AddError("all", "Issue processing form data.")
+		form.AddError("Issue processing form data.")
 	}
 	return form
 }
