@@ -16,36 +16,31 @@ var Login = React.createClass({
     getInitialState: function() {
         return {
             error: false,
-            is_valid: false,
-            errors: {
-                email: [],
-                password: []
-            }
+            email: '',
+            password: ''
         };
     },
-    handleValidate: function(email, password) {
-        this.state.errors.email = [];
-        this.state.errors.password = [];
-        this.state.is_valid = true;
-        if (email.length == "") {
-            this.state.is_valid = false;
-            this.state.errors.email.push(
-                <FormElementError error="Email Address is required" />
-            );
-        } else if (validateEmail(email) !== true) {
-            this.state.is_valid = false;
-            this.state.errors.email.push(
-                <FormElementError error="Invalid Email Address" />
-            );
+    validationEmailState: function() {
+        if (this.state.email.length == "") {
+            return "error";
+        } else if (validateEmail(this.state.email) !== true) {
+            return "error";
         }
-        if (password.length == "") {
-            this.state.is_valid = false;
-            this.state.errors.password.push(
-                <FormElementError error="Password is required" />
-            );
+        return "success";
+    },
+    validationPasswordState: function() {
+        if (this.state.password.length > 8) {
+            return "success";
+        } else if (this.state.password.length > 0) {
+            return "error";
         }
-        this.setState({is_valid: this.state.is_valid,
-                       error: this.state.error, errors: this.state.errors});
+    },
+    handleChange: function() {
+        this.setState({
+            error: this.state.error,
+            email: this.refs.email.getValue(),
+            password: this.refs.password.getValue()
+        });
     },
     handleSubmit: function(event) {
         event.preventDefault();
@@ -53,10 +48,6 @@ var Login = React.createClass({
         var nextPath = router.getCurrentQuery().nextPath;
         var email = this.refs.email.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
-        this.handleValidate(email, password);
-        if (!this.state.is_valid) {
-            return;
-        }
         auth.login(email, password, function(loggedIn) {
             if (!loggedIn) {
                 return this.setState({error: true});
@@ -70,35 +61,22 @@ var Login = React.createClass({
     },
     render: function() {
         var errors = this.state.error ? <p>Bad Login Information</p> : '';
+        var Input = ReactBootstrap.Input;
         return (
             <div className="col-md-3 col-md-offset-3">
                 <h1>Sign In</h1>
-                <div className="alert alert-danger">{errors}</div>
                 <form onSubmit={this.handleSubmit} className="text-left">
-                    <div className={this.state.errors.email.length ? 'form-group has-error' : 'form-group '}>
-                        <label>Email Address</label>
-                        <input type="email" className="form-control"
-                               ref="email" placeholder="Enter email"
-                               value={this.props.email} autofocus />
-                        {this.state.errors.email}
-                    </div>
-                    <div className={this.state.errors.email.length ? 'form-group has-error' : 'form-group '}>
-                        <label>Password</label>
-                        <input type="password" className="form-control"
-                               ref="password" placeholder="Password" />
-                        {this.state.errors.password}
-                    </div>
-                    <button type="submit" className="btn btn-default">Sign In</button>
+                    <Input label="Email Address" type="email" ref="email"
+                           placeholder="Enter email" value={this.state.email}
+                           autoFocus hasFeedback bsStyle={this.validationEmailState()}
+                           onChange={this.handleChange} />
+                    <Input label="Password" type="password" ref="password"
+                           placeholder="Password" value={this.state.password}
+                           hasFeedback bsStyle={this.validationPasswordState()}
+                           onChange={this.handleChange} />
+                   <button type="submit" className="btn btn-default">Sign In</button>
                 </form>
             </div>
-        );
-    }
-});
-
-var FormElementError = React.createClass({
-    render: function() {
-        return (
-            <p className="help-block">{this.props.error}</p>
         );
     }
 });
