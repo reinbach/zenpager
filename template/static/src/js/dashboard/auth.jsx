@@ -15,7 +15,6 @@ var Login = React.createClass({
     },
     getInitialState: function() {
         return {
-            error: false,
             email: '',
             password: ''
         };
@@ -48,6 +47,7 @@ var Login = React.createClass({
         var nextPath = router.getCurrentQuery().nextPath;
         var email = this.refs.email.getDOMNode().value;
         var password = this.refs.password.getDOMNode().value;
+        // Prevent form being submitted till elements are in valid state
         auth.login(email, password, function(loggedIn) {
             if (!loggedIn) {
                 return this.setState({error: true});
@@ -61,7 +61,8 @@ var Login = React.createClass({
     },
     render: function() {
         var errors = this.state.error ? <p>Bad Login Information</p> : '';
-        var Input = ReactBootstrap.Input;
+        var Input = ReactBootstrap.Input,
+            Button = ReactBootstrap.Button;
         return (
             <div className="col-md-3 col-md-offset-3">
                 <h1>Sign In</h1>
@@ -74,7 +75,7 @@ var Login = React.createClass({
                            placeholder="Password" value={this.state.password}
                            hasFeedback bsStyle={this.validationPasswordState()}
                            onChange={this.handleChange} />
-                   <button type="submit" className="btn btn-default">Sign In</button>
+                   <Button type="submit">Sign In</Button>
                 </form>
             </div>
         );
