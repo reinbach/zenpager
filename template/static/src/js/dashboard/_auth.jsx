@@ -104,6 +104,9 @@ var auth = {
             this.onChange(true);
             return ;
         }
+        if (email === undefined || pass == undefined) {
+            return ;
+        }
         authenticate(email, pass, function(res) {
             if (res.authenticated) {
                 localStorage.token = res.token;
