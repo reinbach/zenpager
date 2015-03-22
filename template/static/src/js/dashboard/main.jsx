@@ -3,6 +3,7 @@ var Router = ReactRouter,
     Link = Router.Link,
     RouteHandler = Router.RouteHandler,
     DefaultRoute = Router.DefaultRoute,
+    Redirect = Router.Redirect,
     NotFoundRoute = Router.NotFoundRoute;
 
 var App = React.createClass({
@@ -26,7 +27,7 @@ var App = React.createClass({
             <div>
                 <Navbar brand="ZenPager" fixedTop fluid inverse>
                     <Nav right>
-                        <NavItem href="#/dashboard/overview">Dashboard</NavItem>
+                        <NavItem href="#/dashboard">Dashboard</NavItem>
                         <NavItem href="#/settings">Settings</NavItem>
                         <NavItem href="#/profile">Profile</NavItem>
                         <NavItem href="#/logout">Sign Out</NavItem>
@@ -58,22 +59,13 @@ var Messages = React.createClass({
     }
 });
 
-var DashboardHolder = React.createClass({
-    mixins: [Authentication],
+var NotFound = React.createClass({
     render: function() {
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-sm-3 col-md-2 sidebar">
-                        <ul className="nav nav-sidebar">
-                            <li><Link to="overview">Overview</Link></li>
-                            <li><Link to="servers">Servers</Link></li>
-                            <li><Link to="apps">Applications</Link></li>
-                        </ul>
-                    </div>
                     <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                        {/*<Messages type="success" message="Hello World" />*/}
-                        <RouteHandler />
+                        <h1>404 Not Found</h1>
                     </div>
                 </div>
             </div>
@@ -81,58 +73,35 @@ var DashboardHolder = React.createClass({
     }
 });
 
-var DashboardOverview = React.createClass({
-    render: function() {
-        return (
-            <div>
-                Dashboard Overview...
-            </div>
-        );
-    }
-});
-
-var DashboardServers = React.createClass({
-    render: function() {
-        return (
-            <div>
-                Dashboard Servers...
-            </div>
-        );
-    }
-});
-
-var DashboardApps = React.createClass({
-    render: function() {
-        return (
-            <div>
-                Dashboard Apps...
-            </div>
-        );
-    }
-});
-
-var NotFound = React.createClass({
-    render: function() {
-        return (
-            <div className="inner cover">
-                <h1 className="cover-heading">404 Not Found</h1>
-            </div>
-        );
-    }
-});
-
 var routes = (
     <Route name="app" path="/" handler={App}>
+        <NotFoundRoute handler={NotFound} />
         <Route name="login" handler={Login} />
         <Route name="logout" handler={Logout} />
         <Route name="dashboard" handler={DashboardHolder}>
-            <Route name="overview" handler={DashboardOverview} />
-            <Route name="servers" handler={DashboardServers} />
-            <Route name="apps" handler={DashboardApps} />
-            <DefaultRoute handler={DashboardOverview} />
+            <Route name="d_overview" path="overview"
+                   handler={DashboardOverview} />
+            <Route name="d_servers" path="servers"
+                   handler={DashboardServers} />
+            <Route name="d_apps" path="apps" handler={DashboardApps} />
+            <Redirect from="/dashboard" to="d_overview" />
         </Route>
-        <NotFoundRoute handler={NotFound} />
-        <DefaultRoute handler={DashboardHolder} />
+        <Route name="settings" handler={SettingsHolder}>
+            <Route name="s_commands" path="commands"
+                   handler={SettingsCommands} />
+            <Route name="s_contacts" path="contacts"
+                   handler={SettingsContacts} />
+            <Route name="s_servers" path="servers" handler={SettingsServers} />
+            <Route name="s_timeperiods" path="timeperiods"
+                   handler={SettingsTimePeriods} />
+            <Redirect from="/settings" to="s_commands" />
+        </Route>
+        <Route name="profile" handler={ProfileHolder}>
+            <Route name="p_password" path="password"
+                   handler={ProfilePassword} />
+            <Redirect from="/profile" to="p_password" />
+        </Route>
+        <Redirect from="/" to="d_overview" />
     </Route>
 );
 
