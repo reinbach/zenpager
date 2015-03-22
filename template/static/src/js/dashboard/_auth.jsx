@@ -45,10 +45,8 @@ var Login = React.createClass({
         event.preventDefault();
         var { router } = this.context;
         var nextPath = router.getCurrentQuery().nextPath;
-        var email = this.refs.email.getDOMNode().value;
-        var password = this.refs.password.getDOMNode().value;
         // Prevent form being submitted till elements are in valid state
-        auth.login(email, password, function(loggedIn) {
+        auth.login(this.state.email, this.state.password, function(loggedIn) {
             if (!loggedIn) {
                 return this.setState({error: true});
             }
