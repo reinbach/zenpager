@@ -39,10 +39,22 @@ var App = React.createClass({
 });
 
 var Messages = React.createClass({
+    getInitialState: function() {
+        return {
+            visible: true
+        };
+    },
+    handleDismiss: function() {
+        this.setState({visible: false});
+    },
     render: function() {
-        return (
-            <div className="alert alert-info">{this.props.message}</div>
-        );
+        if (this.state.visible) {
+            var Alert = ReactBootstrap.Alert;
+            return (
+                <Alert bsStyle={this.props.type} onDismiss={this.handleDismiss}
+                       dismissAfter={2000}>{this.props.message}</Alert>
+            );
+        }
     }
 });
 
@@ -60,7 +72,7 @@ var DashboardHolder = React.createClass({
                         </ul>
                     </div>
                     <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                        <Messages />
+                        {/*<Messages type="success" message="Hello World" />*/}
                         <RouteHandler />
                     </div>
                 </div>
