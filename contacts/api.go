@@ -8,11 +8,14 @@ import (
 
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
+
+	"github.com/reinbach/zenpager/auth"
 )
 
 func Routes() *web.Mux {
 	api := web.New()
 	api.Use(middleware.SubRouter)
+	api.Use(auth.Middleware)
 
 	api.Get("/", List)
 	api.Get("/:id", Item)

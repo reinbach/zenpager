@@ -1,23 +1,26 @@
 package auth
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/zenazn/goji/web"
-
-	"github.com/reinbach/zenpager/session"
 )
 
 func Middleware(c *web.C, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
-		if user, err := session.GetValue(r, USER_KEY); err == nil {
-			// set user c
-			log.Printf("user: %v\n", user)
-		} else {
-			http.Redirect(w, r, Route("/login/"), http.StatusFound)
+		auth := r.Header.Get("X-Access-Token")
+		if auth == "" {
+			AuthRequired(w)
+			return
 		}
+		//TODO make sure access token is valid, otherwise respond 401
 		h.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)
+}
+
+func AuthRequired(w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Write([]byte("{\"message\": \"Unauthorized\"}"))
 }
