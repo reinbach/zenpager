@@ -1,4 +1,4 @@
-package settings
+package contacts
 
 import (
 	"database/sql"
