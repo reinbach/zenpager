@@ -23,6 +23,11 @@ var App = React.createClass({
         var Navbar = ReactBootstrap.Navbar,
             Nav = ReactBootstrap.Nav,
             NavItem = ReactBootstrap.NavItem;
+        if (this.state.loggedIn) {
+            accessLink = <NavItem href="#/logout">Sign Out</NavItem>
+        } else {
+            accessLink = <NavItem href="#/login">Sign In</NavItem>
+        }
         return (
             <div>
                 <Navbar brand="ZenPager" fixedTop fluid inverse>
@@ -30,7 +35,7 @@ var App = React.createClass({
                         <NavItem href="#/dashboard">Dashboard</NavItem>
                         <NavItem href="#/settings">Settings</NavItem>
                         <NavItem href="#/profile">Profile</NavItem>
-                        <NavItem href="#/logout">Sign Out</NavItem>
+                        {accessLink}
                     </Nav>
                 </Navbar>
                 <RouteHandler/>
