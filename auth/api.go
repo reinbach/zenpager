@@ -16,8 +16,8 @@ import (
 type Fields []form.Field
 
 type Response struct {
-	Result  string
-	Message []string
+	Result   string
+	Messages []string
 }
 
 var (
@@ -59,14 +59,14 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 			//TODO create token and add to response
 			w.Header().Set("X-Access-Token", "<token>")
 			res = Response{
-				Result:  "success",
-				Message: []string{"Successfully logged in"},
+				Result:   "success",
+				Messages: []string{"Successfully logged in"},
 			}
 		} else {
-			res = Response{Result: "error", Message: []string{"Invalid User"}}
+			res = Response{Result: "error", Messages: []string{"Invalid User"}}
 		}
 	} else {
-		res = Response{Result: "error", Message: f.Errors}
+		res = Response{Result: "error", Messages: f.Errors}
 	}
 	b, err := json.Marshal(res)
 	if err != nil {
@@ -77,7 +77,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	//TODO remove token
-	res := Response{Result: "success", Message: []string{"Signed Out"}}
+	res := Response{Result: "success", Messages: []string{"Signed Out"}}
 	b, err := json.Marshal(res)
 	if err != nil {
 		log.Println("Failed to encode response: ", err)

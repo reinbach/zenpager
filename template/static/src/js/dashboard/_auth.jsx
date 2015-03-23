@@ -130,19 +130,26 @@ var auth = {
     onChange: function() {}
 };
 
-function authenticate(email, pass, cb) {
-    setTimeout(function() {
-        // make call to server and attempt to log user in
-        // result from server at this point
-        if (true) {
+function authenticate(email, password, cb) {
+    // make call to server and attempt to log user in
+    // result from server at this point
+    var r = new XMLHttpRequest();
+    r.open("GET", "/api/v1/auth/login", true);
+    r.onreadystatechange = function() {
+        data = JSON.parse(r.responseText);
+        if (data.Result == "success") {
             cb({
                 authenticated: true,
                 token: Math.random().toString(36).substring(7)
             });
         } else {
-            cb({authenticated: false});
+            cb({
+                authenticated: false
+                errors: data.Messages
+            });
         }
-    }, 0);
+    }
+    r.send(JSON.stringify({email: email, password: password}));
 }
 
 function validateEmail(email) {
