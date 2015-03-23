@@ -144,7 +144,7 @@ function authenticate(email, password, cb) {
             });
         } else {
             cb({
-                authenticated: false
+                authenticated: false,
                 errors: data.Messages
             });
         }
