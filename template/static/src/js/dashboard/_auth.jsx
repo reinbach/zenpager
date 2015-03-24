@@ -3,11 +3,11 @@ var Authentication = {
         willTransitionTo: function(transition) {
             var nextPath = transition.path;
             if (!auth.loggedIn()) {
-                transition.redirect("/login", {}, {"nextPath": nextPath})
+                transition.redirect("/login", {}, {"nextPath": nextPath});
             }
         }
     }
-}
+};
 
 var Login = React.createClass({
     contextTypes: {
@@ -20,17 +20,18 @@ var Login = React.createClass({
         };
     },
     validationEmailState: function() {
-        if (this.state.email.length == "") {
-            return "error";
-        } else if (validateEmail(this.state.email) !== true) {
-            return "error";
+        if (this.state.email.length > 0) {
+            if (validateEmail(this.state.email) === true) {
+                return "success";
+            }
+            return "error"
         }
-        return "success";
     },
     validationPasswordState: function() {
-        if (this.state.password.length > 8) {
-            return "success";
-        } else if (this.state.password.length > 0) {
+        if (this.state.password.length > 0) {
+            if (this.state.password.length >= 8) {
+                return "success";
+            }
             return "error";
         }
     },
@@ -109,10 +110,10 @@ var auth = {
             if (res.authenticated) {
                 localStorage.token = res.token;
                 if (cb) cb(true);
-                this.onChange(true);
+                this.onChange(true, res.Messages);
             } else {
                 if (cb) cb(false);
-                this.onChange(false);
+                this.onChange(false, res.Messages);
             }
         }.bind(this));
     },
@@ -121,7 +122,7 @@ var auth = {
     },
     logout: function(cb) {
         delete localStorage.token;
-        if (cb) cb();
+        if (cb) cb(false);
         this.onChange(false);
     },
     loggedIn: function() {
@@ -131,24 +132,25 @@ var auth = {
 };
 
 function authenticate(email, password, cb) {
-    // make call to server and attempt to log user in
-    // result from server at this point
     var r = new XMLHttpRequest();
-    r.open("GET", "/api/v1/auth/login", true);
+    r.open("POST", "/api/v1/auth/login", true);
+    r.setRequestHeader("Content-Type", "application/json");
     r.onreadystatechange = function() {
-        data = JSON.parse(r.responseText);
-        if (data.Result == "success") {
-            cb({
-                authenticated: true,
-                token: Math.random().toString(36).substring(7)
-            });
-        } else {
-            cb({
-                authenticated: false,
-                errors: data.Messages
-            });
+        if (r.readyState === 4) {
+            data = JSON.parse(r.responseText);
+            if (data.Result === "success") {
+                cb({
+                    authenticated: true,
+                    token: Math.random().toString(36).substring(7)
+                });
+            } else {
+                cb({
+                    authenticated: false,
+                    errors: data.Messages
+                });
+            }
         }
-    }
+    };
     r.send(JSON.stringify({email: email, password: password}));
 }
 
