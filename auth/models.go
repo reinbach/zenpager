@@ -3,14 +3,15 @@ package auth
 import (
 	"database/sql"
 	"log"
+	"net/mail"
 
 	"github.com/reinbach/zenpager/database"
 )
 
 type User struct {
 	ID       int64
-	Email    string
-	Password string
+	Email    string `json:"Email"`
+	Password string `json:"Password"`
 }
 
 func (u *User) Login(db *sql.DB) bool {
@@ -35,4 +36,19 @@ func (u *User) Create(db *sql.DB) bool {
 	}
 	log.Printf("Created user record.")
 	return true
+}
+
+func (u *User) Validate() []string {
+	var errors []string
+	if len(u.Email) < 1 {
+		errors = append(errors, "Email is required.")
+	} else {
+		if _, err := mail.ParseAddress(u.Email); err != nil {
+			errors = append(errors, "A valid Email address is required.")
+		}
+	}
+	if len(u.Password) < 1 {
+		errors = append(errors, "Password is required.")
+	}
+	return errors
 }

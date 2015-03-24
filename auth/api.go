@@ -39,40 +39,39 @@ func Routes() *web.Mux {
 	api.Use(middleware.SubRouter)
 	api.Use(utils.ApplicationJSON)
 
-	api.Get("/login", Login)
+	api.Post("/login", Login)
 	api.Get("/logout", Logout)
 
 	return api
 }
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
-	db := database.FromContext(c)
-	fields := Fields{email, password}
-	f := form.Validate(r, fields)
-	res := Response{}
-	if f.IsValid() == true {
-		user := User{
-			Email:    f.GetValue("email"),
-			Password: f.GetValue("password"),
-		}
-		if user.Login(db) {
-			//TODO create token and add to response
-			w.Header().Set("X-Access-Token", "<token>")
-			res = Response{
-				Result:   "success",
-				Messages: []string{"Successfully logged in"},
-			}
-		} else {
-			res = Response{Result: "error", Messages: []string{"Invalid User"}}
-		}
-	} else {
-		res = Response{Result: "error", Messages: f.Errors}
+	var db = database.FromContext(c)
+	var res = Response{}
+	var user User
+	if err := utils.DecodePayload(r, &user); err != nil {
+		res = Response{Result: "error", Messages: []string{"Data appears to be invalid."}}
+		utils.EncodePayload(w, http.StatusBadRequest, res)
+		return
 	}
-	b, err := json.Marshal(res)
-	if err != nil {
-		log.Println("Failed to encode response: ", err)
+	errors := user.Validate()
+	if len(errors) > 0 {
+		res = Response{Result: "error", Messages: errors}
+		utils.EncodePayload(w, http.StatusBadRequest, res)
+		return
 	}
-	w.Write(b)
+	if user.Login(db) {
+		//TODO create token and add to response
+		w.Header().Set("X-Access-Token", "<token>")
+		res = Response{
+			Result:   "success",
+			Messages: []string{"Successfully logged in"},
+		}
+		utils.EncodePayload(w, http.StatusOK, res)
+		return
+	}
+	res = Response{Result: "error", Messages: []string{"Username and/or password is invalid."}}
+	utils.EncodePayload(w, http.StatusBadRequest, res)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
