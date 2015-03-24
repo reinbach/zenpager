@@ -19,6 +19,11 @@ var Login = React.createClass({
             password: ''
         };
     },
+    getDefaultProps: function() {
+        return {
+            messages: []
+        }
+    },
     validationEmailState: function() {
         if (this.state.email.length > 0) {
             if (validateEmail(this.state.email) === true) {
@@ -59,7 +64,6 @@ var Login = React.createClass({
         }.bind(this));
     },
     render: function() {
-        var errors = this.state.error ? <p>Bad Login Information</p> : '';
         var Input = ReactBootstrap.Input,
             Button = ReactBootstrap.Button;
         var msgs = [];
@@ -81,7 +85,9 @@ var Login = React.createClass({
                                    placeholder="Password" value={this.state.password}
                                    hasFeedback bsStyle={this.validationPasswordState()}
                                    onChange={this.handleChange} />
-                            <Button type="submit">Sign In</Button>
+                            <Button type="submit" bsStyle="success">
+                                Sign In
+                            </Button>
                         </form>
                     </div>
                 </div>
