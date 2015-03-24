@@ -9,11 +9,12 @@ var Router = ReactRouter,
 var App = React.createClass({
     getInitialState: function() {
         return {
-            loggedIn: auth.loggedIn()
+            loggedIn: auth.loggedIn(),
+            messages: []
         };
     },
-    setStateOnAuth: function(loggedIn) {
-        this.setState({loggedIn: loggedIn});
+    setStateOnAuth: function(loggedIn, messages) {
+        this.setState({loggedIn: loggedIn, messages: messages});
     },
     componentWillMount: function() {
         auth.onChange = this.setStateOnAuth;
@@ -38,7 +39,7 @@ var App = React.createClass({
                         {accessLink}
                     </Nav>
                 </Navbar>
-                <RouteHandler />
+                <RouteHandler messages={this.state.messages} />
             </div>
         );
     }
@@ -57,8 +58,9 @@ var Messages = React.createClass({
         if (this.state.visible) {
             var Alert = ReactBootstrap.Alert;
             return (
-                <Alert bsStyle={this.props.type} onDismiss={this.handleDismiss}
-                       dismissAfter={2000}>{this.props.message}</Alert>
+                <Alert bsStyle={this.props.type} onDismiss={this.handleDismiss}>
+                    {this.props.message}
+                </Alert>
             );
         }
         return <div></div>;

@@ -62,20 +62,29 @@ var Login = React.createClass({
         var errors = this.state.error ? <p>Bad Login Information</p> : '';
         var Input = ReactBootstrap.Input,
             Button = ReactBootstrap.Button;
+        var msgs = [];
+        this.props.messages.forEach(function(msg) {
+            msgs.push(<Messages type="danger" message={msg} />);
+        });
         return (
-            <div className="col-md-3 col-md-offset-3">
-                <h1>Sign In</h1>
-                <form onSubmit={this.handleSubmit} className="text-left">
-                    <Input label="Email Address" type="email" ref="email"
-                           placeholder="Enter email" value={this.state.email}
-                           autoFocus hasFeedback bsStyle={this.validationEmailState()}
-                           onChange={this.handleChange} />
-                    <Input label="Password" type="password" ref="password"
-                           placeholder="Password" value={this.state.password}
-                           hasFeedback bsStyle={this.validationPasswordState()}
-                           onChange={this.handleChange} />
-                   <Button type="submit">Sign In</Button>
-                </form>
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-3 col-md-offset-3 main">
+                        {msgs}
+                        <h1>Sign In</h1>
+                        <form onSubmit={this.handleSubmit} className="text-left">
+                            <Input label="Email Address" type="email" ref="email"
+                                   placeholder="Enter email" value={this.state.email}
+                                   autoFocus hasFeedback bsStyle={this.validationEmailState()}
+                                   onChange={this.handleChange} />
+                            <Input label="Password" type="password" ref="password"
+                                   placeholder="Password" value={this.state.password}
+                                   hasFeedback bsStyle={this.validationPasswordState()}
+                                   onChange={this.handleChange} />
+                            <Button type="submit">Sign In</Button>
+                        </form>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -110,10 +119,10 @@ var auth = {
             if (res.authenticated) {
                 localStorage.token = res.token;
                 if (cb) cb(true);
-                this.onChange(true, res.Messages);
+                this.onChange(true, res.errors);
             } else {
                 if (cb) cb(false);
-                this.onChange(false, res.Messages);
+                this.onChange(false, res.errors);
             }
         }.bind(this));
     },

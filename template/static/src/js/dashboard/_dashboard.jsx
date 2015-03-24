@@ -6,7 +6,7 @@ var DashboardHolder = React.createClass({
         };
     },
     render: function() {
-        msgs = [];
+        var msgs = [];
         this.state.messages.forEach(function(msg) {
             msgs.push(<Messages type="error" message={msg} />);
         });
