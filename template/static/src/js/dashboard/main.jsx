@@ -24,9 +24,9 @@ var App = React.createClass({
             Nav = ReactBootstrap.Nav,
             NavItem = ReactBootstrap.NavItem;
         if (this.state.loggedIn) {
-            accessLink = <NavItem href="#/logout">Sign Out</NavItem>
+            accessLink = <NavItem href="#/logout">Sign Out</NavItem>;
         } else {
-            accessLink = <NavItem href="#/login">Sign In</NavItem>
+            accessLink = <NavItem href="#/login">Sign In</NavItem>;
         }
         return (
             <div>
@@ -38,7 +38,7 @@ var App = React.createClass({
                         {accessLink}
                     </Nav>
                 </Navbar>
-                <RouteHandler/>
+                <RouteHandler />
             </div>
         );
     }
@@ -61,6 +61,7 @@ var Messages = React.createClass({
                        dismissAfter={2000}>{this.props.message}</Alert>
             );
         }
+        return <div></div>;
     }
 });
 
