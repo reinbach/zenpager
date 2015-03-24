@@ -34,7 +34,7 @@ var Login = React.createClass({
     },
     validationPasswordState: function() {
         if (this.state.password.length > 0) {
-            if (this.state.password.length >= 8) {
+            if (passwordValid(this.state.password)) {
                 return "success";
             }
             return "error";
@@ -42,7 +42,6 @@ var Login = React.createClass({
     },
     handleChange: function() {
         this.setState({
-            error: this.state.error,
             email: this.refs.email.getValue(),
             password: this.refs.password.getValue()
         });
@@ -53,9 +52,6 @@ var Login = React.createClass({
         var nextPath = router.getCurrentQuery().nextPath;
         // Prevent form being submitted till elements are in valid state
         auth.login(this.state.email, this.state.password, function(loggedIn) {
-            if (!loggedIn) {
-                return this.setState({error: true});
-            }
             if (nextPath) {
                 router.replaceWith(nextPath);
             } else {
@@ -64,8 +60,6 @@ var Login = React.createClass({
         }.bind(this));
     },
     render: function() {
-        var Input = ReactBootstrap.Input,
-            Button = ReactBootstrap.Button;
         var msgs = [];
         this.props.messages.forEach(function(msg) {
             msgs.push(<Messages type="danger" message={msg} />);
@@ -73,9 +67,9 @@ var Login = React.createClass({
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-md-3 col-md-offset-3 main">
+                    <div className="col-md-3 col-md-offset-5 main">
                         {msgs}
-                        <h1>Sign In</h1>
+                        <h1 className="page-header">Sign In</h1>
                         <form onSubmit={this.handleSubmit} className="text-left">
                             <Input label="Email Address" type="email" ref="email"
                                    placeholder="Enter email" value={this.state.email}
