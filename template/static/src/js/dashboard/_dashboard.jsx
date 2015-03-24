@@ -1,6 +1,15 @@
 var DashboardHolder = React.createClass({
     mixins: [Authentication],
+    getInitialState: function() {
+        return {
+            messages: []
+        };
+    },
     render: function() {
+        msgs = [];
+        this.state.messages.forEach(function(msg) {
+            msgs.push(<Messages type="error" message={msg} />);
+        });
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -12,7 +21,7 @@ var DashboardHolder = React.createClass({
                         </ul>
                     </div>
                     <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                        {/*<Messages type="success" message="Hello World" />*/}
+                        {msgs}
                         <RouteHandler />
                     </div>
                 </div>
