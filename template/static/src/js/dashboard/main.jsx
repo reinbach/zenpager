@@ -4,7 +4,11 @@ var Router = ReactRouter,
     RouteHandler = Router.RouteHandler,
     DefaultRoute = Router.DefaultRoute,
     Redirect = Router.Redirect,
-    NotFoundRoute = Router.NotFoundRoute;
+    NotFoundRoute = Router.NotFoundRoute,
+
+    // bootstrap
+    Input = ReactBootstrap.Input,
+    Button = ReactBootstrap.Button;
 
 var App = React.createClass({
     getInitialState: function() {
