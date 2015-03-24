@@ -13,26 +13,10 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
-type Fields []form.Field
-
 type Response struct {
 	Result   string
 	Messages []string
 }
-
-var (
-	email = form.Field{
-		Name:       "email",
-		Required:   true,
-		Validators: form.Validators{form.Email{}},
-		Value:      "",
-	}
-	password = form.Field{
-		Name:     "password",
-		Required: true,
-		Value:    "",
-	}
-)
 
 func Routes() *web.Mux {
 	api := web.New()
