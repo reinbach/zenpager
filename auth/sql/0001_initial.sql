@@ -1,5 +1,5 @@
 create table auth_user (
-  ID SERIAL,
-  Email varchar(150) not null unique,
-  Password varchar(150) not null
+  id SERIAL,
+  email varchar(150) not null unique,
+  password varchar(150) not null
 );
