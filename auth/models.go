@@ -16,8 +16,8 @@ type User struct {
 
 func (u *User) Login(db *sql.DB) bool {
 	var password string
-	err := db.QueryRow("SELECT password FROM auth_user WHERE email = $1",
-		u.Email).Scan(&password)
+	err := db.QueryRow("SELECT id, password FROM auth_user WHERE email = $1",
+		u.Email).Scan(&u.ID, &password)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Printf("No user with that Email.")
@@ -38,25 +38,25 @@ func (u *User) Create(db *sql.DB) bool {
 	return true
 }
 
-func (u *User) Validate(validate_password bool) []string {
-	var errors []string
+func (u *User) Validate(validate_password bool) []Message {
+	var errors []Message
 	if len(u.Email) < 1 {
-		errors = append(errors, "Email is required.")
+		errors = append(errors, Message{Type: "danger", Content: "Email is required."})
 	} else {
 		if _, err := mail.ParseAddress(u.Email); err != nil {
-			errors = append(errors, "A valid Email address is required.")
+			errors = append(errors, Message{Type: "danger", Content: "A valid Email address is required."})
 		}
 	}
 	if validate_password {
 		if len(u.Password) < 1 {
-			errors = append(errors, "Password is required.")
+			errors = append(errors, Message{Type: "danger", Content: "Password is required."})
 		}
 	}
 	return errors
 }
 
 func (u *User) Get(db *sql.DB) {
-	err := db.QueryRow("SELECT email auth_user WHERE id = $1", u.ID).Scan(u.Email)
+	err := db.QueryRow("SELECT email FROM auth_user WHERE id = $1", u.ID).Scan(&u.Email)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("User not found.")

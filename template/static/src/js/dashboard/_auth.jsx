@@ -62,7 +62,7 @@ var Login = React.createClass({
     render: function() {
         var msgs = [];
         this.props.messages.forEach(function(msg) {
-            msgs.push(<Messages type="danger" message={msg} />);
+            msgs.push(<Messages type={msg.Type} message={msg.Content} />);
         });
         return (
             <div className="container-fluid">
@@ -105,19 +105,21 @@ var Logout = React.createClass({
 });
 
 var auth = {
-    login: function(email, pass, cb) {
+    login: function(email, password, cb) {
         cb = arguments[arguments.length - 1];
         if (localStorage.token) {
             if (cb) cb(true);
             this.onChange(true);
             return ;
         }
-        if (email === undefined || pass == undefined) {
+        if (email === undefined || password == undefined) {
+            if (cb) cb(false);
             return ;
         }
-        authenticate(email, pass, function(res) {
+        authenticate(email, password, function(res) {
             if (res.authenticated) {
                 localStorage.token = res.token;
+                localStorage.id = res.id;
                 if (cb) cb(true);
                 this.onChange(true, res.errors);
             } else {
@@ -150,7 +152,8 @@ function authenticate(email, password, cb) {
             if (data.Result === "success") {
                 cb({
                     authenticated: true,
-                    token: Math.random().toString(36).substring(7)
+                    token: Math.random().toString(36).substring(7),
+                    id: data.ID
                 });
             } else {
                 cb({

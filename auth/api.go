@@ -13,9 +13,15 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
+type Message struct {
+	Type    string
+	Content string
+}
+
 type Response struct {
 	Result   string
-	Messages []string
+	Messages []Message
+	ID       int64
 }
 
 func Routes() *web.Mux {
@@ -42,8 +48,16 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 	var res = Response{}
 	var user User
+	var m Message
 	if err := utils.DecodePayload(r, &user); err != nil {
-		res = Response{Result: "error", Messages: []string{"Data appears to be invalid."}}
+		m = Message{
+			Type:    "danger",
+			Content: "Data appears to be invalid.",
+		}
+		res = Response{
+			Result:   "error",
+			Messages: []Message{m},
+		}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
@@ -53,23 +67,35 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
+	log.Println("user before login: ", user)
 	if user.Login(db) {
-		//TODO create token and add to response
+		log.Println("user after login: ", user)
+		// TODO create and store token
 		w.Header().Set("X-Access-Token", "<token>")
+		m = Message{Type: "success", Content: "Successfully logged in"}
 		res = Response{
 			Result:   "success",
-			Messages: []string{"Successfully logged in"},
+			Messages: []Message{m},
+			ID:       user.ID,
 		}
 		utils.EncodePayload(w, http.StatusOK, res)
 		return
 	}
-	res = Response{Result: "error", Messages: []string{"Username and/or password is invalid."}}
+	m = Message{
+		Type:    "danger",
+		Content: "Username and/or password is invalid.",
+	}
+	res = Response{
+		Result:   "error",
+		Messages: []Message{m},
+	}
 	utils.EncodePayload(w, http.StatusBadRequest, res)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	//TODO remove token
-	res := Response{Result: "success", Messages: []string{"Signed Out"}}
+	m := Message{Type: "success", Content: "Signed Out"}
+	res := Response{Result: "success", Messages: []Message{m}}
 	b, err := json.Marshal(res)
 	if err != nil {
 		log.Println("Failed to encode response: ", err)
@@ -80,23 +106,27 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 	var res = Response{}
+	var m Message
+
+	// get id of user to be updated
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		res = Response{Result: "error", Messages: []string{"User not found."}}
+		m = Message{Type: "danger", Content: "User not found."}
+		res = Response{Result: "error", Messages: []Message{m}}
 		utils.EncodePayload(w, http.StatusNotFound, res)
 		return
 	}
+
+	// set user with current data
 	user := User{
 		ID: id,
 	}
-	if err := utils.DecodePayload(r, &user); err != nil {
-		res = Response{Result: "error", Messages: []string{"Data appears to be invalid."}}
-		utils.EncodePayload(w, http.StatusBadRequest, res)
-		return
-	}
 	user.Get(db)
+
+	// update data with new data and ensure it is valid
 	if err := utils.DecodePayload(r, &user); err != nil {
-		res = Response{Result: "error", Messages: []string{"Data appears to be invalid."}}
+		m = Message{Type: "danger", Content: "Data appears to be invalid."}
+		res = Response{Result: "error", Messages: []Message{m}}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
@@ -106,11 +136,14 @@ func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
+
 	if user.Update(db) {
-		res = Response{Result: "success", Messages: []string{"User data updated."}}
+		m = Message{Type: "success", Content: "User data updated."}
+		res = Response{Result: "success", Messages: []Message{m}}
 		utils.EncodePayload(w, http.StatusAccepted, res)
 	} else {
-		res = Response{Result: "error", Messages: []string{"Failed to update user."}}
+		m = Message{Type: "danger", Content: "Failed to update user."}
+		res = Response{Result: "error", Messages: []Message{m}}
 		utils.EncodePayload(w, http.StatusInternalServerError, res)
 	}
 }
