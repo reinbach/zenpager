@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1.0,
+                   initial-scale=1.0, user-scalable=yes">
+    <title>ZenPager</title>
+    <script
+       src="../bower_components/webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="elements.html">
+    <link rel="stylesheet" href="app.css">
+  </head>
+  <body unresolved fullbleed layout vertical>
+    <template is="auto-binding">
+      <flatiron-director route="{{route}}" autoHash></flatiron-director>
+      <core-scaffold>
+        <core-header-panel navigation flex>
+          <core-toolbar>ZenPager</core-toolbar>
+          <core-menu valueattr="hash" selected="{{route}}"
+                     on-core-select="{{menuItemSelected}}">
+            <template repeat="{{page in pages}}">
+              <core-item hash="{{page.hash}}">
+                <a href="#{{page.hash}}">{{page.name}}</a>
+              </core-item>
+            </template>
+            <core-item label="Dashboard"></core-item>
+          </core-menu>
+        </core-header-panel>
+
+        <span id="title" tool>Loading...</span>
+        <div class="content">
+          <core-animated-pages valueattr="hash" selected="{{route}}"
+                               transitions="cross-fade">
+            <page-home hash="home"></page-home>
+            <page-contact hash="contact"></page-contact>
+          </core-animated-pages>
+        </div>
+      </core-scaffold>
+    </template>
+    <script src="app.js"></script>
+  </body>
+</html>
