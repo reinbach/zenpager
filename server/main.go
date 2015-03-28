@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"code.google.com/p/go.net/context"
@@ -16,6 +17,7 @@ import (
 	"github.com/reinbach/zenpager/monitor"
 	"github.com/reinbach/zenpager/session"
 	"github.com/reinbach/zenpager/template"
+	"github.com/reinbach/zenpager/utils"
 )
 
 var (
@@ -24,8 +26,8 @@ var (
 )
 
 func Intro(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, append(templates, "intro.html"),
-		template.NewContext())
+	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
+		"website/intro.html"))
 }
 
 func Dashboard(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -56,10 +58,10 @@ func main() {
 	goji.Handle("/alert/*", alert.Router())
 	goji.Handle("/monitor/*", monitor.Router())
 
-	http.HandleFunc(template.STATIC_URL, template.StaticHandler)
 	goji.Get("/dashboard/", Dashboard)
 	goji.Get("/dashboard", http.RedirectHandler("/dashboard/", 301))
 	goji.Get("/", Intro)
+	http.HandleFunc("/intro.js", template.StaticHandler)
 	goji.NotFound(NotFound)
 
 	// API v1

@@ -14,8 +14,8 @@ import (
 )
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
-	static_file := r.URL.Path[len(STATIC_URL):]
-	static_dir := utils.GetAbsDir("template", STATIC_ROOT)
+	static_file := r.URL.Path
+	static_dir := utils.GetAbsDir("website")
 	if len(static_file) != 0 {
 		f, err := http.Dir(static_dir).Open(static_file)
 		if err == nil {
