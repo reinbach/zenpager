@@ -14,13 +14,13 @@
   <body unresolved fullbleed layout vertical>
     <template is="auto-binding">
       <flatiron-director route="{{route}}" autoHash></flatiron-director>
-      <core-scaffold>
+      <core-scaffold id="scaffold">
         <core-header-panel navigation flex>
           <core-toolbar>ZenPager</core-toolbar>
           <core-menu valueattr="hash" selected="{{route}}"
                      on-core-select="{{menuItemSelected}}">
             <template repeat="{{page in pages}}">
-              <core-item hash="{{page.hash}}">
+              <core-item hash="{{page.hash}}" title="{{page.name}}">
                 <a href="#{{page.hash}}">{{page.name}}</a>
               </core-item>
             </template>
