@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     vulcanize = require("gulp-vulcanize");
 var $ = require("gulp-load-plugins")();
 var project_dir = "website/";
-var dest_dir = __dirname;
+var dest_dir = __dirname + "dist/";
 
 function processFiles(files, name) {
     return gulp.src(files)
