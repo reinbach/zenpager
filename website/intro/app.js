@@ -3,7 +3,8 @@ document.addEventListener('polymer-ready', function() {
     var template = document.querySelector('template[is="auto-binding"]');
     template.pages = [
         {name: "Home", hash: "home"},
-        {name: "Contact", hash: "contact"}
+        {name: "Contact", hash: "contact"},
+        {name: "Dashboard", hash: "dashboard"}
     ];
     template.addEventListener('template-bound', function(e) {
         this.route = this.route || DEFAULT_ROUTE;
