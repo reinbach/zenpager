@@ -20,9 +20,11 @@
           <core-menu valueattr="hash" selected="{{route}}"
                      on-core-select="{{menuItemSelected}}">
             <template repeat="{{page in pages}}">
-              <core-item hash="{{page.hash}}" title="{{page.name}}">
-                <a href="#{{page.hash}}">{{page.name}}</a>
-              </core-item>
+              <paper-item hash="{{page.hash}}" title="{{page.name}}">
+                <a href="#{{page.hash}}">
+                  <core-icon icon="{{page.icon}}" id="icon"></core-icon>
+                  {{page.name}}</a>
+              </paper-item>
             </template>
           </core-menu>
         </core-header-panel>
