@@ -15,7 +15,7 @@ import (
 
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	static_file := r.URL.Path
-	static_dir := utils.GetAbsDir("website")
+	static_dir := utils.GetAbsDir("website", "dist")
 	if len(static_file) != 0 {
 		f, err := http.Dir(static_dir).Open(static_file)
 		if err == nil {

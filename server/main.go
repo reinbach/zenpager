@@ -27,7 +27,7 @@ var (
 
 func Intro(c web.C, w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
-		"website/intro.html"))
+		"website/dist/intro.html"))
 }
 
 func Dashboard(c web.C, w http.ResponseWriter, r *http.Request) {
