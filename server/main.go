@@ -27,7 +27,7 @@ var (
 
 func Dashboard(c web.C, w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
-		"website/dist/dashboard.html"))
+		"website/dist/index.html"))
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -54,7 +54,8 @@ func main() {
 	goji.Handle("/monitor/*", monitor.Router())
 
 	goji.Get("/", Dashboard)
-	http.HandleFunc("/dashboard.js", template.StaticHandler)
+	http.HandleFunc("/index.js", template.StaticHandler)
+	http.HandleFunc("/fonts/", template.StaticHandler)
 	goji.NotFound(NotFound)
 
 	// API v1
