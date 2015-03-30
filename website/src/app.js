@@ -1,10 +1,10 @@
 document.addEventListener('polymer-ready', function() {
-    var DEFAULT_ROUTE = "home";
+    var DEFAULT_ROUTE = "dashboard";
     var template = document.querySelector('template[is="auto-binding"]');
     template.pages = [
-        {name: "Home", hash: "home", icon: "home"},
-        {name: "Contact", hash: "contact", icon: "mail"},
-        {name: "Dashboard", hash: "dashboard", icon: "dashboard"}
+        {name: "Dashboard", hash: "dashboard", icon: "dashboard"},
+        {name: "Settings", hash: "settings", icon: "settings"},
+        {name: "Profile", hash: "profile", icon: "profile"}
     ];
     template.addEventListener('template-bound', function(e) {
         this.route = this.route || DEFAULT_ROUTE;

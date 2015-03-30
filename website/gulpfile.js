@@ -22,24 +22,19 @@ function processFiles(files, name) {
               .pipe($.notify({message: name + ' task complete'})));
 }
 
-gulp.task('intro', function() {
-    processFiles("intro/index.html", 'intro');
-});
-
 gulp.task('dashboard', function() {
-    processFiles("dashboard/index.html", 'dashboard');
+    processFiles("src/index.html", 'dashboard');
 });
 
 // grouped tasks
 gulp.task('build', function() {
-    gulp.start('intro', 'dashboard');
+    gulp.start('dashboard');
 });
 
 // main
 gulp.task('default', function() {
     // watch intro
-    gulp.watch("intro/*", ['intro']);
-    gulp.watch("dashboard/*", ['dashboard']);
+    gulp.watch("src/*", ['dashboard']);
 });
 
 // Workaround for https://github.com/gulpjs/gulp/issues/71

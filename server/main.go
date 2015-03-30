@@ -25,19 +25,14 @@ var (
 	templates = []string{}
 )
 
-func Intro(c web.C, w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
-		"website/dist/intro.html"))
-}
-
 func Dashboard(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, append(templates, "dashboard.html"),
-		template.NewContext())
+	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
+		"website/dist/dashboard.html"))
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
-	template.Render(c, w, r, append(templates, "404.html"),
-		template.NewContext())
+	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
+		"website/dist/404.html"))
 }
 
 // ContextMiddleware creates a new go.net/context and
@@ -58,10 +53,8 @@ func main() {
 	goji.Handle("/alert/*", alert.Router())
 	goji.Handle("/monitor/*", monitor.Router())
 
-	goji.Get("/dashboard/", Dashboard)
-	goji.Get("/dashboard", http.RedirectHandler("/dashboard/", 301))
-	goji.Get("/", Intro)
-	http.HandleFunc("/intro.js", template.StaticHandler)
+	goji.Get("/", Dashboard)
+	http.HandleFunc("/dashboard.js", template.StaticHandler)
 	goji.NotFound(NotFound)
 
 	// API v1
