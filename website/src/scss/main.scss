@@ -1,0 +1,76 @@
+/*
+ * Primary Color: Indigo
+ * 500 #3F51B5
+ * 50  #E8EAF6
+ * 100 #C5CAE9
+ * 200 #9FA8DA
+ * 300 #7986CB
+ * 400 #5C6BC0
+ * 500 #3F51B5
+ * 600 #3949AB
+ * 700 #303F9F
+ * 800 #283593
+ * 900 #1A237E
+
+ * A100 #8C9EFF
+ * A200 #536DFE
+ * A400 #3D5AFE
+ * A700 #304FFE
+
+ * Accent Color: Green
+ * A100 #B9F6CA
+ * A200 #69F0AE
+ * A400 #00E676
+ * A700 #00C853
+
+ * 500 #4CAF50
+ * 50  #E8F5E9
+ * 100 #C8E6C9
+ * 200 #A5D6A7
+ * 300 #81C784
+ * 400 #66BB6A
+ * 500 #4CAF50
+ * 600 #43A047
+ * 700 #388E3C
+ * 800 #2E7D32
+ * 900 #1B5E20
+ */
+
+@import url("fonts.scss");
+
+body {
+    font-family: "Roboto";
+    color: #444;
+}
+
+a {
+    color: #444;
+    text-decoration: none;
+}
+
+core-header-panel {
+    background-color: #f5f5f5;
+}
+
+core-drawer-panel:not([narrow]) #navicon {
+    display: none;
+}
+
+/* side header panel */
+core-toolbar {
+    background-color: #444;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+core-menu {
+    margin: 0;
+}
+
+#icon {
+    margin: 0 16px 0 4px;
+}
+
+.content {
+    padding: 20px;
+}

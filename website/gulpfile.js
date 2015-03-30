@@ -1,40 +1,49 @@
 var gulp = require('gulp'),
     vulcanize = require("gulp-vulcanize");
 var $ = require("gulp-load-plugins")();
-var project_dir = "website/";
 var dest_dir = __dirname + "/dist/";
 
-function processFiles(files, name) {
-    return gulp.src(files)
-        .pipe($.rename(name + ".html"))
+gulp.task("vulcanize", function() {
+    return gulp.src("src/index.html")
         .pipe(vulcanize({
             dest: dest_dir,
             inline: true,
             csp: true,
             strip: true
         }))
+        .pipe($.replace(/\.\.\/src\/fonts/g, 'fonts'))
         .pipe(gulp.dest(dest_dir))
         .pipe(gulp.src("*.js")
               .pipe($.uglify())
               .on('error', function (error) {
                   console.error('' + error);
               })
-              .pipe($.notify({message: name + ' task complete'})));
-}
-
-gulp.task('dashboard', function() {
-    processFiles("src/index.html", 'dashboard');
+              .pipe($.notify({message: 'Vulcanize task completed'})));
 });
 
-// grouped tasks
-gulp.task('build', function() {
-    gulp.start('dashboard');
+gulp.task('css', function() {
+    return gulp.src("src/scss/*.scss")
+        .pipe($.autoprefixer({browsers: '> 1%', cascade: false, remove: true}))
+        .pipe($.concat('app.css'))
+        .pipe($.sass({errLogToConsole: true}))
+        .pipe($.minifyCss())
+        .pipe($.replace(/\.\.\/fonts/g, 'fonts'))
+        .pipe(gulp.dest(__dirname + "/src/"))
+        .on('error', function (error) {
+            console.error('' + error);
+        })
+        .pipe($.notify({message: 'Style task completed'}));
 });
 
-// main
+gulp.task('fonts', function() {
+    return gulp.src("src/fonts/*")
+        .pipe(gulp.dest(dest_dir + "/fonts"));
+});
+
+gulp.task('build', $.sequence('css', ['vulcanize', 'fonts']));
+
 gulp.task('default', function() {
-    // watch intro
-    gulp.watch("src/*", ['dashboard']);
+    gulp.watch("src/*", ['build']);
 });
 
 // Workaround for https://github.com/gulpjs/gulp/issues/71
