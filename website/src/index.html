@@ -42,8 +42,13 @@
         <div class="content">
           <core-animated-pages valueattr="hash" selected="{{route}}"
                                transitions="cross-fade">
-            <page-home hash="dashboard/overview"></page-home>
-            <page-contact hash="settings/contacts"></page-contact>
+            <page-dashboard-overview hash="dashboard/overview"></page-dashboard-overview>
+            <page-dashboard-servers hash="dashboard/servers"></page-dashboard-servers>
+            <page-dashboard-applications hash="dashboard/applications"></page-dashboard-applications>
+            <page-settings-contacts hash="settings/contacts"></page-settings-contacts>
+            <page-settings-servers hash="settings/servers"></page-settings-servers>
+            <page-settings-timeperiods hash="settings/timeperiods"></page-settings-timeperiods>
+            <page-profile-password hash="profile/password"></page-profile-password>
           </core-animated-pages>
         </div>
       </core-scaffold>
