@@ -17,24 +17,33 @@
       <core-scaffold id="scaffold">
         <core-header-panel navigation flex>
           <core-toolbar>ZenPager</core-toolbar>
-          <core-menu valueattr="hash" selected="{{route}}"
-                     on-core-select="{{menuItemSelected}}">
-            <template repeat="{{page in pages}}">
-              <paper-item hash="{{page.hash}}" title="{{page.name}}">
-                <a href="#{{page.hash}}">
-                  <core-icon icon="{{page.icon}}" id="icon"></core-icon>
-                  {{page.name}}</a>
-              </paper-item>
+          <core-menu>
+            <template repeat="{{section in sections}}">
+              <core-submenu icon="{{section.icon}}" label="{{section.name}}"
+                            on-core-select={{menuItemSelected}}>
+                <template repeat="{{page in section.pages}}" valueattr="hash"
+                      selected="{{route}}">
+                  <paper-item hash="{{page.hash}}" title="{{page.name}}">
+                    <a href="#{{section.hash}}/{{page.hash}}">
+                      <core-icon icon="{{page.icon}}" id="icon"></core-icon>
+                      {{page.name}}</a>
+                  </paper-item>
+                </template>
+              </core-submenu>
             </template>
           </core-menu>
         </core-header-panel>
 
-        <span id="title" tool>Loading...</span>
+        <div tool>
+          <span id="sectionTitle">Loading...</span>
+           <core-icon icon="chevron-right"></core-icon>
+          <span id="pageTitle"></span>
+        </div>
         <div class="content">
           <core-animated-pages valueattr="hash" selected="{{route}}"
                                transitions="cross-fade">
-            <page-home hash="home"></page-home>
-            <page-contact hash="contact"></page-contact>
+            <page-home hash="dashboard/overview"></page-home>
+            <page-contact hash="settings/contacts"></page-contact>
           </core-animated-pages>
         </div>
       </core-scaffold>
