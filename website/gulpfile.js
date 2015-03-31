@@ -43,8 +43,10 @@ gulp.task('fonts', function() {
 gulp.task('build', $.sequence('css', ['vulcanize', 'fonts']));
 
 gulp.task('default', function() {
-    gulp.watch("src/*", ['build']);
+    gulp.watch("src/scss/*", ['css']);
+    // gulp.watch("src/*", ['build']);
 });
+
 
 // Workaround for https://github.com/gulpjs/gulp/issues/71
 var origSrc = gulp.src;
