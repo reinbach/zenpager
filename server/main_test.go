@@ -8,11 +8,11 @@ import (
 	"github.com/zenazn/goji/web"
 )
 
-func TestHome(t *testing.T) {
+func TestDashboard(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 	w := httptest.NewRecorder()
 	c := web.C{}
-	Home(c, w, r)
+	Dashboard(c, w, r)
 	if w.Code != http.StatusOK {
 		t.Errorf("200 expected, got %v instead", w.Code)
 	}
@@ -23,7 +23,7 @@ func TestNotFound(t *testing.T) {
 	w := httptest.NewRecorder()
 	c := web.C{}
 	NotFound(c, w, r)
-	if w.Code != http.StatusOK {
+	if w.Code != http.StatusNotFound {
 		t.Errorf("200 expected, got %v instead", w.Code)
 	}
 }

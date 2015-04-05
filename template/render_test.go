@@ -17,7 +17,7 @@ func TestUpdateTemplateList(t *testing.T) {
 }
 
 func TestStaticHandlerValid(t *testing.T) {
-	p := path.Join(STATIC_URL, "js/bootstrap.min.js")
+	p := path.Join(STATIC_URL, "dist/js/dashboard.min.js")
 	r, _ := http.NewRequest("GET", p, nil)
 	w := httptest.NewRecorder()
 	StaticHandler(w, r)
@@ -27,7 +27,7 @@ func TestStaticHandlerValid(t *testing.T) {
 }
 
 func TestStaticHandlerInValid(t *testing.T) {
-	p := path.Join(STATIC_URL, "js/something.js")
+	p := path.Join(STATIC_URL, "dist/js/something.js")
 	r, _ := http.NewRequest("GET", p, nil)
 	w := httptest.NewRecorder()
 	StaticHandler(w, r)
@@ -40,5 +40,5 @@ func TestRender(t *testing.T) {
 	c := web.C{}
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/", nil)
-	Render(c, w, r, []string{"intro/home.html"}, &Context{})
+	Render(c, w, r, []string{"dashboard.html"}, &Context{})
 }
