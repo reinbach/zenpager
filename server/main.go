@@ -26,13 +26,12 @@ var (
 )
 
 func Dashboard(c web.C, w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
-		"website/dist/index.html"))
+	template.Render(c, w, r, []string{"dashboard.html"}, template.NewContext())
 }
 
 func NotFound(c web.C, w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, fmt.Sprintf("%v/%v", utils.GetAbsDir(),
-		"website/dist/404.html"))
+		"404.html"))
 }
 
 // ContextMiddleware creates a new go.net/context and
@@ -54,8 +53,7 @@ func main() {
 	goji.Handle("/monitor/*", monitor.Router())
 
 	goji.Get("/", Dashboard)
-	http.HandleFunc("/index.js", template.StaticHandler)
-	http.HandleFunc("/fonts/", template.StaticHandler)
+	http.HandleFunc("/static/", template.StaticHandler)
 	goji.NotFound(NotFound)
 
 	// API v1
