@@ -1,0 +1,28 @@
+{
+  "name": "zenpager",
+  "version": "0.0.1",
+  "homepage": "https://github.com/reinbach/zenpager",
+  "authors": [
+    "Greg Reinbach <greg@reinbach.com>"
+  ],
+  "description": "A monitor and alert system for small to medium sized entities",
+  "keywords": [
+    "monitor",
+    "alert"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.4",
+    "react": "~0.13.1",
+    "react-bootstrap": "~0.17.0",
+    "react-router": "~0.13.1"
+  }
+}
