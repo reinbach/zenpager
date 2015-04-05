@@ -63,13 +63,25 @@ core-toolbar {
     text-shadow: 0 1px 3px rgba(0,0,0,.5);
 }
 
+core-menu {
+    margin: 0;
+}
+
+core-submenu {
+    &::shadow {
+        #submenu {
+            margin-left: 0;
+        }
+    }
+    paper-item a {
+        font-size: 0.75em;
+        margin-left: 30px;
+    }
+}
+
 
 #pageTitle {
     font-size: 0.75em;
-}
-
-core-menu {
-    margin: 0;
 }
 
 #icon {

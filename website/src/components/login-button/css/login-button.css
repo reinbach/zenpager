@@ -1,0 +1,10 @@
+:host {}
+
+a {
+    color: #444;
+    text-decoration: none;
+}
+
+#icon {
+    margin: 0 16px 0 4px;
+}

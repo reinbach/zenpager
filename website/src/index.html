@@ -25,18 +25,18 @@
                       selected="{{route}}">
                   <paper-item hash="{{page.hash}}" title="{{page.name}}">
                     <a href="#{{section.hash}}/{{page.hash}}">
-                      <core-icon icon="{{page.icon}}" id="icon"></core-icon>
                       {{page.name}}</a>
                   </paper-item>
                 </template>
               </core-submenu>
             </template>
+            <login-button></login-button>
           </core-menu>
         </core-header-panel>
 
         <div tool>
           <span id="sectionTitle">Loading...</span>
-           <core-icon icon="chevron-right"></core-icon>
+          <core-icon id="titleDivider" icon="chevron-right"></core-icon>
           <span id="pageTitle"></span>
         </div>
         <div class="content">
@@ -49,6 +49,8 @@
             <page-settings-servers hash="settings/servers"></page-settings-servers>
             <page-settings-timeperiods hash="settings/timeperiods"></page-settings-timeperiods>
             <page-profile-password hash="profile/password"></page-profile-password>
+            <page-logout hash="signout"></page-logout>
+            <page-login hash="signin"></page-login>
           </core-animated-pages>
         </div>
       </core-scaffold>
