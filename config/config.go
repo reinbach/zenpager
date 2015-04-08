@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/pelletier/go-toml"
@@ -24,7 +25,15 @@ type Config struct {
 
 func GetConfig() Config {
 	d := utils.GetAbsDir()
-	config, err := toml.LoadFile(filepath.Join(d, "config.toml"))
+	f := "config.toml"
+
+	// if TEST environment variable is set, use test config file
+	t := os.Getenv("TEST")
+	if t != "" {
+		f = "config_test.toml"
+	}
+
+	config, err := toml.LoadFile(filepath.Join(d, f))
 	cfg := Config{}
 	if err != nil {
 		fmt.Println("Error ", err.Error())
