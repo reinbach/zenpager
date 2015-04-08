@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 
-	"github.com/reinbach/zenpager/database"
 	"github.com/reinbach/zenpager/utils"
 )
 
@@ -58,7 +58,7 @@ func FindSqlFiles(path string, info os.FileInfo, err error) error {
 }
 
 func ExecSqlFiles(tx *sql.Tx, app string) error {
-	fmt.Printf("%s:\n", app)
+	log.Printf("%s:\n", app)
 	for _, m := range s[app] {
 		if MigrationExists(app, m.Name) == false {
 			if f, err := ioutil.ReadFile(m.File); err == nil {
@@ -66,7 +66,7 @@ func ExecSqlFiles(tx *sql.Tx, app string) error {
 					return err
 				}
 			} else {
-				fmt.Printf("Failed to get SQL from file %v: %v\n", m.File, err)
+				log.Printf("Failed to get SQL from file %v: %v\n", m.File, err)
 				return err
 			}
 		}
@@ -76,11 +76,11 @@ func ExecSqlFiles(tx *sql.Tx, app string) error {
 
 func ExecSql(tx *sql.Tx, f []byte, m Migration) error {
 	if _, err := tx.Exec(fmt.Sprintf("%s", f)); err != nil {
-		fmt.Printf("Failed to migrate %v: %v\n", m.File, err)
+		log.Printf("Failed to migrate %v: %v\n", m.File, err)
 		return err
 	}
 	fname := filepath.Base(m.File)
-	fmt.Printf("- %s\n", fname)
+	log.Printf("- %s\n", fname)
 	tx.Exec("INSERT INTO migrate (app, name, datetime) VALUES ($1, $2, NOW())",
 		m.Name, fname)
 	return nil
@@ -96,13 +96,13 @@ func GetRunSql(db *sql.DB) error {
 	for rows.Next() {
 		var app, name string
 		if err := rows.Scan(&app, &name); err != nil {
-			fmt.Printf("Issue scanning row: ", err)
+			log.Printf("Issue scanning row: ", err)
 			return err
 		}
 		c = MigrationAdd(c, app, name)
 	}
 	if err := rows.Err(); err != nil {
-		fmt.Printf("Issue iterating rows: ", err)
+		log.Printf("Issue iterating rows: ", err)
 		return err
 	}
 	return nil
@@ -111,20 +111,20 @@ func GetRunSql(db *sql.DB) error {
 func Migrate() {
 	filepath.Walk(d, FindSqlFiles)
 
-	db := database.Connect()
+	db := Connect()
 
 	if err := GetRunSql(db); err != nil {
-		fmt.Println("Failed to get previous migrations: ", err)
+		log.Println("Failed to get previous migrations: ", err)
 		os.Exit(1)
 	}
 
 	tx, err := db.Begin()
 	if err != nil {
-		fmt.Println("Not able to start transaction: ", err)
+		log.Println("Not able to start transaction: ", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Running migrations...\n")
+	log.Println("Running migrations...\n")
 	// Update `migrate` table first
 	if err = ExecSqlFiles(tx, "database"); err != nil {
 		valid = false
@@ -142,5 +142,5 @@ func Migrate() {
 		tx.Rollback()
 	}
 
-	fmt.Println("\nFinished.\n")
+	log.Println("\nFinished.\n")
 }
