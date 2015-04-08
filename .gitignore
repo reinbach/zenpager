@@ -1,4 +1,5 @@
 coverage*
 config.toml
+config_test.toml
 bower_components/
 node_modules/
