@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"code.google.com/p/go.net/context"
@@ -29,4 +30,33 @@ func NewContext(ctx context.Context, db *sql.DB) context.Context {
 func FromContext(c web.C) *sql.DB {
 	ctx := webctx.FromC(c)
 	return ctx.Value(DB_KEY).(*sql.DB)
+}
+
+func InitDB() {
+	Migrate()
+}
+
+func DropTables() {
+	db := Connect()
+
+	rows, err := db.Query(
+		"SELECT table_name FROM information_schema.tables WHERE table_schema = $1",
+		"public",
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var table string
+		if err = rows.Scan(&table); err != nil {
+			log.Fatal(err)
+		}
+		stmt := fmt.Sprintf("DROP TABLE IF EXISTS %s CASCADE", table)
+		_, err := db.Exec(stmt)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }
