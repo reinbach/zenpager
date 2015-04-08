@@ -67,9 +67,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
-	log.Println("user before login: ", user)
 	if user.Login(db) {
-		log.Println("user after login: ", user)
 		// TODO create and store token
 		w.Header().Set("X-Access-Token", "<token>")
 		m = Message{Type: "success", Content: "Successfully logged in"}
