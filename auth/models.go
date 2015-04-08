@@ -28,8 +28,11 @@ func (u *User) Login(db *sql.DB) bool {
 }
 
 func (u *User) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO auth_user (email, password) VALUES($1, $2)",
-		u.Email, u.Password)
+	_, err := db.Exec(
+		"INSERT INTO auth_user (email, password) VALUES ($1, $2)",
+		u.Email,
+		u.Password,
+	)
 	if err != nil {
 		log.Printf("Failed to create user record. ", err)
 		return false
@@ -41,22 +44,44 @@ func (u *User) Create(db *sql.DB) bool {
 func (u *User) Validate(validate_password bool) []Message {
 	var errors []Message
 	if len(u.Email) < 1 {
-		errors = append(errors, Message{Type: "danger", Content: "Email is required."})
+		errors = append(
+			errors,
+			Message{
+				Type:    "danger",
+				Content: "Email is required.",
+			},
+		)
 	} else {
 		if _, err := mail.ParseAddress(u.Email); err != nil {
-			errors = append(errors, Message{Type: "danger", Content: "A valid Email address is required."})
+			errors = append(
+				errors,
+				Message{
+					Type:    "danger",
+					Content: "A valid Email address is required.",
+				},
+			)
 		}
 	}
 	if validate_password {
 		if len(u.Password) < 1 {
-			errors = append(errors, Message{Type: "danger", Content: "Password is required."})
+			errors = append(
+				errors,
+				Message{
+					Type:    "danger",
+					Content: "Password is required.",
+				},
+			)
 		}
 	}
 	return errors
 }
 
 func (u *User) Get(db *sql.DB) {
-	err := db.QueryRow("SELECT email FROM auth_user WHERE id = $1", u.ID).Scan(&u.Email)
+	err := db.QueryRow(
+		"SELECT email FROM auth_user WHERE id = $1",
+		u.ID,
+	).Scan(&u.Email)
+
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("User not found.")
@@ -68,8 +93,10 @@ func (u *User) Get(db *sql.DB) {
 func (u *User) Update(db *sql.DB) bool {
 	if len(u.Password) > 0 {
 		u.Password = database.Encrypt(u.Password)
-		_, err := db.Exec("UPDATE auth_user SET email = $1, password = $2 WHERE id = $3",
-			u.Email, u.Password, u.ID)
+		_, err := db.Exec(
+			"UPDATE auth_user SET email = $1, password = $2 WHERE id = $3",
+			u.Email, u.Password, u.ID,
+		)
 		if err != nil {
 			log.Printf("Failed to update user record. ", err)
 			return false
