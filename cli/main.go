@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/reinbach/zenpager/cli/database"
 	"github.com/reinbach/zenpager/cli/user"
+	"github.com/reinbach/zenpager/database"
 )
 
 func main() {
