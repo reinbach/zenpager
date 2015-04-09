@@ -1,7 +1,10 @@
 package auth
 
 import (
+	"bytes"
+	"crypto/rand"
 	"database/sql"
+	"fmt"
 	"log"
 	"net/mail"
 
@@ -12,6 +15,16 @@ type User struct {
 	ID       int64
 	Email    string `json:"Email"`
 	Password string `json:"Password"`
+}
+
+func RandomPassword() string {
+	c := 20
+	b := make([]byte, c)
+	_, err := rand.Read(b)
+	if err != nil {
+		log.Fatal("Failed to generate random password: ", err)
+	}
+	return fmt.Sprintf("%d", bytes.Equal(b, make([]byte, c)))
 }
 
 func (u *User) Login(db *sql.DB) bool {
@@ -28,11 +41,16 @@ func (u *User) Login(db *sql.DB) bool {
 }
 
 func (u *User) Create(db *sql.DB) bool {
-	_, err := db.Exec(
-		"INSERT INTO auth_user (email, password) VALUES ($1, $2)",
+	var p string
+	if len(u.Password) < 1 {
+		u.Password = RandomPassword()
+	}
+	p = database.Encrypt(u.Password)
+	err := db.QueryRow(
+		"INSERT INTO auth_user (email, password) VALUES ($1, $2) RETURNING id",
 		u.Email,
-		u.Password,
-	)
+		p,
+	).Scan(&u.ID)
 	if err != nil {
 		log.Printf("Failed to create user record. ", err)
 		return false
@@ -91,6 +109,10 @@ func (u *User) Get(db *sql.DB) {
 }
 
 func (u *User) Update(db *sql.DB) bool {
+	if u.ID == 0 {
+		log.Printf("Invalid ID")
+		return false
+	}
 	if len(u.Password) > 0 {
 		u.Password = database.Encrypt(u.Password)
 		_, err := db.Exec(

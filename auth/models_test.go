@@ -105,7 +105,10 @@ func TestCreateUser(t *testing.T) {
 	}
 	r := u.Create(db)
 	if r != true {
-		t.Errorf("Expected successful create, got %s", r)
+		t.Errorf("Expected successful create, got %t", r)
+	}
+	if u.ID == 0 {
+		t.Errorf("Expected ID to be set, got %d", u.ID)
 	}
 }
 
@@ -118,11 +121,147 @@ func TestCreateUserInvalid(t *testing.T) {
 	}
 	r := u.Create(db)
 	if r != true {
-		t.Errorf("Expected successful create, got %s", r)
+		t.Errorf("Expected successful create, got %t", r)
 	}
 
 	r = u.Create(db)
 	if r != false {
-		t.Errorf("Expected failed create, got %s", r)
+		t.Errorf("Expected failed create, got %t", r)
+	}
+}
+
+// get user, empty
+func TestGetUserEmpty(t *testing.T) {
+	db := database.Connect()
+	u := User{}
+	u.Get(db)
+	if u.Email != "" {
+		t.Errorf("Expected not found, got %s", u.Email)
+	}
+}
+
+// get user, empty
+func TestGetUser(t *testing.T) {
+	db := database.Connect()
+	u1 := User{
+		Email:    "test2@example.com",
+		Password: "123",
+	}
+	r := u1.Create(db)
+	if r != true {
+		t.Errorf("Expected succesfull create, got %t", r)
+	}
+
+	u2 := User{
+		ID: u1.ID,
+	}
+	u2.Get(db)
+	if u2.Email != u1.Email {
+		t.Errorf("Expected matching record, got %s", u2.Email)
+	}
+}
+
+// update user, no password
+func TestUpdateUserNoPassword(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email: "test3@example.com",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+	u.Password = ""
+	u.Email = "change@example.com"
+	r = u.Update(db)
+	if r != true {
+		t.Errorf("Expected successful update, got %t", r)
+	}
+}
+
+// update user, not valid
+func TestUpdateUserNotValid(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email: "test4@example.com",
+	}
+	r := u.Update(db)
+	if r != false {
+		t.Errorf("Expected failed update, got %t", r)
+	}
+}
+
+// update user, with password
+func TestUpdateUserWithPassword(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test5@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	u.Password = "321"
+	r = u.Update(db)
+	if r != true {
+		t.Errorf("Expected successful update, got %t", r)
+	}
+}
+
+// login valid
+func TestLogin(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test6@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	l := u.Login(db)
+	if l != true {
+		t.Errorf("Expected successful login, got %t", l)
+	}
+}
+
+// login invalid password
+func TestLoginInValidPassword(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test7@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	u.Password = "321"
+	l := u.Login(db)
+	if l != false {
+		t.Errorf("Expected invalid login, got %t", l)
+	}
+}
+
+// login invalid email
+func TestLoginInValidEmail(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test8@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	u.Email = "wrong@example.com"
+	l := u.Login(db)
+	if l != false {
+		t.Errorf("Expected invalid login, got %t", l)
 	}
 }
