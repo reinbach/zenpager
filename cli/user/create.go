@@ -31,7 +31,7 @@ func CreateUser() {
 
 	user := auth.User{
 		Email:    email,
-		Password: database.Encrypt(password),
+		Password: password,
 	}
 	db := database.Connect()
 	if user.Create(db) {
