@@ -1,7 +1,8 @@
 CREATE TABLE contact_contact (
   id SERIAL PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
-  user_id INT REFERENCES auth_user (id)
+  user_id INT REFERENCES auth_user (id),
+  UNIQUE (user_id)
 );
 
 CREATE TABLE contact_group (

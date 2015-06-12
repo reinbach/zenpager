@@ -1,5 +1,5 @@
 CREATE TABLE auth_user (
-  id SERIAL UNIQUE,
+  id SERIAL PRIMARY KEY,
   email VARCHAR(150) NOT NULL UNIQUE,
   password VARCHAR(150) NOT NULL
 );
