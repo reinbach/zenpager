@@ -13,17 +13,6 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
-type Message struct {
-	Type    string
-	Content string
-}
-
-type Response struct {
-	Result   string
-	Messages []Message
-	ID       int64
-}
-
 func Routes() *web.Mux {
 	api := web.New()
 	api.Use(middleware.SubRouter)
@@ -46,54 +35,54 @@ func Routes() *web.Mux {
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
-	var res = Response{}
+	var res = utils.Response{}
 	var user User
-	var m Message
+	var m utils.Message
 	if err := utils.DecodePayload(r, &user); err != nil {
-		m = Message{
+		m = utils.Message{
 			Type:    "danger",
 			Content: "Data appears to be invalid.",
 		}
-		res = Response{
+		res = utils.Response{
 			Result:   "error",
-			Messages: []Message{m},
+			Messages: []utils.Message{m},
 		}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 	errors := user.Validate(true)
 	if len(errors) > 0 {
-		res = Response{Result: "error", Messages: errors}
+		res = utils.Response{Result: "error", Messages: errors}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 	if user.Login(db) {
 		// TODO create and store token
 		w.Header().Set("X-Access-Token", "<token>")
-		m = Message{Type: "success", Content: "Successfully logged in"}
-		res = Response{
+		m = utils.Message{Type: "success", Content: "Successfully logged in"}
+		res = utils.Response{
 			Result:   "success",
-			Messages: []Message{m},
+			Messages: []utils.Message{m},
 			ID:       user.ID,
 		}
 		utils.EncodePayload(w, http.StatusOK, res)
 		return
 	}
-	m = Message{
+	m = utils.Message{
 		Type:    "danger",
 		Content: "Username and/or password is invalid.",
 	}
-	res = Response{
+	res = utils.Response{
 		Result:   "error",
-		Messages: []Message{m},
+		Messages: []utils.Message{m},
 	}
 	utils.EncodePayload(w, http.StatusBadRequest, res)
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
 	//TODO remove token
-	m := Message{Type: "success", Content: "Signed Out"}
-	res := Response{Result: "success", Messages: []Message{m}}
+	m := utils.Message{Type: "success", Content: "Signed Out"}
+	res := utils.Response{Result: "success", Messages: []utils.Message{m}}
 	b, err := json.Marshal(res)
 	if err != nil {
 		log.Println("Failed to encode response: ", err)
@@ -103,14 +92,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
-	var res = Response{}
-	var m Message
+	var res = utils.Response{}
+	var m utils.Message
 
 	// get id of user to be updated
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		m = Message{Type: "danger", Content: "User not found."}
-		res = Response{Result: "error", Messages: []Message{m}}
+		m = utils.Message{Type: "danger", Content: "User not found."}
+		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusNotFound, res)
 		return
 	}
@@ -123,25 +112,28 @@ func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	// update data with new data and ensure it is valid
 	if err := utils.DecodePayload(r, &user); err != nil {
-		m = Message{Type: "danger", Content: "Data appears to be invalid."}
-		res = Response{Result: "error", Messages: []Message{m}}
+		m = utils.Message{
+			Type:    "danger",
+			Content: "Data appears to be invalid.",
+		}
+		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 	errors := user.Validate(false)
 	if len(errors) > 0 {
-		res = Response{Result: "error", Messages: errors}
+		res = utils.Response{Result: "error", Messages: errors}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 
 	if user.Update(db) {
-		m = Message{Type: "success", Content: "User data updated."}
-		res = Response{Result: "success", Messages: []Message{m}}
+		m = utils.Message{Type: "success", Content: "User data updated."}
+		res = utils.Response{Result: "success", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusAccepted, res)
 	} else {
-		m = Message{Type: "danger", Content: "Failed to update user."}
-		res = Response{Result: "error", Messages: []Message{m}}
+		m = utils.Message{Type: "danger", Content: "Failed to update user."}
+		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusInternalServerError, res)
 	}
 }

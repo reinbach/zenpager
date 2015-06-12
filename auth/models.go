@@ -9,6 +9,7 @@ import (
 	"net/mail"
 
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/utils"
 )
 
 type User struct {
@@ -59,12 +60,12 @@ func (u *User) Create(db *sql.DB) bool {
 	return true
 }
 
-func (u *User) Validate(validate_password bool) []Message {
-	var errors []Message
+func (u *User) Validate(validate_password bool) []utils.Message {
+	var errors []utils.Message
 	if len(u.Email) < 1 {
 		errors = append(
 			errors,
-			Message{
+			utils.Message{
 				Type:    "danger",
 				Content: "Email is required.",
 			},
@@ -73,7 +74,7 @@ func (u *User) Validate(validate_password bool) []Message {
 		if _, err := mail.ParseAddress(u.Email); err != nil {
 			errors = append(
 				errors,
-				Message{
+				utils.Message{
 					Type:    "danger",
 					Content: "A valid Email address is required.",
 				},
@@ -84,7 +85,7 @@ func (u *User) Validate(validate_password bool) []Message {
 		if len(u.Password) < 1 {
 			errors = append(
 				errors,
-				Message{
+				utils.Message{
 					Type:    "danger",
 					Content: "Password is required.",
 				},
