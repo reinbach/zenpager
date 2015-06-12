@@ -1,3 +1,10 @@
+help:
+	@echo "- run            Run local instance of app"
+	@echo "- createuser     Create user in app"
+	@echo "- migrate        Migrate relevant sql scripts"
+	@echo "- test           Run tests"
+	@echo "- cov            Run coverage tool"
+
 run:
 	@go run server/main.go
 
