@@ -3,18 +3,21 @@ package contacts
 import (
 	"database/sql"
 	"log"
+
+	"github.com/reinbach/zenpager/auth"
+	"github.com/reinbach/zenpager/utils"
 )
 
 type Contact struct {
 	ID     int64
 	Name   string
-	Email  string
+	User   auth.User
 	Groups []*Group
 }
 
 func (c *Contact) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO contact_contact (name, email) VALUES($1, $2)",
-		c.Name, c.Email)
+	_, err := db.Exec("INSERT INTO contact_contact (name, user_id) VALUES($1, $2)",
+		c.Name, c.User.ID)
 	if err != nil {
 		log.Printf("Failed to create contact record. ", err)
 		return false
@@ -27,6 +30,37 @@ func (c *Contact) Create(db *sql.DB) bool {
 		cg.Create(db)
 	}
 
+	return true
+}
+
+func (c *Contact) Validate() []utils.Message {
+	var errors []utils.Message
+	if len(c.Name) < 1 {
+		errors = append(
+			errors,
+			utils.Message{Type: "danger", Content: "Name is required."},
+		)
+	}
+	return errors
+}
+
+func (c *Contact) Get(db *sql.DB) {
+	err := db.QueryRow("SELECT name, user_id FROM contact_contact WHERE id = $1", c.ID).Scan(&c.Name, &c.User.ID)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("Contact not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+}
+
+func (c *Contact) Update(db *sql.DB) bool {
+	_, err := db.Exec("UPDATE contact_contact SET name = $1 WHERE id = $2",
+		c.Name, c.ID)
+	if err != nil {
+		log.Printf("Failed to update contact record. ", err)
+		return false
+	}
 	return true
 }
 
