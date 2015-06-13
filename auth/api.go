@@ -45,15 +45,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	var user User
 	var m utils.Message
 	if err := utils.DecodePayload(r, &user); err != nil {
-		m = utils.Message{
-			Type:    "danger",
-			Content: "Data appears to be invalid.",
-		}
-		res = utils.Response{
-			Result:   "error",
-			Messages: []utils.Message{m},
-		}
-		utils.EncodePayload(w, http.StatusBadRequest, res)
+		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
 	errors := user.Validate(true)
@@ -65,15 +57,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	if user.Login(db) {
 		t, err := user.AddToken(db)
 		if err != nil {
-			m = utils.Message{
-				Type:    "danger",
-				Content: "Failed to login.",
-			}
-			res = utils.Response{
-				Result:   "error",
-				Messages: []utils.Message{m},
-			}
-			utils.EncodePayload(w, http.StatusBadRequest, res)
+			utils.BadRequestResponse(w, "Failed to login.")
 			return
 		}
 		w.Header().Set("X-Access-Token", t.Token)
@@ -86,15 +70,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		utils.EncodePayload(w, http.StatusOK, res)
 		return
 	}
-	m = utils.Message{
-		Type:    "danger",
-		Content: "Username and/or password is invalid.",
-	}
-	res = utils.Response{
-		Result:   "error",
-		Messages: []utils.Message{m},
-	}
-	utils.EncodePayload(w, http.StatusBadRequest, res)
+	utils.BadRequestResponse(w, "Username and/or password is invalid.")
 }
 
 func Logout(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -136,12 +112,7 @@ func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	// update data with new data and ensure it is valid
 	if err := utils.DecodePayload(r, &user); err != nil {
-		m = utils.Message{
-			Type:    "danger",
-			Content: "Data appears to be invalid.",
-		}
-		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
-		utils.EncodePayload(w, http.StatusBadRequest, res)
+		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
 	errors := user.Validate(false)

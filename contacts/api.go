@@ -76,9 +76,7 @@ func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	// get id of contact to be updated
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		m = utils.Message{Type: "danger", Content: "Contact not found."}
-		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
-		utils.EncodePayload(w, http.StatusNotFound, res)
+		utils.NotFoundResponse(w, "Contact not found.")
 		return
 	}
 
@@ -90,12 +88,7 @@ func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	// update data with new data and ensure it is valid
 	if err := utils.DecodePayload(r, &contact); err != nil {
-		m = utils.Message{
-			Type:    "danger",
-			Content: "Data appears to be invalid.",
-		}
-		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
-		utils.EncodePayload(w, http.StatusBadRequest, res)
+		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
 	errors := contact.Validate()
