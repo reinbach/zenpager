@@ -1,0 +1,5 @@
+CREATE TABLE auth_token (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(150) NOT NULL,
+  token VARCHAR(150) NOT NULL UNIQUE
+);

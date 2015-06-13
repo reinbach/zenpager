@@ -1,9 +1,14 @@
 package auth
 
 import (
+	"database/sql"
 	"net/http"
 
+	"code.google.com/p/go.net/context"
+	webctx "github.com/goji/context"
 	"github.com/zenazn/goji/web"
+
+	"github.com/reinbach/zenpager/database"
 )
 
 func Middleware(c *web.C, h http.Handler) http.Handler {
@@ -13,7 +18,17 @@ func Middleware(c *web.C, h http.Handler) http.Handler {
 			AuthRequired(w)
 			return
 		}
-		//TODO make sure access token is valid, otherwise respond 401
+		t := Token{Token: auth}
+
+		ctx := webctx.FromC(*c)
+
+		var db = ctx.Value(database.DB_KEY).(*sql.DB)
+		if err := t.Get(db); err == false {
+			AuthRequired(w)
+			return
+		}
+		ctx = context.WithValue(ctx, "user", t.User)
+		webctx.Set(c, ctx)
 		h.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)

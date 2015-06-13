@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	webctx "github.com/goji/context"
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
 
@@ -33,6 +34,11 @@ func Routes() *web.Mux {
 	return api
 }
 
+func GetUser(c web.C) User {
+	ctx := webctx.FromC(c)
+	return ctx.Value("user").(User)
+}
+
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 	var res = utils.Response{}
@@ -57,8 +63,20 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if user.Login(db) {
-		// TODO create and store token
-		w.Header().Set("X-Access-Token", "<token>")
+		t, err := user.AddToken(db)
+		if err != nil {
+			m = utils.Message{
+				Type:    "danger",
+				Content: "Failed to login.",
+			}
+			res = utils.Response{
+				Result:   "error",
+				Messages: []utils.Message{m},
+			}
+			utils.EncodePayload(w, http.StatusBadRequest, res)
+			return
+		}
+		w.Header().Set("X-Access-Token", t.Token)
 		m = utils.Message{Type: "success", Content: "Successfully logged in"}
 		res = utils.Response{
 			Result:   "success",
@@ -79,8 +97,14 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	utils.EncodePayload(w, http.StatusBadRequest, res)
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
-	//TODO remove token
+func Logout(c web.C, w http.ResponseWriter, r *http.Request) {
+	var db = database.FromContext(c)
+	var t = r.Header.Get("X-Access-Token")
+
+	if t != "undefined" {
+		RemoveToken(t, db)
+	}
+
 	m := utils.Message{Type: "success", Content: "Signed Out"}
 	res := utils.Response{Result: "success", Messages: []utils.Message{m}}
 	b, err := json.Marshal(res)
