@@ -132,6 +132,7 @@ var auth = {
         return localStorage.token;
     },
     logout: function(cb) {
+        logout(localStorage.token);
         delete localStorage.token;
         if (cb) cb(false);
         this.onChange(false);
@@ -152,7 +153,7 @@ function authenticate(email, password, cb) {
             if (data.Result === "success") {
                 cb({
                     authenticated: true,
-                    token: Math.random().toString(36).substring(7),
+                    token: r.getResponseHeader("X-Access-Token"),
                     id: data.ID
                 });
             } else {
@@ -164,6 +165,24 @@ function authenticate(email, password, cb) {
         }
     };
     r.send(JSON.stringify({email: email, password: password}));
+}
+
+function logout(token) {
+    var r = new XMLHttpRequest();
+    r.open("GET", "/api/v1/auth/logout", true);
+    r.setRequestHeader("Content-Type", "application/json");
+    r.setRequestHeader("X-Access-Token", token);
+    r.onreadystatechange = function() {
+        if (r.readyState === 4) {
+            data = JSON.parse(r.responseText);
+            if (data.Result === "success") {
+                console.log("successfully logged out");
+            } else {
+                console.log("faield to logout!");
+            }
+        }
+    };
+    r.send();
 }
 
 function validateEmail(email) {
