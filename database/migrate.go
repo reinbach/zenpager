@@ -12,6 +12,7 @@ import (
 )
 
 type Migration struct {
+	App  string
 	Name string
 	File string
 }
@@ -36,7 +37,8 @@ func MigrationExists(app, name string) bool {
 
 func MigrationAdd(m map[string][]Migration, app, file string) map[string][]Migration {
 	m[app] = append(m[app], Migration{
-		Name: app,
+		App:  app,
+		Name: filepath.Base(file),
 		File: file,
 	})
 	return m
@@ -79,10 +81,9 @@ func ExecSql(tx *sql.Tx, f []byte, m Migration) error {
 		log.Printf("Failed to migrate %v: %v\n", m.File, err)
 		return err
 	}
-	fname := filepath.Base(m.File)
-	log.Printf("- %s\n", fname)
+	log.Printf("- %s\n", m.Name)
 	tx.Exec("INSERT INTO migrate (app, name, datetime) VALUES ($1, $2, NOW())",
-		m.Name, fname)
+		m.App, m.Name)
 	return nil
 }
 
@@ -125,12 +126,12 @@ func Migrate() {
 	}
 
 	log.Println("Running migrations...\n")
-	// Update `migrate` table first
+	// 'database' migrations run first
 	if err = ExecSqlFiles(tx, "database"); err != nil {
 		valid = false
 	} else {
 		delete(s, "database")
-		// Run the rest
+		// Run the rest of the migrations
 		for a, _ := range s {
 			ExecSqlFiles(tx, a)
 		}
