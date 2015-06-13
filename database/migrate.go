@@ -25,6 +25,8 @@ var (
 )
 
 func MigrationExists(app, name string) bool {
+	// check that the name of migration does not
+	// already exist in the list of found migrations
 	if f, prs := c[app]; prs == true {
 		for _, n := range f {
 			if n.Name == name {
