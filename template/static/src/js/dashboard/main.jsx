@@ -62,7 +62,8 @@ var Messages = React.createClass({
         if (this.state.visible) {
             var Alert = ReactBootstrap.Alert;
             return (
-                <Alert bsStyle={this.props.type} onDismiss={this.handleDismiss}>
+                <Alert bsStyle={this.props.type}
+                       onDismiss={this.handleDismiss}>
                     {this.props.message}
                 </Alert>
             );
@@ -76,7 +77,8 @@ var NotFound = React.createClass({
         return (
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <div className="col-sm-9 col-sm-offset-3 col-md-10
+                                    col-md-offset-2 main">
                         <h1>404 Not Found</h1>
                     </div>
                 </div>
@@ -102,7 +104,10 @@ var routes = (
             <Route name="s_commands" path="commands"
                    handler={SettingsCommands} />
             <Route name="s_contacts" path="contacts"
-                   handler={SettingsContacts} />
+                   handler={SettingsContacts}>
+                <Route name="s_contacts_add" path="add"
+                       handler={SettingsContactsAdd} />
+            </Route>
             <Route name="s_servers" path="servers" handler={SettingsServers} />
             <Route name="s_timeperiods" path="timeperiods"
                    handler={SettingsTimePeriods} />

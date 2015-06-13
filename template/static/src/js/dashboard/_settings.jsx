@@ -10,10 +10,13 @@ var SettingsHolder = React.createClass({
                             <li><Link to="s_commands">Commands</Link></li>
                             <li><Link to="s_contacts">Contacts</Link></li>
                             <li><Link to="s_servers">Servers</Link></li>
-                            <li><Link to="s_timeperiods">Time Periods</Link></li>
+                            <li>
+                                <Link to="s_timeperiods">Time Periods</Link>
+                            </li>
                         </ul>
                     </div>
-                    <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <div className="col-sm-9 col-sm-offset-3 col-md-10
+                                    col-md-offset-2 main">
                         {/*<Messages type="success" message="Hello World" />*/}
                         <RouteHandler />
                     </div>
@@ -28,16 +31,6 @@ var SettingsCommands = React.createClass({
         return (
             <div>
                 Settings Commands...
-            </div>
-        );
-    }
-});
-
-var SettingsContacts = React.createClass({
-    render: function() {
-        return (
-            <div>
-                Settings Contacts...
             </div>
         );
     }

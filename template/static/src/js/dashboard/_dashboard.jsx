@@ -20,7 +20,8 @@ var DashboardHolder = React.createClass({
                             <li><Link to="d_apps">Applications</Link></li>
                         </ul>
                     </div>
-                    <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                    <div className="col-sm-9 col-sm-offset-3 col-md-10
+                                    col-md-offset-2 main">
                         {msgs}
                         <RouteHandler />
                     </div>
