@@ -178,7 +178,7 @@ function logout(token) {
             if (data.Result === "success") {
                 console.log("successfully logged out");
             } else {
-                console.log("faield to logout!");
+                console.log("failed to logout!");
             }
         }
     };
