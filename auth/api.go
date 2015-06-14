@@ -22,13 +22,21 @@ func Routes() *web.Mux {
 	api.Post("/login", Login)
 	api.Get("/logout", Logout)
 
+	return api
+}
+
+func UserRoutes() *web.Mux {
+	api := web.New()
+	api.Use(middleware.SubRouter)
+	api.Use(utils.ApplicationJSON)
+
 	// user
 	api.Use(Middleware)
 	// api.Get("/user/", UserList)
 	// api.Get("/user/:id", UserItem)
 	// api.Post("/user/", UserAdd)
 	// api.Put("/user/:id", UserUpdate)
-	api.Patch("/user/:id", UserPartialUpdate)
+	api.Patch("/:id", UserPartialUpdate)
 	// api.Delete("/user/:id", UserDelete)
 	// api.Get("/user", http.RedirectHandler("/user/", 301))
 

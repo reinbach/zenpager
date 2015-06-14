@@ -112,7 +112,7 @@ var user = {
             return ;
         }
         request.patch(
-            "/api/v1/auth/user/" + localStorage.id,
+            "/api/v1/user/" + localStorage.id,
             {password: password},
             this.processPatch
         )
