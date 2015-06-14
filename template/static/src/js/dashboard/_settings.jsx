@@ -27,6 +27,7 @@ var SettingsHolder = React.createClass({
 });
 
 var SettingsCommands = React.createClass({
+    mixins: [Authentication],
     render: function() {
         return (
             <div>
@@ -37,6 +38,7 @@ var SettingsCommands = React.createClass({
 });
 
 var SettingsServers = React.createClass({
+    mixins: [Authentication],
     render: function() {
         return (
             <div>
@@ -47,6 +49,7 @@ var SettingsServers = React.createClass({
 });
 
 var SettingsTimePeriods = React.createClass({
+    mixins: [Authentication],
     render: function() {
         return (
             <div>
