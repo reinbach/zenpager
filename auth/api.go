@@ -23,6 +23,7 @@ func Routes() *web.Mux {
 	api.Get("/logout", Logout)
 
 	// user
+	api.Use(Middleware)
 	// api.Get("/user/", UserList)
 	// api.Get("/user/:id", UserItem)
 	// api.Post("/user/", UserAdd)
