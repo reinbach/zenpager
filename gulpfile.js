@@ -8,12 +8,12 @@ var jsFiles = {
         "intro": projectDir + "src/js/intro/*.jsx",
         "dashboard": prependPath(projectDir + "src/js/dashboard/", [
             "utils.jsx",
-            "_auth.jsx",
-            "_dashboard.jsx",
-            "_profile.jsx",
-            "_settings.jsx",
-            "_settings_contacts.jsx",
-            "_validation.jsx",
+            "auth.jsx",
+            "dashboard.jsx",
+            "profile.jsx",
+            "settings.jsx",
+            "settings_contacts.jsx",
+            "validation.jsx",
             "main.jsx"
         ])
     }
