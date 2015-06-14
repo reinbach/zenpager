@@ -6,7 +6,16 @@ var jsFiles = {
     "vendor": bowerFiles({filter: '**/*.js'}),
     "local": {
         "intro": projectDir + "src/js/intro/*.jsx",
-        "dashboard": projectDir + "src/js/dashboard/*.jsx"
+        "dashboard": prependPath(projectDir + "src/js/dashboard/", [
+            "utils.jsx",
+            "_auth.jsx",
+            "_dashboard.jsx",
+            "_profile.jsx",
+            "_settings.jsx",
+            "_settings_contacts.jsx",
+            "_validation.jsx",
+            "main.jsx"
+        ])
     }
 };
 var cssFiles = {
@@ -17,18 +26,12 @@ var cssFiles = {
     }
 };
 
-// js
-gulp.task('js-vendor', function() {
-    return gulp.src(jsFiles.vendor)
-        .pipe($.concat('vendor.js'))
-        .pipe($.rename({ suffix: '.min' }))
-        .pipe($.uglify())
-        .pipe(gulp.dest(projectDir + 'dist/js'))
-        .on('error', function (error) {
-            console.error('' + error);
-        })
-        .pipe($.notify({message: 'Javascript vendor task complete'}));
-});
+function prependPath(path, arr) {
+    for (var i = 0; i < arr.length; i++) {
+        arr[i] = path + arr[i];
+    }
+    return arr;
+}
 
 function processJSFiles(files, name) {
     return gulp.src(files)
@@ -44,6 +47,19 @@ function processJSFiles(files, name) {
         })
         .pipe($.notify({message: 'Javascript local ' + name + ' task complete'}));
 }
+
+// js
+gulp.task('js-vendor', function() {
+    return gulp.src(jsFiles.vendor)
+        .pipe($.concat('vendor.js'))
+        .pipe($.rename({ suffix: '.min' }))
+        .pipe($.uglify())
+        .pipe(gulp.dest(projectDir + 'dist/js'))
+        .on('error', function (error) {
+            console.error('' + error);
+        })
+        .pipe($.notify({message: 'Javascript vendor task complete'}));
+});
 
 gulp.task('js-local-intro', function() {
     processJSFiles(jsFiles.local.intro, 'intro');
