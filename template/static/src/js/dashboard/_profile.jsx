@@ -20,6 +20,7 @@ var ProfileHolder = React.createClass({
 });
 
 var ProfilePassword = React.createClass({
+    mixins: [Authentication],
     getInitialState: function() {
         return {
             password: '',
@@ -68,6 +69,7 @@ var ProfilePassword = React.createClass({
                     password: this.state.password,
                     password_confirm: this.state.password_confirm
                 });
+                console.log(this.state.messages);
             }
         }.bind(this));
     },
@@ -100,37 +102,29 @@ var ProfilePassword = React.createClass({
 
 var user = {
     updatePassword: function(password, cb) {
+        callback = cb;
         if (!localStorage.id) {
-            if (cb) cb(false);
+            if (callback) callback(false);
             return ;
         }
         if (password.length < 1) {
-            if (cb) cb(false, ["Password is required."]);
+            if (callback) callback(false, ["Password is required."]);
             return ;
         }
-        updatePassword(localStorage.id, password, function(res) {
-            if (res.update) {
-                if (cb) cb(true, [{Type: "success", Content: "Successfully updated password."}]);
-            } else {
-                if (cb) cb(false, res.errors);
-            }
-        });
+        request.patch(
+            "/api/v1/auth/user/" + localStorage.id,
+            {password: password},
+            this.processPatch
+        )
+    },
+    processPatch: function(res) {
+        if (res.Result == "success") {
+            if (callback) callback(true, [{
+                Type: "success",
+                Content: "Successfully updated password."
+            }]);
+        } else {
+            if (callback) callback(false, res.errors);
+        }
     }
 };
-
-function updatePassword(userId, password, cb) {
-    var r = new XMLHttpRequest();
-    r.open("PATCH", "/api/v1/auth/user/" + userId, true);
-    r.setRequestHeader("Content-Type", "application/json");
-    r.onreadystatechange = function() {
-        if (r.readyState === 4) {
-            data = JSON.parse(r.responseText);
-            if (data.Result === "success") {
-                cb({update: true});
-            } else {
-                cb({update: false, errors: data.Messages});
-            }
-        }
-    };
-    r.send(JSON.stringify({password: password}));
-}

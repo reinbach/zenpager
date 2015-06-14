@@ -1,24 +1,19 @@
 var contacts = {
     get: function(cb) {
-        var r = new XMLHttpRequest();
-        r.open("GET", "/api/v1/contacts/", true);
-        r.setRequestHeader("Content-Type", "application/json");
-        r.setRequestHeader("X-Access-Token", auth.getToken());
-        r.onreadystatechange = function() {
-            if (r.readyState === 4) {
-                data = JSON.parse(r.responseText);
-                if (data.Result === "success") {
-                    cb({data: data});
-                } else {
-                    cb({data: [], errors: data.Messages});
-                }
-            }
-        };
-        r.send();
+        callback = cb;
+        request.get("/api/v1/contacts/", this.processGet);
+    },
+    processGet: function(data) {
+        if (data.Result === "success") {
+            callback({data: data});
+        } else {
+            callback({data: [], errors: data.Messages});
+        }
     }
 }
 
 var SettingsContacts = React.createClass({
+    mixins: [Authentication],
     propTypes: {
         contacts: React.PropTypes.array,
         messages: React.PropTypes.array
@@ -41,6 +36,7 @@ var SettingsContacts = React.createClass({
 });
 
 var SettingsContactsAdd = React.createClass({
+    mixins: [Authentication],
     render: function() {
         return (
             <div>
