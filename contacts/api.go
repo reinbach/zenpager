@@ -32,7 +32,6 @@ func Routes() *web.Mux {
 }
 
 func List(c web.C, w http.ResponseWriter, r *http.Request) {
-	log.Println("List contacts...")
 	contact := Contact{}
 	j, err := json.Marshal(contact)
 	if err != nil {
