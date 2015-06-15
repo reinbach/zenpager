@@ -1,5 +1,5 @@
 var SettingsHolder = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div className="container-fluid">
@@ -27,7 +27,7 @@ var SettingsHolder = React.createClass({
 });
 
 var SettingsCommands = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>
@@ -38,7 +38,7 @@ var SettingsCommands = React.createClass({
 });
 
 var SettingsServers = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>
@@ -49,7 +49,7 @@ var SettingsServers = React.createClass({
 });
 
 var SettingsTimePeriods = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>

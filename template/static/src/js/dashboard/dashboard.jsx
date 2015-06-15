@@ -1,5 +1,5 @@
 var DashboardHolder = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     getInitialState: function() {
         return {
             messages: []
@@ -32,7 +32,7 @@ var DashboardHolder = React.createClass({
 });
 
 var DashboardOverview = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>
@@ -43,7 +43,7 @@ var DashboardOverview = React.createClass({
 });
 
 var DashboardServers = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>
@@ -54,7 +54,7 @@ var DashboardServers = React.createClass({
 });
 
 var DashboardApps = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div>

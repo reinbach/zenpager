@@ -1,4 +1,4 @@
-var Authentication = {
+var AuthenticationMixin = {
     statics: {
         willTransitionTo: function(transition) {
             var nextPath = transition.path;

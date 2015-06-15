@@ -1,5 +1,5 @@
 var ProfileHolder = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     render: function() {
         return (
             <div className="container-fluid">
@@ -20,7 +20,7 @@ var ProfileHolder = React.createClass({
 });
 
 var ProfilePassword = React.createClass({
-    mixins: [Authentication],
+    mixins: [AuthenticationMixin],
     getInitialState: function() {
         return {
             password: '',

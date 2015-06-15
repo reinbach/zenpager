@@ -28,7 +28,7 @@ var SettingsContactsMixin = {
 };
 
 var SettingsContacts = React.createClass({
-    mixins: [Authentication, SettingsContactsMixin],
+    mixins: [AuthenticationMixin, SettingsContactsMixin],
     propTypes: {
         contacts: React.PropTypes.array,
         messages: React.PropTypes.array
@@ -53,7 +53,7 @@ var SettingsContacts = React.createClass({
 });
 
 var SettingsContactsAdd = React.createClass({
-    mixins: [Authentication, SettingsContactsMixin],
+    mixins: [AuthenticationMixin, SettingsContactsMixin],
     render: function() {
         return (
             <div>
