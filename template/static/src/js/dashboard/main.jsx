@@ -104,10 +104,9 @@ var routes = (
             <Route name="s_commands" path="commands"
                    handler={SettingsCommands} />
             <Route name="s_contacts" path="contacts"
-                   handler={SettingsContacts}>
-                <Route name="s_contacts_add" path="add"
-                       handler={SettingsContactsAdd} />
-            </Route>
+                   handler={SettingsContacts} />
+            <Route name="s_contacts_add" path="contacts/add"
+                   handler={SettingsContactsAdd} />
             <Route name="s_servers" path="servers" handler={SettingsServers} />
             <Route name="s_timeperiods" path="timeperiods"
                    handler={SettingsTimePeriods} />

@@ -1,4 +1,10 @@
 var contacts = {
+    init: function() {
+        $(".contacts-link").addClass("active");
+    },
+    close: function() {
+        $(".contacts-link").removeClass("active");
+    },
     get: function(cb) {
         callback = cb;
         request.get("/api/v1/contacts/", this.processGet);
@@ -12,8 +18,17 @@ var contacts = {
     }
 }
 
+var SettingsContactsMixin = {
+    componentDidMount: function() {
+        contacts.init();
+    },
+    componentWillUnmount: function() {
+        contacts.close();
+    }
+};
+
 var SettingsContacts = React.createClass({
-    mixins: [Authentication],
+    mixins: [Authentication, SettingsContactsMixin],
     propTypes: {
         contacts: React.PropTypes.array,
         messages: React.PropTypes.array
@@ -29,6 +44,8 @@ var SettingsContacts = React.createClass({
     render: function() {
         return (
             <div>
+                <h1 className="page-header">Contacts</h1>
+                <Link to="s_contacts_add"><Button bsStyle="primary">Add Contact</Button></Link>
                 Settings Contacts... we need more
             </div>
         );
@@ -36,7 +53,7 @@ var SettingsContacts = React.createClass({
 });
 
 var SettingsContactsAdd = React.createClass({
-    mixins: [Authentication],
+    mixins: [Authentication, SettingsContactsMixin],
     render: function() {
         return (
             <div>
