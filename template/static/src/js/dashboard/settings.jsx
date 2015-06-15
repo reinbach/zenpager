@@ -8,7 +8,7 @@ var SettingsHolder = React.createClass({
                         <h1>Settings</h1>
                         <ul className="nav nav-sidebar">
                             <li><Link to="s_commands">Commands</Link></li>
-                            <li><Link to="s_contacts" className="contacts-link">Contacts</Link></li>
+                            <li><Link to="s_contacts_list" className="contacts-link">Contacts</Link></li>
                             <li><Link to="s_servers">Servers</Link></li>
                             <li>
                                 <Link to="s_timeperiods">Time Periods</Link>

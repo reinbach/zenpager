@@ -27,6 +27,18 @@ var SettingsContactsMixin = {
     }
 };
 
+var SettingsContactsHolder = React.createClass({
+    mixins: [AuthenticationMixin, SettingsContactsMixin],
+    render: function() {
+        return (
+            <div>
+                <h1 className="page-header">Contacts</h1>
+                <RouteHandler />
+            </div>
+        );
+    }
+});
+
 var SettingsContacts = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     propTypes: {
@@ -44,9 +56,8 @@ var SettingsContacts = React.createClass({
     render: function() {
         return (
             <div>
-                <h1 className="page-header">Contacts</h1>
                 <Link to="s_contacts_add"><Button bsStyle="primary">Add Contact</Button></Link>
-                Settings Contacts... we need more
+                <p>Settings Contacts... we need more</p>
             </div>
         );
     }

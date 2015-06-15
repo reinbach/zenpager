@@ -103,10 +103,13 @@ var routes = (
         <Route name="settings" handler={SettingsHolder}>
             <Route name="s_commands" path="commands"
                    handler={SettingsCommands} />
-            <Route name="s_contacts" path="contacts"
-                   handler={SettingsContacts} />
-            <Route name="s_contacts_add" path="contacts/add"
-                   handler={SettingsContactsAdd} />
+            <Route name="contacts" handler={SettingsContactsHolder}>
+                <Route name="s_contacts_list" path="list"
+                       handler={SettingsContacts} />
+                <Route name="s_contacts_add" path="add"
+                       handler={SettingsContactsAdd} />
+                <Redirect from="/contacts" to="s_contacts_list" />
+            </Route>
             <Route name="s_servers" path="servers" handler={SettingsServers} />
             <Route name="s_timeperiods" path="timeperiods"
                    handler={SettingsTimePeriods} />
