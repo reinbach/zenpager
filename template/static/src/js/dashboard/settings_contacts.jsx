@@ -15,6 +15,24 @@ var contacts = {
         } else {
             callback({data: [], errors: data.Messages});
         }
+    },
+    add: function(name, email, cb) {
+        callback = cb;
+        request.post(
+            "/api/v1/contact/add/",
+            {name: name, email: email},
+            this.processAdd
+        );
+    },
+    processAdd: function(res) {
+        if (res.Result == "success") {
+            if (callback) callback(true, [{
+                Type: "success",
+                Content: "Successfully add contact."
+            }]);
+        } else {
+            if (callback) callback(false, res.errors);
+        }
     }
 }
 
@@ -56,7 +74,7 @@ var SettingsContacts = React.createClass({
     render: function() {
         return (
             <div>
-                <Link to="s_contacts_add"><Button bsStyle="primary">Add Contact</Button></Link>
+                <Link to="s_contacts_add" className="btn btn-primary">Add Contact</Link>
                 <p>Settings Contacts... we need more</p>
             </div>
         );
@@ -65,10 +83,85 @@ var SettingsContacts = React.createClass({
 
 var SettingsContactsAdd = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
+    getInitialState: function() {
+        return {
+            "name": "",
+            "email": "",
+            "messages": []
+        }
+    },
+    validateNameState: function() {
+        if (this.state.name.length > 0) {
+            if (this.state.name.length > 2) {
+                return "success";
+            }
+            return "error"
+        }
+    },
+    validateEmailState: function() {
+        if (this.state.email.length > 0) {
+            if (validateEmail(this.state.email) === true) {
+                return "success";
+            }
+            return "error"
+        }
+    },
+    handleChange: function() {
+        this.setState({
+            name: this.refs.name.getValue(),
+            email: this.refs.email.getValue()
+        });
+    },
+    handleSubmit: function() {
+        event.preventDefault();
+        if (this.state.name.length < 1) {
+            this.setState({"messages": [{Type: "danger", Content: "Name is required."}]});
+            return ;
+        }
+        if (this.state.email.length < 1) {
+            this.setState({"messages": [{Type: "danger", Content: "Email is required."}]});
+            return ;
+        }
+        if (this.validateNameState() !== "success" || this.validateEmailState() !== "success") {
+            this.setState({"messages": [{Type: "danger", Content: "Fix errors"}]});
+            return ;
+        }
+        contacts.add(this.state.email, this.state.name, function(success, messages) {
+            if (success == true) {
+                this.setState({messages: messages, name: "", email: ""});
+            } else {
+                this.setState({
+                    messages: messages,
+                    name: this.state.name,
+                    email: this.state.email
+                });
+                console.log(this.state.messages);
+            }
+        }.bind(this));
+    },
     render: function() {
+        var msgs = [];
+        this.state.messages.forEach(function(msg) {
+            msgs.push(<Messages type={msg.Type} message={msg.Content} />);
+        });
         return (
-            <div>
-                add the contacts here!!!
+            <div className="col-md-4">
+                <form onSubmit={this.handleSubmit} className="text-left">
+                    <h2 className="page-header">Add Contact</h2>
+                    {msgs}
+                    <Input label="Name" type="text" ref="name"
+                           placeholder="Jane Smart" value={this.state.name}
+                           autoFocus hasFeedback bsStyle={this.validateNameState()}
+                           onChange={this.handleChange} />
+                    <Input label="Email" type="text" ref="email"
+                           placeholder="test@example.com" value={this.state.email}
+                           hasFeedback bsStyle={this.validateEmailState()}
+                           onChange={this.handleChange} />
+                    <Button type="submit" bsStyle="success">
+                        Add Contact
+                    </Button>
+                    <Link to="s_contacts_list" className="btn btn-default">Cancel</Link>
+                </form>
             </div>
         );
     }
