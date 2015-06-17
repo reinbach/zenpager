@@ -12,7 +12,6 @@ type Message struct {
 type Response struct {
 	Result   string
 	Messages []Message
-	ID       int64
 	Data     interface{}
 }
 

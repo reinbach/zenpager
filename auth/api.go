@@ -74,7 +74,7 @@ func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 		res = utils.Response{
 			Result:   "success",
 			Messages: []utils.Message{m},
-			ID:       user.ID,
+			Data:     user.ID,
 		}
 		utils.EncodePayload(w, http.StatusOK, res)
 		return
