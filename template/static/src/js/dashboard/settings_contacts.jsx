@@ -19,7 +19,7 @@ var contacts = {
     add: function(name, email, cb) {
         callback = cb;
         request.post(
-            "/api/v1/contact/add/",
+            "/api/v1/contacts/",
             {name: name, email: email},
             this.processAdd
         );
@@ -28,10 +28,10 @@ var contacts = {
         if (res.Result == "success") {
             if (callback) callback(true, [{
                 Type: "success",
-                Content: "Successfully add contact."
+                Content: "Successfully added contact."
             }]);
         } else {
-            if (callback) callback(false, res.errors);
+            if (callback) callback(false, res.Messages);
         }
     }
 }
@@ -126,7 +126,7 @@ var SettingsContactsAdd = React.createClass({
             this.setState({"messages": [{Type: "danger", Content: "Fix errors"}]});
             return ;
         }
-        contacts.add(this.state.email, this.state.name, function(success, messages) {
+        contacts.add(this.state.name, this.state.email, function(success, messages) {
             if (success == true) {
                 this.setState({messages: messages, name: "", email: ""});
             } else {
