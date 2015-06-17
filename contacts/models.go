@@ -10,9 +10,33 @@ import (
 
 type Contact struct {
 	ID     int64
-	Name   string `json:"name"`
-	User   auth.User
+	Name   string    `json:"name"`
+	User   auth.User `json:"user"`
 	Groups []*Group
+}
+
+func GetAll(db *sql.DB) []Contact {
+	contacts := []Contact{}
+	rows, err := db.Query("SELECT c.id, c.name, u.email FROM contact_contact as c JOIN auth_user AS u on c.user_id = u.id ORDER BY c.name")
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("Contacts not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var c Contact
+		err = rows.Scan(&c.ID, &c.Name, &c.User.Email)
+		if err != nil {
+			log.Println("Failed to get contact data: ", err)
+		}
+		contacts = append(contacts, c)
+	}
+
+	return contacts
 }
 
 func (c *Contact) Create(db *sql.DB) bool {
@@ -52,6 +76,7 @@ func (c *Contact) Get(db *sql.DB) {
 		"SELECT name, user_id FROM contact_contact WHERE id = $1",
 		c.ID,
 	).Scan(&c.Name, &c.User.ID)
+
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("Contact not found.")

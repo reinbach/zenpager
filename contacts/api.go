@@ -32,12 +32,12 @@ func Routes() *web.Mux {
 }
 
 func List(c web.C, w http.ResponseWriter, r *http.Request) {
-	contact := Contact{}
-	j, err := json.Marshal(contact)
-	if err != nil {
-		log.Println("Contact List Error: ", err)
-	}
-	io.WriteString(w, string(j))
+	var db = database.FromContext(c)
+
+	d := GetAll(db)
+
+	res := utils.Response{Result: "success", Data: d}
+	utils.EncodePayload(w, http.StatusOK, res)
 }
 
 func Item(c web.C, w http.ResponseWriter, r *http.Request) {
