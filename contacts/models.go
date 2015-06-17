@@ -9,10 +9,10 @@ import (
 )
 
 type Contact struct {
-	ID     int64
+	ID     int64     `json:"id"`
 	Name   string    `json:"name"`
 	User   auth.User `json:"user"`
-	Groups []*Group
+	Groups []*Group  `json:"groups"`
 }
 
 func GetAll(db *sql.DB) []Contact {

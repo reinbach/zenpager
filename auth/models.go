@@ -13,15 +13,15 @@ import (
 )
 
 type User struct {
-	ID       int64
-	Email    string `json:"Email"`
-	Password string `json:"Password"`
+	ID       int64  `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type Token struct {
-	ID    int64
-	Token string
-	User  User
+	ID    int64  `json:"id"`
+	Token string `json:"token"`
+	User  User   `json:"user"`
 }
 
 func RandomPassword() string {
