@@ -13,6 +13,7 @@ type Response struct {
 	Result   string
 	Messages []Message
 	ID       int64
+	Data     interface{}
 }
 
 func BadRequestResponse(w http.ResponseWriter, msg string) {
