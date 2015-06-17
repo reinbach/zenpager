@@ -86,8 +86,6 @@ var SettingsContacts = React.createClass({
         });
         return (
             <div>
-                <Link to="s_contacts_add" className="btn btn-primary">Add Contact</Link>
-
                 <Table striped hover>
                     <thead>
                         <tr>
@@ -99,6 +97,8 @@ var SettingsContacts = React.createClass({
                         {contacts}
                     </tbody>
                 </Table>
+
+                <Link to="s_contacts_add" className="btn btn-primary">Add Contact</Link>
             </div>
         );
     }
