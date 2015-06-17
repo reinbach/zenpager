@@ -154,7 +154,7 @@ function authenticate(email, password, cb) {
                 cb({
                     authenticated: true,
                     token: r.getResponseHeader("X-Access-Token"),
-                    id: data.ID
+                    id: data.data
                 });
             } else {
                 cb({
