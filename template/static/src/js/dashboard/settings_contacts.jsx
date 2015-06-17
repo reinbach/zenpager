@@ -11,7 +11,7 @@ var contacts = {
     },
     processGet: function(data) {
         if (data.Result === "success") {
-            callback({data: data});
+            callback(data.Data, []);
         } else {
             callback({data: [], errors: data.Messages});
         }
@@ -71,6 +71,7 @@ var SettingsContacts = React.createClass({
     },
     componentWillMount: function() {
         contacts.get(function(data, messages) {
+            console.log(data);
             this.setState({
                 contacts: data,
                 messages: messages
@@ -78,10 +79,27 @@ var SettingsContacts = React.createClass({
         }.bind(this));
     },
     render: function() {
+        var contacts = [];
+        this.state.contacts.forEach(function(contact) {
+            contacts.push(
+                <tr><td>{contact.name}</td><td>{contact.user.email}</td></tr>
+            );
+        });
         return (
             <div>
                 <Link to="s_contacts_add" className="btn btn-primary">Add Contact</Link>
-                <p>Settings Contacts... we need more</p>
+
+                <Table striped hover>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {contacts}
+                    </tbody>
+                </Table>
             </div>
         );
     }

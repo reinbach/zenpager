@@ -8,7 +8,8 @@ var Router = ReactRouter,
 
     // bootstrap
     Input = ReactBootstrap.Input,
-    Button = ReactBootstrap.Button;
+    Button = ReactBootstrap.Button,
+    Table = ReactBootstrap.Table;
 
 var App = React.createClass({
     getInitialState: function() {
