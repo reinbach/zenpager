@@ -50,12 +50,53 @@ func Item(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func Add(c web.C, w http.ResponseWriter, r *http.Request) {
-	contact := Contact{}
-	j, err := json.Marshal(contact)
-	if err != nil {
-		log.Println("Contact Add Error: ", err)
+	var db = database.FromContext(c)
+
+	type Data struct {
+		Name  string
+		Email string
 	}
-	io.WriteString(w, string(j))
+	d := Data{}
+	if err := utils.DecodePayload(r, &d); err != nil {
+		utils.BadRequestResponse(w, "Data appears to be invalid.")
+		return
+	}
+
+	contact := Contact{}
+	contact.Name = d.Name
+	contact.User.Email = d.Email
+
+	errors := contact.Validate()
+	if len(errors) > 0 {
+		res := utils.Response{Result: "error", Messages: errors}
+		utils.EncodePayload(w, http.StatusBadRequest, res)
+		return
+	}
+
+	contact.User.GetByEmail(db)
+	if contact.User.ID == 0 {
+		contact.User.Create(db)
+	}
+	contact.GetByUser(db)
+	if contact.ID != 0 {
+		utils.BadRequestResponse(
+			w,
+			"Contact already exists for this email address.",
+		)
+		return
+	}
+	if contact.Create(db) {
+		m := utils.Message{Type: "success", Content: "Contact data added."}
+		res := utils.Response{Result: "success", Messages: []utils.Message{m}}
+		utils.EncodePayload(w, http.StatusAccepted, res)
+	} else {
+		m := utils.Message{
+			Type:    "danger",
+			Content: "Failed to update contact.",
+		}
+		res := utils.Response{Result: "error", Messages: []utils.Message{m}}
+		utils.EncodePayload(w, http.StatusInternalServerError, res)
+	}
 }
 
 func Update(c web.C, w http.ResponseWriter, r *http.Request) {
@@ -69,8 +110,6 @@ func Update(c web.C, w http.ResponseWriter, r *http.Request) {
 
 func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
-	var res = utils.Response{}
-	var m utils.Message
 
 	// get id of contact to be updated
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
@@ -92,18 +131,21 @@ func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 	errors := contact.Validate()
 	if len(errors) > 0 {
-		res = utils.Response{Result: "error", Messages: errors}
+		res := utils.Response{Result: "error", Messages: errors}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 
 	if contact.Update(db) {
-		m = utils.Message{Type: "success", Content: "Contact data updated."}
-		res = utils.Response{Result: "success", Messages: []utils.Message{m}}
+		m := utils.Message{Type: "success", Content: "Contact data updated."}
+		res := utils.Response{Result: "success", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusAccepted, res)
 	} else {
-		m = utils.Message{Type: "danger", Content: "Failed to update contact."}
-		res = utils.Response{Result: "error", Messages: []utils.Message{m}}
+		m := utils.Message{
+			Type:    "danger",
+			Content: "Failed to update contact.",
+		}
+		res := utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusInternalServerError, res)
 	}
 }

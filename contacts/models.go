@@ -10,14 +10,17 @@ import (
 
 type Contact struct {
 	ID     int64
-	Name   string
+	Name   string `json:"name"`
 	User   auth.User
 	Groups []*Group
 }
 
 func (c *Contact) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO contact_contact (name, user_id) VALUES($1, $2)",
-		c.Name, c.User.ID)
+	_, err := db.Exec(
+		"INSERT INTO contact_contact (name, user_id) VALUES($1, $2)",
+		c.Name,
+		c.User.ID,
+	)
 	if err != nil {
 		log.Printf("Failed to create contact record. ", err)
 		return false
@@ -45,10 +48,27 @@ func (c *Contact) Validate() []utils.Message {
 }
 
 func (c *Contact) Get(db *sql.DB) {
-	err := db.QueryRow("SELECT name, user_id FROM contact_contact WHERE id = $1", c.ID).Scan(&c.Name, &c.User.ID)
+	err := db.QueryRow(
+		"SELECT name, user_id FROM contact_contact WHERE id = $1",
+		c.ID,
+	).Scan(&c.Name, &c.User.ID)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("Contact not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+}
+
+func (c *Contact) GetByUser(db *sql.DB) {
+	err := db.QueryRow(
+		"SELECT id, name FROM contact_contact WHERE user_id = $1",
+		c.User.ID,
+	).Scan(&c.ID, &c.Name)
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("Contact does not exist.")
 	case err != nil:
 		log.Fatal(err)
 	}
