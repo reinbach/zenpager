@@ -71,7 +71,6 @@ var SettingsContacts = React.createClass({
     },
     componentWillMount: function() {
         contacts.get(function(data, messages) {
-            console.log(data);
             this.setState({
                 contacts: data,
                 messages: messages
