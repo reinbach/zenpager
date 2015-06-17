@@ -116,6 +116,20 @@ func (u *User) Get(db *sql.DB) {
 	}
 }
 
+func (u *User) GetByEmail(db *sql.DB) {
+	err := db.QueryRow(
+		"SELECT id FROM auth_user WHERE email = $1",
+		u.Email,
+	).Scan(&u.ID)
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("User not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+}
+
 func (u *User) Update(db *sql.DB) bool {
 	if u.ID == 0 {
 		log.Printf("Invalid ID")
