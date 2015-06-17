@@ -63,13 +63,19 @@ var SettingsContacts = React.createClass({
         contacts: React.PropTypes.array,
         messages: React.PropTypes.array
     },
-    getDefaultProps: function() {
+    getInitialState: function() {
+        return {
+            contacts: [],
+            messages: []
+        };
+    },
+    componentWillMount: function() {
         contacts.get(function(data, messages) {
-            return {
+            this.setState({
                 contacts: data,
                 messages: messages
-            };
-        });
+            });
+        }.bind(this));
     },
     render: function() {
         return (
@@ -85,9 +91,9 @@ var SettingsContactsAdd = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     getInitialState: function() {
         return {
-            "name": "",
-            "email": "",
-            "messages": []
+            name: "",
+            email: "",
+            messages: []
         }
     },
     validateNameState: function() {
@@ -115,15 +121,21 @@ var SettingsContactsAdd = React.createClass({
     handleSubmit: function() {
         event.preventDefault();
         if (this.state.name.length < 1) {
-            this.setState({"messages": [{Type: "danger", Content: "Name is required."}]});
+            this.setState({
+                messages: [{Type: "danger", Content: "Name is required."}]
+            });
             return ;
         }
         if (this.state.email.length < 1) {
-            this.setState({"messages": [{Type: "danger", Content: "Email is required."}]});
+            this.setState({
+                messages: [{Type: "danger", Content: "Email is required."}]
+            });
             return ;
         }
         if (this.validateNameState() !== "success" || this.validateEmailState() !== "success") {
-            this.setState({"messages": [{Type: "danger", Content: "Fix errors"}]});
+            this.setState({
+                messages: [{Type: "danger", Content: "Fix errors"}]
+            });
             return ;
         }
         contacts.add(this.state.name, this.state.email, function(success, messages) {
@@ -135,7 +147,6 @@ var SettingsContactsAdd = React.createClass({
                     name: this.state.name,
                     email: this.state.email
                 });
-                console.log(this.state.messages);
             }
         }.bind(this));
     },
