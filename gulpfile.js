@@ -25,6 +25,15 @@ var cssFiles = {
         "dashboard": projectDir + "src/css/dashboard/*.scss"
     }
 };
+var imgFiles = {
+    "local": [
+        projectDir + 'src/img/*.gif',
+        projectDir + 'src/img/*.png',
+        projectDir + 'src/img/*.jpg',
+        projectDir + 'src/img/*.jpeg',
+        projectDir + 'src/img/*.ico'
+    ]
+};
 
 function prependPath(path, arr) {
     for (var i = 0; i < arr.length; i++) {
@@ -123,7 +132,15 @@ gulp.task('css', function() {
 });
 
 // images
-//TODO maybe compress images (imagemin)?
+gulp.task('img-local', function() {
+    return gulp.src(imgFiles.local)
+        .pipe(gulp.dest(projectDir + 'dist/img'))
+        .pipe($.notify({message: 'Img local task complete'}));
+});
+
+gulp.task('img', function() {
+    gulp.start('img-local');
+});
 
 // fonts
 gulp.task('fonts-vendor', function() {
@@ -141,7 +158,7 @@ gulp.task('fonts', function() {
 
 // grouped tasks
 gulp.task('local', function() {
-    gulp.start('css-local', 'js-local');
+    gulp.start('css-local', 'js-local', 'img-local');
 });
 
 gulp.task('vendor', function() {
@@ -149,7 +166,7 @@ gulp.task('vendor', function() {
 });
 
 gulp.task('build', function() {
-    gulp.start('local', 'vendor', 'fonts');
+    gulp.start('local', 'vendor');
 });
 
 // main
