@@ -24,5 +24,10 @@
     "react": "~0.13.1",
     "react-bootstrap": "~0.17.0",
     "react-router": "~0.13.1"
+  },
+  "overrides": {
+    "react": {
+      "main": "**/react-with-addons.js"
+    }
   }
 }
