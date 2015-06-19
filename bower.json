@@ -21,13 +21,8 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.4",
-    "react": "~0.13.1",
+    "react": "~0.13.3",
     "react-bootstrap": "~0.17.0",
     "react-router": "~0.13.1"
-  },
-  "overrides": {
-    "react": {
-      "main": "**/react-with-addons.js"
-    }
   }
 }
