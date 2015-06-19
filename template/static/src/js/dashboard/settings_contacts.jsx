@@ -33,6 +33,23 @@ var contacts = {
         } else {
             if (callback) callback(false, res.Messages);
         }
+    },
+    remove: function(id, cb) {
+        callback = cb
+        request.remove(
+            "/api/v1/contacts/" + id,
+            this.processRemove
+        );
+    },
+    processRemove: function(res) {
+        if (res.Result == "success") {
+            if (callback) callback([{
+                Type: "success",
+                Content: "Successfully removed contact."
+            }]);
+        } else {
+            if (callback) callback(res.Messages);
+        }
     }
 }
 
@@ -57,6 +74,25 @@ var SettingsContactsHolder = React.createClass({
     }
 });
 
+var SettingsContactsLine = React.createClass({
+    handleDelete: function(elem) {
+        this.props.removeContact(this.props.contact);
+    },
+    render: function() {
+        return (
+            <tr>
+                <td>{this.props.contact.name}</td>
+                <td>{this.props.contact.user.email}</td>
+                <td>
+                    <Button bsSize="xsmall" bsStyle="danger" onClick={this.handleDelete}>
+                        Delete
+                    </Button>
+                </td>
+            </tr>
+        );
+    }
+});
+
 var SettingsContacts = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     propTypes: {
@@ -77,20 +113,32 @@ var SettingsContacts = React.createClass({
             });
         }.bind(this));
     },
+    removeContact: function(contact) {
+        contacts.remove(contact.id, function(messages) {
+            this.setState({messages: messages})
+        }.bind(this));
+        this.setState({
+            contacts: removeItem(this.state.contacts, contact)
+        });
+    },
     render: function() {
+        var msgs = [];
+        this.state.messages.forEach(function(msg) {
+            msgs.push(<Messages type={msg.Type} message={msg.Content} />);
+        });
         var contacts = [];
         this.state.contacts.forEach(function(contact) {
-            contacts.push(
-                <tr><td>{contact.name}</td><td>{contact.user.email}</td></tr>
-            );
-        });
+            contacts.push(<SettingsContactsLine contact={contact} removeContact={this.removeContact} />);
+        }.bind(this));
         return (
             <div>
+                {msgs}
                 <Table striped hover>
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
