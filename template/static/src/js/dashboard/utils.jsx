@@ -1,7 +1,7 @@
 var request = {
-    get: function(url, cb) {
+    call : function(method, url, cb) {
         var r = new XMLHttpRequest();
-        r.open("GET", url, true);
+        r.open(method, url, true);
         r.setRequestHeader("Content-Type", "application/json");
         r.setRequestHeader("X-Access-Token", auth.getToken());
         r.onreadystatechange = function() {
@@ -16,44 +16,32 @@ var request = {
                 }
             }
         };
+        return r
+    },
+    remove: function(url, cb) {
+        var r = this.call("DELETE", url, cb);
+        r.send();
+    },
+    get: function(url, cb) {
+        var r = this.call("GET", url, cb);
         r.send();
     },
     post: function(url, data, cb) {
-        var r = new XMLHttpRequest();
-        r.open("POST", url, true);
-        r.setRequestHeader("Content-Type", "application/json");
-        r.setRequestHeader("X-Access-Token", auth.getToken());
-        r.onreadystatechange = function() {
-            if (r.readyState === 4) {
-                if (r.status == 401) {
-                    auth.logout();
-                } else {
-                    rdata = JSON.parse(r.responseText);
-                    if (cb) {
-                        cb(rdata);
-                    }
-                }
-            }
-        };
+        var r = this.call("POST", url, cb);
         r.send(JSON.stringify(data));
     },
     patch: function(url, data, cb) {
-        var r = new XMLHttpRequest();
-        r.open("PATCH", url, true);
-        r.setRequestHeader("Content-Type", "application/json");
-        r.setRequestHeader("X-Access-Token", auth.getToken());
-        r.onreadystatechange = function() {
-            if (r.readyState === 4) {
-                if (r.status == 401) {
-                    auth.logout();
-                } else {
-                    rdata = JSON.parse(r.responseText);
-                    if (cb) {
-                        cb(rdata);
-                    }
-                }
-            }
-        };
+        var r = this.call("PATH", data, cb);
         r.send(JSON.stringify(data));
     }
+}
+
+function removeItem(l, o) {
+    var n = [];
+    for (var i = 0; i < l.length; i++) {
+        if (l[i] != o) {
+            n.push(l[i]);
+        }
+    }
+    return n;
 }
