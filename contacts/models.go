@@ -109,6 +109,16 @@ func (c *Contact) Update(db *sql.DB) bool {
 	return true
 }
 
+func (c *Contact) Delete(db *sql.DB) bool {
+	_, err := db.Exec("DELETE FROM contact_contact WHERE id = $1",
+		c.ID)
+	if err != nil {
+		log.Printf("Failed to delete contact record. ", err)
+		return false
+	}
+	return true
+}
+
 type ContactGroup struct {
 	Contact *Contact
 	Group   *Group

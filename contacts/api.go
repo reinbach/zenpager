@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
@@ -151,10 +152,21 @@ func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func Delete(c web.C, w http.ResponseWriter, r *http.Request) {
-	contact := Contact{}
-	j, err := json.Marshal(contact)
+	var db = database.FromContext(c)
+
+	id, err := strconv.ParseInt(
+		strings.Replace(r.URL.Path, "/", "", 1),
+		10,
+		64,
+	)
 	if err != nil {
-		log.Println("Contact Delete Error: ", err)
+		utils.BadRequestResponse(w, "Invalid contact data.")
+		return
 	}
-	io.WriteString(w, string(j))
+
+	contact := Contact{ID: id}
+	contact.Delete(db)
+
+	res := utils.Response{Result: "success"}
+	utils.EncodePayload(w, http.StatusOK, res)
 }
