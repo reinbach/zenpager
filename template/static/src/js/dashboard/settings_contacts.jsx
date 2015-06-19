@@ -118,7 +118,7 @@ var SettingsContacts = React.createClass({
             this.setState({messages: messages})
         }.bind(this));
         this.setState({
-            contacts: removeItem(this.state.contacts, contact)
+            contacts: removeFromList(this.state.contacts, contact)
         });
     },
     render: function() {

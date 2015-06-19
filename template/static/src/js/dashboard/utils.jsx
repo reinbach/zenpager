@@ -36,7 +36,7 @@ var request = {
     }
 }
 
-function removeItem(l, o) {
+function removeFromList(l, o) {
     var n = [];
     for (var i = 0; i < l.length; i++) {
         if (l[i] != o) {
