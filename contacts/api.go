@@ -1,8 +1,6 @@
 package contacts
 
 import (
-	"encoding/json"
-	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -26,7 +24,7 @@ func Routes() *web.Mux {
 	api.Get("/:id", Item)
 	api.Post("/", Add)
 	api.Put("/:id", Update)
-	api.Patch("/:id", PartialUpdate)
+	api.Patch("/:id", Update)
 	api.Delete("/:id", Delete)
 
 	return api
@@ -57,7 +55,6 @@ func Item(c web.C, w http.ResponseWriter, r *http.Request) {
 	contact := Contact{ID: id}
 	contact.Get(db)
 
-	log.Println(contact)
 	res := utils.Response{Result: "success", Data: contact}
 	utils.EncodePayload(w, http.StatusOK, res)
 }
@@ -113,15 +110,6 @@ func Add(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func Update(c web.C, w http.ResponseWriter, r *http.Request) {
-	contact := Contact{}
-	j, err := json.Marshal(contact)
-	if err != nil {
-		log.Println("Contact Update Error: ", err)
-	}
-	io.WriteString(w, string(j))
-}
-
-func PartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	// get id of contact to be updated
