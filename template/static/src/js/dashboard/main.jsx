@@ -108,7 +108,9 @@ var routes = (
                 <Route name="s_contacts_list" path="list"
                        handler={SettingsContacts} />
                 <Route name="s_contacts_add" path="add"
-                       handler={SettingsContactsAdd} />
+                       handler={SettingsContactsForm} />
+                <Route name="s_contacts_update" path="update/:contactId"
+                       handler={SettingsContactsForm} />
                 <Redirect from="/contacts" to="s_contacts_list" />
             </Route>
             <Route name="s_servers" path="servers" handler={SettingsServers} />
