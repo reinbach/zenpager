@@ -63,7 +63,6 @@ var contacts = {
         }
     },
     update: function(id, name, email, cb) {
-        console.log("id: " + id);
         callback = cb;
         request.put(
             "/api/v1/contacts/" + id,
