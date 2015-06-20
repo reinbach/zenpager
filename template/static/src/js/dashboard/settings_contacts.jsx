@@ -61,6 +61,25 @@ var contacts = {
         } else {
             if (callback) callback(res.Messages);
         }
+    },
+    update: function(id, name, email, cb) {
+        console.log("id: " + id);
+        callback = cb;
+        request.put(
+            "/api/v1/contacts/" + id,
+            {name: name, email: email},
+            this.processUpdate
+        );
+    },
+    processUpdate: function(res) {
+        if (res.Result == "success") {
+            if (callback) callback(true, [{
+                Type: "success",
+                Content: "Successfully updated contact."
+            }]);
+        } else {
+            if (callback) callback(false, res.Messages);
+        }
     }
 }
 
@@ -243,16 +262,20 @@ var SettingsContactsForm = React.createClass({
         }
 
         if (this.state.id != "") {
-            contacts.update(this.state.name, this.state.email,
+            contacts.update(this.state.id, this.state.name, this.state.email,
                             this.handleFormResponse);
         } else {
             contacts.add(this.state.name, this.state.email,
                          this.handleFormResponse);
         }
     },
-    handleFormResponse: function(success, message) {
+    handleFormResponse: function(success, messages) {
         if (success == true) {
-            this.setState({messages: messages, name: "", email: ""});
+            if (this.state.id) {
+                this.setState({messages: messages});
+            } else {
+                this.setState({messages: messages, name: "", email: ""});
+            }
         } else {
             this.setState({
                 messages: messages,

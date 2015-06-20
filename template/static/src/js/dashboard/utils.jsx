@@ -26,12 +26,16 @@ var request = {
         var r = this.call("GET", url, cb);
         r.send();
     },
+    patch: function(url, data, cb) {
+        var r = this.call("PATH", url, cb);
+        r.send(JSON.stringify(data));
+    },
     post: function(url, data, cb) {
         var r = this.call("POST", url, cb);
         r.send(JSON.stringify(data));
     },
-    patch: function(url, data, cb) {
-        var r = this.call("PATH", data, cb);
+    put: function(url, data, cb) {
+        var r = this.call("PUT", url, cb);
         r.send(JSON.stringify(data));
     }
 }
