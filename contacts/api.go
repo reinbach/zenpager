@@ -42,12 +42,24 @@ func List(c web.C, w http.ResponseWriter, r *http.Request) {
 }
 
 func Item(c web.C, w http.ResponseWriter, r *http.Request) {
-	contact := Contact{}
-	j, err := json.Marshal(contact)
+	var db = database.FromContext(c)
+
+	id, err := strconv.ParseInt(
+		strings.Replace(r.URL.Path, "/", "", 1),
+		10,
+		64,
+	)
 	if err != nil {
-		log.Println("Contact Item Error: ", err)
+		utils.BadRequestResponse(w, "Invalid contact data.")
+		return
 	}
-	io.WriteString(w, string(j))
+
+	contact := Contact{ID: id}
+	contact.Get(db)
+
+	log.Println(contact)
+	res := utils.Response{Result: "success", Data: contact}
+	utils.EncodePayload(w, http.StatusOK, res)
 }
 
 func Add(c web.C, w http.ResponseWriter, r *http.Request) {

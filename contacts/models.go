@@ -73,9 +73,9 @@ func (c *Contact) Validate() []utils.Message {
 
 func (c *Contact) Get(db *sql.DB) {
 	err := db.QueryRow(
-		"SELECT name, user_id FROM contact_contact WHERE id = $1",
+		"SELECT c.name, c.user_id, u.email  FROM contact_contact AS c JOIN auth_user AS u ON c.user_id = u.id WHERE c.id = $1",
 		c.ID,
-	).Scan(&c.Name, &c.User.ID)
+	).Scan(&c.Name, &c.User.ID, &c.User.Email)
 
 	switch {
 	case err == sql.ErrNoRows:
