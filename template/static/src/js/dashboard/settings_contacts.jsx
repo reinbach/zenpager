@@ -197,7 +197,7 @@ var SettingsContactsForm = React.createClass({
         }
     },
     componentDidMount: function() {
-        if (this.props.params != undefined) {
+        if (this.props.params.contactId != undefined) {
             var id = this.props.params.contactId;
             this.setState({
                 "id": id,
