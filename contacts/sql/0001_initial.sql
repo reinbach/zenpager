@@ -1,3 +1,4 @@
+-- require auth 0001_initial.sql
 CREATE TABLE contact_contact (
   id SERIAL PRIMARY KEY,
   name VARCHAR(150) NOT NULL,
