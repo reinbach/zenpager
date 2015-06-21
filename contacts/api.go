@@ -1,7 +1,6 @@
 package contacts
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
