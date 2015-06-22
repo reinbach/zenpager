@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	webctx "github.com/goji/context"
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
 
@@ -41,11 +40,6 @@ func UserRoutes() *web.Mux {
 	// api.Get("/user", http.RedirectHandler("/user/", 301))
 
 	return api
-}
-
-func GetUser(c web.C) User {
-	ctx := webctx.FromC(c)
-	return ctx.Value("user").(User)
 }
 
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
