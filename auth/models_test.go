@@ -210,6 +210,39 @@ func TestUpdateUserWithPassword(t *testing.T) {
 	}
 }
 
+// get user, with email
+func TestGetByEmail(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test5.5@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	nu := User{
+		Email: "test5.5@example.com",
+	}
+	nu.GetByEmail(db)
+	if nu.ID == 0 {
+		t.Errorf("Expected successful get by email, got nothing")
+	}
+}
+
+// get user, with email, does not exist
+func TestGetByEmailInvalid(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email: "wrong-email@example.com",
+	}
+	u.GetByEmail(db)
+	if u.ID != 0 {
+		t.Errorf("Expected no result, got %v", u)
+	}
+}
+
 // login valid
 func TestLogin(t *testing.T) {
 	db := database.Connect()
@@ -264,4 +297,114 @@ func TestLoginInValidEmail(t *testing.T) {
 	if l != false {
 		t.Errorf("Expected invalid login, got %t", l)
 	}
+}
+
+// add token
+func TestAddToken(t *testing.T) {
+	db := database.Connect()
+	u := User{
+		Email:    "test9@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	rt, err := u.AddToken(db)
+	if err != nil {
+		t.Errorf("Expected to add token, got %t", err)
+	}
+
+	if rt.User.ID != u.ID {
+		t.Errorf("Expected user on token to match user")
+	}
+}
+
+// get token
+func TestGetToken(t *testing.T) {
+	db := database.Connect()
+
+	u := User{
+		Email:    "test10@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	ut, err := u.AddToken(db)
+	if err != nil {
+		t.Errorf("Expected token to be added, got %t", err)
+	}
+
+	b := ut.Get(db)
+	if b != true {
+		t.Errorf("Expected get token to return true")
+	}
+}
+
+// get token, invalid
+func TestGetTokenInvalid(t *testing.T) {
+	db := database.Connect()
+
+	u := User{
+		Email:    "test11@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	_, err := u.AddToken(db)
+	if err != nil {
+		t.Errorf("Expected token to be added, got %t", err)
+	}
+
+	uwt := Token{
+		Token: "321",
+	}
+	b := uwt.Get(db)
+	if b != false {
+		t.Errorf("Expected get token to return false")
+	}
+}
+
+// delete token
+func TestDeleteToken(t *testing.T) {
+	db := database.Connect()
+
+	u := User{
+		Email:    "test12@example.com",
+		Password: "123",
+	}
+	r := u.Create(db)
+	if r != true {
+		t.Errorf("Expected successful create, got %t", r)
+	}
+
+	ut, err := u.AddToken(db)
+	if err != nil {
+		t.Errorf("Expected token to be added, got %t", err)
+	}
+
+	RemoveToken(ut.Token, db)
+
+	rt := ut.Get(db)
+	if rt != false {
+		t.Errorf("Expected get token to return false")
+	}
+}
+
+// delete token, invalid
+func TestDeleteTokenInvalid(t *testing.T) {
+	db := database.Connect()
+
+	ut := Token{
+		Token: "321",
+	}
+
+	RemoveToken(ut.Token, db)
 }
