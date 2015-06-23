@@ -52,11 +52,6 @@ Current and historical view of Monitor and Alert components
 
 ## Installation / Setup
 
-### Database
-
-Setup up the database and run the relevant sql scripts against it.
-(TODO have a migration script the runs all the sql scripts)
-
 ### Config File
 
 Create a `config.toml` file at the root of the project. For example;
@@ -67,6 +62,14 @@ Create a `config.toml` file at the root of the project. For example;
     password = ""
     host = "localhost"
     sslmode = "disable"
+
+
+### Database
+
+Setup the database and then run the migration script to create the relevant tables;
+
+    make migrate
+
 
 ### Create user
 
