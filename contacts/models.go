@@ -40,16 +40,15 @@ func GetAll(db *sql.DB) []Contact {
 }
 
 func (c *Contact) Create(db *sql.DB) bool {
-	_, err := db.Exec(
-		"INSERT INTO contact_contact (name, user_id) VALUES($1, $2)",
+	err := db.QueryRow(
+		"INSERT INTO contact_contact (name, user_id) VALUES($1, $2) RETURNING id",
 		c.Name,
 		c.User.ID,
-	)
+	).Scan(&c.ID)
 	if err != nil {
 		log.Printf("Failed to create contact record. ", err)
 		return false
 	}
-	log.Printf("Created contact record.")
 
 	var cg ContactGroup
 	for _, g := range c.Groups {
