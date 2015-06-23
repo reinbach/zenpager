@@ -3,7 +3,6 @@ package contacts
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
@@ -41,18 +40,19 @@ func List(c web.C, w http.ResponseWriter, r *http.Request) {
 func Item(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	id, err := strconv.ParseInt(
-		strings.Replace(r.URL.Path, "/", "", 1),
-		10,
-		64,
-	)
+	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		utils.BadRequestResponse(w, "Invalid contact data.")
+		utils.NotFoundResponse(w, "Contact not found.")
 		return
 	}
 
 	contact := Contact{ID: id}
 	contact.Get(db)
+
+	if contact.User.ID == 0 {
+		utils.NotFoundResponse(w, "Contact not found")
+		return
+	}
 
 	res := utils.Response{Result: "success", Data: contact}
 	utils.EncodePayload(w, http.StatusOK, res)
@@ -153,13 +153,9 @@ func Update(c web.C, w http.ResponseWriter, r *http.Request) {
 func Delete(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	id, err := strconv.ParseInt(
-		strings.Replace(r.URL.Path, "/", "", 1),
-		10,
-		64,
-	)
+	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		utils.BadRequestResponse(w, "Invalid contact data.")
+		utils.NotFoundResponse(w, "Contact not found.")
 		return
 	}
 
