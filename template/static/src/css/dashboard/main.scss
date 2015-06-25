@@ -56,6 +56,14 @@ body {
     }
 }
 
+table {
+    .action-cell {
+        button {
+            margin-right: 5px;
+        }
+    }
+}
+
 .main {
     padding: 20px;
 }
