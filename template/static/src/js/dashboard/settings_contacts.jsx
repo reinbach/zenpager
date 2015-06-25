@@ -85,7 +85,7 @@ var contacts = {
 var groups = {
     get: function(id, cb) {
         callback = cb;
-        request.get("/api/v1/contacts/group/" + id, this.processGet);
+        request.get("/api/v1/contacts/groups/" + id, this.processGet);
     },
     processGet: function(cb) {
         if (data.Result === "success") {
@@ -97,7 +97,7 @@ var groups = {
     },
     getAll: function(cb) {
         callback = cb;
-        request.get("/api/v1/contacts/group/", this.processGetAll);
+        request.get("/api/v1/contacts/groups/", this.processGetAll);
     },
     processGetAll: function(data) {
         if (data.Result === "success") {
@@ -109,7 +109,7 @@ var groups = {
     add: function(name, email, cb) {
         callback = cb;
         request.post(
-            "/api/v1/contacts/group/",
+            "/api/v1/contacts/groups/",
             {name: name},
             this.processAdd
         );
@@ -127,7 +127,7 @@ var groups = {
     remove: function(id, cb) {
         callback = cb
         request.remove(
-            "/api/v1/contacts/group/" + id,
+            "/api/v1/contacts/groups/" + id,
             this.processRemove
         );
     },
@@ -144,7 +144,7 @@ var groups = {
     update: function(id, name, cb) {
         callback = cb;
         request.put(
-            "/api/v1/contacts/group/" + id,
+            "/api/v1/contacts/groups/" + id,
             {name: name},
             this.processUpdate
         );
