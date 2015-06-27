@@ -26,16 +26,6 @@ func SetupWebContext() web.C {
 	return c
 }
 
-// Routes
-func TestRoutes(t *testing.T) {
-	AuthRoutes()
-}
-
-// UserRoutes
-func TestUserRoutes(t *testing.T) {
-	UserRoutes()
-}
-
 // login no payload
 func TestLoginNoPayload(t *testing.T) {
 	body := url.Values{}
@@ -106,7 +96,7 @@ func TestLoginSuccess(t *testing.T) {
 	db := database.Connect()
 
 	u := models.User{
-		Email:    "test-valid@example.com",
+		Email:    "test-valid1@example.com",
 		Password: "123",
 	}
 	u.Create(db)
@@ -133,7 +123,7 @@ func TestLogout(t *testing.T) {
 	db := database.Connect()
 
 	u := models.User{
-		Email:    "test-valid@example.com",
+		Email:    "test-valid2@example.com",
 		Password: "123",
 	}
 	u.Create(db)
@@ -162,7 +152,7 @@ func TestUserPartialUpdate(t *testing.T) {
 	db := database.Connect()
 
 	u := models.User{
-		Email:    "test321@example.com",
+		Email:    "test1@example.com",
 		Password: "123",
 	}
 	u.Create(db)
@@ -195,7 +185,7 @@ func TestUserPartialUpdateValidation(t *testing.T) {
 	db := database.Connect()
 
 	u := models.User{
-		Email:    "test321@example.com",
+		Email:    "test2@example.com",
 		Password: "123",
 	}
 	u.Create(db)
@@ -225,7 +215,7 @@ func TestUserPartialUpdateInvalid(t *testing.T) {
 	db := database.Connect()
 
 	u := models.User{
-		Email:    "test321@example.com",
+		Email:    "test3@example.com",
 		Password: "123",
 	}
 	u.Create(db)
