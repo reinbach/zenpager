@@ -230,7 +230,7 @@ func TestContactGetAll(t *testing.T) {
 		t.Errorf("Expected success on contact create, got %v", r)
 	}
 
-	cs := GetAll(db)
+	cs := ContactGetAll(db)
 	if len(cs) == 0 {
 		t.Errorf("Expected to get contacts")
 	}

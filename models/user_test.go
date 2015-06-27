@@ -1,25 +1,10 @@
 package models
 
 import (
-	"os"
 	"testing"
 
 	"github.com/reinbach/zenpager/database"
 )
-
-func TestMain(m *testing.M) {
-	// setup
-	os.Setenv("TEST", "true")
-	database.DropTables()
-	database.InitDB()
-
-	r := m.Run()
-
-	// teardown
-	database.DropTables()
-
-	os.Exit(r)
-}
 
 // validate both email and password, none given
 func TestUserValidateEmailPassword(t *testing.T) {
