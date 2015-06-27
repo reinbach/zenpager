@@ -13,8 +13,8 @@ import (
 	"github.com/reinbach/zenpager/alert"
 	"github.com/reinbach/zenpager/api"
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/middleware"
 	"github.com/reinbach/zenpager/monitor"
-	"github.com/reinbach/zenpager/session"
 	"github.com/reinbach/zenpager/template"
 	"github.com/reinbach/zenpager/utils"
 )
@@ -60,7 +60,7 @@ func main() {
 
 	db = database.Connect()
 	goji.Use(ContextMiddleware)
-	goji.Use(session.Middleware)
+	goji.Use(middleware.Session)
 
 	go monitor.Monitor()
 	goji.Serve()
