@@ -11,8 +11,7 @@ import (
 	"github.com/zenazn/goji/web"
 
 	"github.com/reinbach/zenpager/alert"
-	"github.com/reinbach/zenpager/auth"
-	"github.com/reinbach/zenpager/contacts"
+	"github.com/reinbach/zenpager/api"
 	"github.com/reinbach/zenpager/database"
 	"github.com/reinbach/zenpager/monitor"
 	"github.com/reinbach/zenpager/session"
@@ -57,11 +56,11 @@ func main() {
 	goji.NotFound(NotFound)
 
 	// API v1
-	goji.Handle("/api/v1/auth/*", auth.Routes())
-	goji.Handle("/api/v1/user/*", auth.UserRoutes())
+	goji.Handle("/api/v1/auth/*", api.AuthRoutes())
+	goji.Handle("/api/v1/user/*", api.UserRoutes())
 	goji.Get("/api/v1/user",
 		http.RedirectHandler("/api/v1/user/", 301))
-	goji.Handle("/api/v1/contacts/*", contacts.Routes())
+	goji.Handle("/api/v1/contacts/*", api.ContactRoutes())
 	goji.Get("/api/v1/contacts",
 		http.RedirectHandler("/api/v1/contacts/", 301))
 

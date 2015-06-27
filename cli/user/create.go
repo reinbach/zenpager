@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
-	"github.com/reinbach/zenpager/auth"
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/models"
 )
 
 var (
@@ -29,7 +29,7 @@ func CreateUser() {
 		GetPassword()
 	}
 
-	user := auth.User{
+	user := models.User{
 		Email:    email,
 		Password: password,
 	}

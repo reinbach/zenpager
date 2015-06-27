@@ -1,43 +1,26 @@
-package contacts
+package api
 
 import (
 	"net/http"
 	"strconv"
 
 	"github.com/zenazn/goji/web"
-	"github.com/zenazn/goji/web/middleware"
 
-	"github.com/reinbach/zenpager/auth"
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/models"
 	"github.com/reinbach/zenpager/utils"
 )
 
-func Routes() *web.Mux {
-	api := web.New()
-	api.Use(middleware.SubRouter)
-	api.Use(auth.Middleware)
-
-	// contacts
-	api.Get("/", List)
-	api.Get("/:id", Item)
-	api.Post("/", Add)
-	api.Put("/:id", Update)
-	api.Patch("/:id", Update)
-	api.Delete("/:id", Delete)
-
-	return api
-}
-
-func List(c web.C, w http.ResponseWriter, r *http.Request) {
+func GroupList(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	d := GetAll(db)
+	d := models.ContactGetAll(db)
 
 	res := utils.Response{Result: "success", Data: d}
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
-func Item(c web.C, w http.ResponseWriter, r *http.Request) {
+func GroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
@@ -46,7 +29,7 @@ func Item(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contact := Contact{ID: id}
+	contact := models.Contact{ID: id}
 	contact.Get(db)
 
 	if contact.User.ID == 0 {
@@ -58,7 +41,7 @@ func Item(c web.C, w http.ResponseWriter, r *http.Request) {
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
-func Add(c web.C, w http.ResponseWriter, r *http.Request) {
+func GroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	type Data struct {
@@ -71,7 +54,7 @@ func Add(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contact := Contact{}
+	contact := models.Contact{}
 	contact.Name = d.Name
 	contact.User.Email = d.Email
 
@@ -108,7 +91,7 @@ func Add(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Update(c web.C, w http.ResponseWriter, r *http.Request) {
+func GroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	// get id of contact to be updated
@@ -119,7 +102,7 @@ func Update(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set contact with current data
-	contact := Contact{
+	contact := models.Contact{
 		ID: id,
 	}
 	contact.Get(db)
@@ -150,7 +133,7 @@ func Update(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Delete(c web.C, w http.ResponseWriter, r *http.Request) {
+func GroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
@@ -159,7 +142,7 @@ func Delete(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contact := Contact{ID: id}
+	contact := models.Contact{ID: id}
 	contact.Delete(db)
 
 	res := utils.Response{Result: "success"}

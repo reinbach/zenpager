@@ -1,4 +1,4 @@
-package auth
+package middleware
 
 import (
 	"database/sql"
@@ -9,16 +9,17 @@ import (
 	"github.com/zenazn/goji/web"
 
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/models"
 )
 
-func Middleware(c *web.C, h http.Handler) http.Handler {
+func Authenticate(c *web.C, h http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		auth := r.Header.Get("X-Access-Token")
 		if auth == "" {
 			AuthRequired(w)
 			return
 		}
-		t := Token{Token: auth}
+		t := models.Token{Token: auth}
 
 		ctx := webctx.FromC(*c)
 

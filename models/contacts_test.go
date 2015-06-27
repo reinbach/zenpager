@@ -1,10 +1,9 @@
-package contacts
+package models
 
 import (
 	"os"
 	"testing"
 
-	"github.com/reinbach/zenpager/auth"
 	"github.com/reinbach/zenpager/database"
 )
 
@@ -41,7 +40,7 @@ func TestContactValidate(t *testing.T) {
 // create contact
 func TestContactCreate(t *testing.T) {
 	db := database.Connect()
-	u := auth.User{
+	u := User{
 		Email: "contacttest@example.com",
 	}
 	u.Create(db)
@@ -60,7 +59,7 @@ func TestContactCreate(t *testing.T) {
 // get contact
 func TestContactGet(t *testing.T) {
 	db := database.Connect()
-	u := auth.User{
+	u := User{
 		Email: "contacttest1@example.com",
 	}
 	u.Create(db)
@@ -99,7 +98,7 @@ func TestContactGet(t *testing.T) {
 // getbyuser contact
 func TestContactGetByUser(t *testing.T) {
 	db := database.Connect()
-	u := auth.User{
+	u := User{
 		Email: "contacttest2@example.com",
 	}
 	u.Create(db)
@@ -132,7 +131,7 @@ func TestContactGetByUser(t *testing.T) {
 // update contact
 func TestContactUpdate(t *testing.T) {
 	db := database.Connect()
-	u := auth.User{
+	u := User{
 		Email: "contacttest3@example.com",
 	}
 	u.Create(db)
@@ -167,7 +166,7 @@ func TestContactUpdate(t *testing.T) {
 // delete contact
 func TestContactDelete(t *testing.T) {
 	db := database.Connect()
-	u := auth.User{
+	u := User{
 		Email: "contacttest4@example.com",
 	}
 	u.Create(db)
@@ -201,12 +200,12 @@ func TestContactDelete(t *testing.T) {
 func TestContactGetAll(t *testing.T) {
 	db := database.Connect()
 
-	u1 := auth.User{
+	u1 := User{
 		Email: "contacttest5@example.com",
 	}
 	u1.Create(db)
 
-	u2 := auth.User{
+	u2 := User{
 		Email: "contacttest6@example.com",
 	}
 	u2.Create(db)

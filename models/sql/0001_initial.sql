@@ -1,4 +1,15 @@
--- require auth 0001_initial.sql
+CREATE TABLE auth_user (
+  id SERIAL PRIMARY KEY,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  password VARCHAR(150) NOT NULL
+);
+
+CREATE TABLE auth_token (
+  id SERIAL PRIMARY KEY,
+  user_id VARCHAR(150) NOT NULL,
+  token VARCHAR(150) NOT NULL UNIQUE
+);
+
 CREATE TABLE contact_contact (
   id SERIAL PRIMARY KEY,
   name VARCHAR(150) NOT NULL,

@@ -1,4 +1,4 @@
-package auth
+package api
 
 import (
 	"bytes"
@@ -14,6 +14,7 @@ import (
 	"github.com/zenazn/goji/web"
 
 	"github.com/reinbach/zenpager/database"
+	"github.com/reinbach/zenpager/models"
 )
 
 func SetupWebContext() web.C {
@@ -27,7 +28,7 @@ func SetupWebContext() web.C {
 
 // Routes
 func TestRoutes(t *testing.T) {
-	Routes()
+	AuthRoutes()
 }
 
 // UserRoutes
@@ -57,7 +58,7 @@ func TestLoginNoPayload(t *testing.T) {
 
 // login, invalid params
 func TestLoginFailed(t *testing.T) {
-	u := User{
+	u := models.User{
 		Email:    "test@example.com",
 		Password: "123",
 	}
@@ -80,7 +81,7 @@ func TestLoginFailed(t *testing.T) {
 
 // login, validation
 func TestLoginValidation(t *testing.T) {
-	u := User{
+	u := models.User{
 		Email: "test@example.com",
 	}
 	j, _ := json.Marshal(u)
@@ -104,7 +105,7 @@ func TestLoginValidation(t *testing.T) {
 func TestLoginSuccess(t *testing.T) {
 	db := database.Connect()
 
-	u := User{
+	u := models.User{
 		Email:    "test-valid@example.com",
 		Password: "123",
 	}
@@ -131,7 +132,7 @@ func TestLoginSuccess(t *testing.T) {
 func TestLogout(t *testing.T) {
 	db := database.Connect()
 
-	u := User{
+	u := models.User{
 		Email:    "test-valid@example.com",
 		Password: "123",
 	}
@@ -160,7 +161,7 @@ func TestLogout(t *testing.T) {
 func TestUserPartialUpdate(t *testing.T) {
 	db := database.Connect()
 
-	u := User{
+	u := models.User{
 		Email:    "test321@example.com",
 		Password: "123",
 	}
@@ -193,7 +194,7 @@ func TestUserPartialUpdate(t *testing.T) {
 func TestUserPartialUpdateValidation(t *testing.T) {
 	db := database.Connect()
 
-	u := User{
+	u := models.User{
 		Email:    "test321@example.com",
 		Password: "123",
 	}
@@ -223,14 +224,14 @@ func TestUserPartialUpdateValidation(t *testing.T) {
 func TestUserPartialUpdateInvalid(t *testing.T) {
 	db := database.Connect()
 
-	u := User{
+	u := models.User{
 		Email:    "test321@example.com",
 		Password: "123",
 	}
 	u.Create(db)
 	ut, _ := u.AddToken(db)
 
-	uw := User{}
+	uw := models.User{}
 	j, _ := json.Marshal(uw)
 	b := bytes.NewBuffer(j)
 

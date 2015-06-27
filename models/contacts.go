@@ -1,21 +1,20 @@
-package contacts
+package models
 
 import (
 	"database/sql"
 	"log"
 
-	"github.com/reinbach/zenpager/auth"
 	"github.com/reinbach/zenpager/utils"
 )
 
 type Contact struct {
-	ID     int64     `json:"id"`
-	Name   string    `json:"name"`
-	User   auth.User `json:"user"`
-	Groups []*Group  `json:"groups"`
+	ID     int64    `json:"id"`
+	Name   string   `json:"name"`
+	User   User     `json:"user"`
+	Groups []*Group `json:"groups"`
 }
 
-func GetAll(db *sql.DB) []Contact {
+func ContactGetAll(db *sql.DB) []Contact {
 	contacts := []Contact{}
 	rows, err := db.Query("SELECT c.id, c.name, u.email FROM contact_contact as c JOIN auth_user AS u on c.user_id = u.id ORDER BY c.name")
 

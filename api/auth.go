@@ -1,4 +1,4 @@
-package auth
+package api
 
 import (
 	"encoding/json"
@@ -10,10 +10,12 @@ import (
 	"github.com/zenazn/goji/web/middleware"
 
 	"github.com/reinbach/zenpager/database"
+	mw "github.com/reinbach/zenpager/middleware"
+	"github.com/reinbach/zenpager/models"
 	"github.com/reinbach/zenpager/utils"
 )
 
-func Routes() *web.Mux {
+func AuthRoutes() *web.Mux {
 	api := web.New()
 	api.Use(middleware.SubRouter)
 	api.Use(utils.ApplicationJSON)
@@ -30,7 +32,7 @@ func UserRoutes() *web.Mux {
 	api.Use(utils.ApplicationJSON)
 
 	// user
-	api.Use(Middleware)
+	api.Use(mw.Authenticate)
 	// api.Get("/user/", UserList)
 	// api.Get("/user/:id", UserItem)
 	// api.Post("/user/", UserAdd)
@@ -45,7 +47,7 @@ func UserRoutes() *web.Mux {
 func Login(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 	var res = utils.Response{}
-	var user User
+	var user models.User
 	var m utils.Message
 	if err := utils.DecodePayload(r, &user); err != nil {
 		utils.BadRequestResponse(w, "Data appears to be invalid.")
@@ -81,7 +83,7 @@ func Logout(c web.C, w http.ResponseWriter, r *http.Request) {
 	var t = r.Header.Get("X-Access-Token")
 
 	if t != "undefined" {
-		RemoveToken(t, db)
+		models.RemoveToken(t, db)
 	}
 
 	m := utils.Message{Type: "success", Content: "Signed Out"}
@@ -108,7 +110,7 @@ func UserPartialUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set user with current data
-	user := User{
+	user := models.User{
 		ID: id,
 	}
 	user.Get(db)
