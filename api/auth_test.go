@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"testing"
 
 	"code.google.com/p/go.net/context"
@@ -16,6 +17,20 @@ import (
 	"github.com/reinbach/zenpager/database"
 	"github.com/reinbach/zenpager/models"
 )
+
+func TestMain(m *testing.M) {
+	// setup
+	os.Setenv("TEST", "true")
+	database.DropTables()
+	database.InitDB()
+
+	r := m.Run()
+
+	// teardown
+	database.DropTables()
+
+	os.Exit(r)
+}
 
 func SetupWebContext() web.C {
 	var ctx = context.Background()
