@@ -56,13 +56,7 @@ func main() {
 	goji.NotFound(NotFound)
 
 	// API v1
-	goji.Handle("/api/v1/auth/*", api.AuthRoutes())
-	goji.Handle("/api/v1/user/*", api.UserRoutes())
-	goji.Get("/api/v1/user",
-		http.RedirectHandler("/api/v1/user/", 301))
-	goji.Handle("/api/v1/contacts/*", api.ContactRoutes())
-	goji.Get("/api/v1/contacts",
-		http.RedirectHandler("/api/v1/contacts/", 301))
+	goji.Handle("/api/v1/*", api.Routes("/api/v1"))
 
 	db = database.Connect()
 	goji.Use(ContextMiddleware)

@@ -1,12 +1,28 @@
 package api
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/zenazn/goji/web"
 	"github.com/zenazn/goji/web/middleware"
 
 	mw "github.com/reinbach/zenpager/middleware"
 	"github.com/reinbach/zenpager/utils"
 )
+
+func Routes(p string) *web.Mux {
+	api := web.New()
+	api.Handle(fmt.Sprintf("%s/auth/*", p), AuthRoutes())
+	api.Handle(fmt.Sprintf("%s/user/*", p), UserRoutes())
+	api.Get("/user",
+		http.RedirectHandler("/user/", 301))
+	api.Handle(fmt.Sprintf("%s/contacts/*", p), ContactRoutes())
+	api.Get("/contacts",
+		http.RedirectHandler("/contacts/", 301))
+
+	return api
+}
 
 func AuthRoutes() *web.Mux {
 	api := web.New()
