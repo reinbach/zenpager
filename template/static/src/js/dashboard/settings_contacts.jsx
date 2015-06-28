@@ -82,7 +82,7 @@ var contacts = {
     }
 }
 
-var groups = {
+var contactgroups = {
     get: function(id, cb) {
         callback = cb;
         request.get("/api/v1/contacts/groups/" + id, this.processGet);
@@ -207,7 +207,7 @@ var SettingsContactsGroups = React.createClass({
         };
     },
     componentWillMount: function() {
-        groups.getAll(function(data, messages) {
+        contactgroups.getAll(function(data, messages) {
             this.setState({
                 groups: data,
                 messages: messages
@@ -215,7 +215,7 @@ var SettingsContactsGroups = React.createClass({
         }.bind(this));
     },
     removeGroup: function(contact) {
-        groups.remove(group.id, function(messages) {
+        contactgroups.remove(group.id, function(messages) {
             this.setState({messages: messages})
         }.bind(this));
         this.setState({
@@ -503,7 +503,7 @@ var SettingsContactsGroupForm = React.createClass({
                 "id": id,
                 "action": "Update"
             });
-            groups.get(id, this.handleGet);
+            contactgroups.get(id, this.handleGet);
         }
     },
     handleGet: function(data, messages) {
@@ -545,10 +545,10 @@ var SettingsContactsGroupForm = React.createClass({
         }
 
         if (this.state.id != "") {
-            groups.update(this.state.id, this.state.name,
+            contactgroups.update(this.state.id, this.state.name,
                             this.handleFormResponse);
         } else {
-            groups.add(this.state.name,
+            contactgroups.add(this.state.name,
                          this.handleFormResponse);
         }
     },

@@ -1,7 +1,7 @@
 var gulp = require('gulp'),
     bowerFiles = require("main-bower-files");
 var $ = require("gulp-load-plugins")();
-var projectDir = "template/static/";
+var projectDir = "";
 var jsFiles = {
     "vendor": bowerFiles({filter: '**/*.js'}),
     "local": {
