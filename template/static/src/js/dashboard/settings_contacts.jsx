@@ -86,8 +86,6 @@ var SettingsContactsList = React.createClass({
     },
     componentWillMount: function() {
         contacts.getAll(function(data, messages) {
-            console.log("contact component will mount");
-            console.log(data);
             this.setState({
                 contacts: data,
                 messages: messages

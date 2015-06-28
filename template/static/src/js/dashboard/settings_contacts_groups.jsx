@@ -1,6 +1,6 @@
 var contactgroups = {
     get: function(id, cb) {
-        request.get("/api/v1/contacts/groups/" + id, function(cb) {
+        request.get("/api/v1/contacts/groups/" + id, function(data) {
             if (data.Result === "success") {
                 cb(data.Data, []);
             } else {
@@ -80,8 +80,6 @@ var SettingsContactsGroups = React.createClass({
     },
     componentWillMount: function() {
         contactgroups.getAll(function(data, messages) {
-            console.log("contact groups component will mount");
-            console.log(data)
             this.setState({
                 groups: data,
                 messages: messages
