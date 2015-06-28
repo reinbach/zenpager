@@ -11,7 +11,7 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
-func GroupList(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupList(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	d := models.ContactGetAll(db)
@@ -20,7 +20,7 @@ func GroupList(c web.C, w http.ResponseWriter, r *http.Request) {
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
-func GroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
@@ -41,7 +41,7 @@ func GroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
-func GroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	type Data struct {
@@ -91,7 +91,7 @@ func GroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	// get id of contact to be updated
@@ -133,7 +133,7 @@ func GroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
