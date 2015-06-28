@@ -39,13 +39,33 @@ func TestContactGroupCreate(t *testing.T) {
 	}
 }
 
+// create contact group with contacts
+func TestContactGroupWithContactsCreate(t *testing.T) {
+	db := database.Connect()
+
+	u := User{Email: "cg2@example.com"}
+	u.Create(db)
+
+	c := Contact{Name: "CG2", User: u}
+	c.Create(db)
+
+	g := Group{Name: "G5", Contacts: []Contact{c}}
+
+	r := g.Create(db)
+	if r != true {
+		t.Errorf("Expected success on contact group create, got %v", r)
+	}
+
+	if g.ID == 0 {
+		t.Errorf("Expected contact group id to be set")
+	}
+}
+
 // get all contact groups
 func TestContactGroupGetAll(t *testing.T) {
 	db := database.Connect()
 
-	g1 := Group{
-		Name: "G2",
-	}
+	g1 := Group{Name: "G2"}
 
 	r := g1.Create(db)
 	if r != true {

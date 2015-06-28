@@ -26,7 +26,7 @@ func (cg *ContactGroup) Create(db *sql.DB) bool {
 type Group struct {
 	ID       int64
 	Name     string
-	Contacts []*Contact
+	Contacts []Contact
 }
 
 func ContactGroupGetAll(db *sql.DB) []Group {
@@ -75,7 +75,7 @@ func (g *Group) Create(db *sql.DB) bool {
 
 	var cg ContactGroup
 	for _, c := range g.Contacts {
-		cg = ContactGroup{Contact: c, Group: g}
+		cg = ContactGroup{Contact: &c, Group: g}
 		cg.Create(db)
 	}
 
