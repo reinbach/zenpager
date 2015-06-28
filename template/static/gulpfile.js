@@ -11,10 +11,7 @@ var jsFiles = {
             "auth.jsx",
             "dashboard.jsx",
             "profile.jsx",
-            "settings.jsx",
-            "settings_contacts_holder.jsx",
-            "settings_contacts.jsx",
-            "settings_contacts_groups.jsx",
+            "settings/**/*.jsx",
             "validation.jsx",
             "main.jsx"
         ])

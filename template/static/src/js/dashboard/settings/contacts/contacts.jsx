@@ -1,97 +1,29 @@
-var contactgroups = {
-    get: function(id, cb) {
-        request.get("/api/v1/contacts/groups/" + id, function(data) {
-            if (data.Result === "success") {
-                cb(data.Data, []);
-            } else {
-                cb([], data.Messages);
-            }
-        });
-    },
-    getAll: function(cb) {
-        request.get("/api/v1/contacts/groups/", function(data) {
-            if (data.Result === "success") {
-                cb(data.Data, []);
-            } else {
-                cb({data: [], errors: data.Messages});
-            }
-        });
-    },
-    add: function(name, cb) {
-        request.post(
-            "/api/v1/contacts/groups/",
-            {name: name},
-            function(res) {
-                if (res.Result == "success") {
-                    if (cb) cb(true, [{
-                        Type: "success",
-                        Content: "Successfully added contact group."
-                    }]);
-                } else {
-                    if (cb) cb(false, res.Messages);
-                }
-            }
-        );
-    },
-    remove: function(id, cb) {
-        request.remove(
-            "/api/v1/contacts/groups/" + id,
-            function(res) {
-                if (res.Result == "success") {
-                    if (cb) cb([{
-                        Type: "success",
-                        Content: "Successfully removed contact group."
-                    }]);
-                } else {
-                    if (cb) cb(res.Messages);
-                }
-            }
-        );
-    },
-    update: function(id, name, cb) {
-        request.put(
-            "/api/v1/contacts/groups/" + id,
-            {name: name},
-            function(res) {
-                if (res.Result == "success") {
-                    if (cb) cb(true, [{
-                        Type: "success",
-                        Content: "Successfully updated contact group."
-                    }]);
-                } else {
-                    if (cb) cb(false, res.Messages);
-                }
-            }
-        );
-    }
-}
-
-var SettingsContactsGroups = React.createClass({
+var SettingsContactsList = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     propTypes: {
-        groups: React.PropTypes.array,
+        contacts: React.PropTypes.array,
         messages: React.PropTypes.array
     },
     getInitialState: function() {
         return {
-            groups: [],
+            contacts: [],
             messages: []
         };
     },
     componentWillMount: function() {
-        contactgroups.getAll(function(data, messages) {
+        contacts.getAll(function(data, messages) {
             this.setState({
-                groups: data,
+                contacts: data,
                 messages: messages
             });
         }.bind(this));
     },
-    removeGroup: function(group) {
-        contactgroups.remove(group.id, function(messages) {
+    removeContact: function(contact) {
+        contacts.remove(contact.id, function(messages) {
             this.setState({messages: messages})
         }.bind(this));
         this.setState({
-            groups: removeFromList(this.state.groups, group)
+            contacts: removeFromList(this.state.contacts, contact)
         });
     },
     render: function() {
@@ -99,51 +31,49 @@ var SettingsContactsGroups = React.createClass({
         this.state.messages.forEach(function(msg) {
             msgs.push(<Messages type={msg.Type} message={msg.Content} />);
         });
-        var groups = [];
-        this.state.groups.forEach(function(group) {
-            groups.push(
-                <SettingsContactsGroupLine group={group}
-                                           removeGroup={this.removeGroup} />
-            );
+        var contacts = [];
+        this.state.contacts.forEach(function(contact) {
+            contacts.push(<SettingsContactsLine contact={contact} removeContact={this.removeContact} />);
         }.bind(this));
         return (
             <div>
-                <h2>Groups</h2>
+                <h2>Individuals</h2>
                 {msgs}
                 <Table striped hover>
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Email</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {groups}
+                        {contacts}
                     </tbody>
                 </Table>
 
-                <Link to="s_contacts_group_add"
-                      className="btn btn-primary">Add Group</Link>
+                <Link to="s_contacts_add" className="btn btn-primary">Add Contact</Link>
             </div>
-        )
+        );
     }
 });
 
-var SettingsContactsGroupLine = React.createClass({
+var SettingsContactsLine = React.createClass({
     handleDelete: function() {
-        this.props.removeGroup(this.props.group);
+        this.props.removeContact(this.props.contact);
     },
     render: function() {
         return (
             <tr>
-                <td>{this.props.group.name}</td>
+                <td>{this.props.contact.name}</td>
+                <td>{this.props.contact.user.email}</td>
                 <td className="action-cell">
                     <Button bsSize="xsmall" bsStyle="danger"
                             onClick={this.handleDelete}>
                         Delete
                     </Button>
-                    <Link to="s_contacts_group_update"
-                          params={{"groupId": this.props.group.id}}
+                    <Link to="s_contacts_update"
+                          params={{"contactId": this.props.contact.id}}
                           className="btn btn-xs btn-default">Edit</Link>
                 </td>
             </tr>
@@ -151,33 +81,35 @@ var SettingsContactsGroupLine = React.createClass({
     }
 });
 
-var SettingsContactsGroupForm = React.createClass({
+var SettingsContactsForm = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     getInitialState: function() {
         return {
             id: "",
             action: "Add",
             name: "",
+            email: "",
             messages: []
         }
     },
     componentDidMount: function() {
-        if (this.props.params.groupId != undefined) {
-            var id = this.props.params.groupId;
+        if (this.props.params.contactId != undefined) {
+            var id = this.props.params.contactId;
             this.setState({
                 "id": id,
                 "action": "Update"
             });
-            contactgroups.get(id, this.handleGet);
+            contacts.get(id, this.handleGet);
         }
     },
     handleGet: function(data, messages) {
         if (messages.length > 0) {
-            this.setState({messages: messages, name: ""});
+            this.setState({messages: messages, name: "", email: ""});
         } else {
             this.setState({
                 messages: messages,
-                name: data.name
+                name: data.name,
+                email: data.user.email
             });
         }
     },
@@ -189,9 +121,18 @@ var SettingsContactsGroupForm = React.createClass({
             return "error"
         }
     },
+    validateEmailState: function() {
+        if (this.state.email.length > 0) {
+            if (validateEmail(this.state.email) === true) {
+                return "success";
+            }
+            return "error"
+        }
+    },
     handleChange: function() {
         this.setState({
             name: this.refs.name.getValue(),
+            email: this.refs.email.getValue()
         });
     },
     handleSubmit: function() {
@@ -202,7 +143,13 @@ var SettingsContactsGroupForm = React.createClass({
             });
             return ;
         }
-        if (this.validateNameState() !== "success") {
+        if (this.state.email.length < 1) {
+            this.setState({
+                messages: [{Type: "danger", Content: "Email is required."}]
+            });
+            return ;
+        }
+        if (this.validateNameState() !== "success" || this.validateEmailState() !== "success") {
             this.setState({
                 messages: [{Type: "danger", Content: "Fix errors"}]
             });
@@ -210,10 +157,10 @@ var SettingsContactsGroupForm = React.createClass({
         }
 
         if (this.state.id != "") {
-            contactgroups.update(this.state.id, this.state.name,
+            contacts.update(this.state.id, this.state.name, this.state.email,
                             this.handleFormResponse);
         } else {
-            contactgroups.add(this.state.name,
+            contacts.add(this.state.name, this.state.email,
                          this.handleFormResponse);
         }
     },
@@ -222,12 +169,13 @@ var SettingsContactsGroupForm = React.createClass({
             if (this.state.id) {
                 this.setState({messages: messages});
             } else {
-                this.setState({messages: messages, name: ""});
+                this.setState({messages: messages, name: "", email: ""});
             }
         } else {
             this.setState({
                 messages: messages,
-                name: this.state.name
+                name: this.state.name,
+                email: this.state.email
             });
         }
     },
@@ -239,14 +187,18 @@ var SettingsContactsGroupForm = React.createClass({
         return (
             <div className="col-md-4">
                 <form onSubmit={this.handleSubmit} className="text-left">
-                    <h2 className="page-header">{this.state.action} Contact Group</h2>
+                    <h2 className="page-header">{this.state.action} Contact</h2>
                     {msgs}
                     <Input label="Name" type="text" ref="name"
-                           placeholder="Admins" value={this.state.name}
+                           placeholder="Jane Smart" value={this.state.name}
                            autoFocus hasFeedback bsStyle={this.validateNameState()}
                            onChange={this.handleChange} />
+                    <Input label="Email" type="text" ref="email"
+                           placeholder="test@example.com" value={this.state.email}
+                           hasFeedback bsStyle={this.validateEmailState()}
+                           onChange={this.handleChange} />
                     <Button type="submit" bsStyle="success">
-                        {this.state.action} Contact Group
+                        {this.state.action} Contact
                     </Button>
                     <Link to="s_contacts_list" className="btn btn-default">Cancel</Link>
                 </form>
