@@ -6,7 +6,7 @@ var contacts = {
         $(".contacts-link").removeClass("active");
     },
     get: function(id, cb) {
-        request.get("/api/v1/contacts/" + id, function(cb) {
+        request.get("/api/v1/contacts/" + id, function(data) {
             if (data.Result === "success") {
                 cb(data.Data, []);
             } else {
