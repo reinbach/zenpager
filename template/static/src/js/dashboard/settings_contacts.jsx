@@ -111,6 +111,7 @@ var SettingsContactsList = React.createClass({
         }.bind(this));
         return (
             <div>
+                <h2>Individuals</h2>
                 {msgs}
                 <Table striped hover>
                     <thead>

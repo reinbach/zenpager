@@ -108,6 +108,7 @@ var SettingsContactsGroups = React.createClass({
         }.bind(this));
         return (
             <div>
+                <h2>Groups</h2>
                 {msgs}
                 <Table striped hover>
                     <thead>

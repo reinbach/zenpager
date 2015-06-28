@@ -23,9 +23,13 @@ var SettingsContacts = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     render: function() {
         return (
-            <div>
-                <SettingsContactsGroups />
-                <SettingsContactsList />
+            <div className="row">
+                <div className="col-md-6">
+                    <SettingsContactsGroups />
+                </div>
+                <div className="col-md-6">
+                    <SettingsContactsList />
+                </div>
             </div>
         )
     }
