@@ -113,7 +113,8 @@ var routes = (
                        handler={SettingsContactsForm} />
                 <Route name="s_contacts_group_add" path="group/add"
                        handler={SettingsContactsGroupForm} />
-                <Route name="s_contacts_group_update" path="group/update/:groupId"
+                <Route name="s_contacts_group_update"
+                       path="group/update/:groupId"
                        handler={SettingsContactsGroupForm} />
                 <Redirect from="/contacts" to="s_contacts_list" />
             </Route>

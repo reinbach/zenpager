@@ -12,7 +12,9 @@ var jsFiles = {
             "dashboard.jsx",
             "profile.jsx",
             "settings.jsx",
+            "settings_contacts_holder.jsx",
             "settings_contacts.jsx",
+            "settings_contacts_groups.jsx",
             "validation.jsx",
             "main.jsx"
         ])
