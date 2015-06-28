@@ -14,7 +14,7 @@ import (
 func ContactGroupList(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	d := models.ContactGetAll(db)
+	d := models.ContactGroupGetAll(db)
 
 	res := utils.Response{Result: "success", Data: d}
 	utils.EncodePayload(w, http.StatusOK, res)
@@ -25,66 +25,63 @@ func ContactGroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		utils.NotFoundResponse(w, "Contact not found.")
+		utils.NotFoundResponse(w, "Contact Group not found.")
 		return
 	}
 
-	contact := models.Contact{ID: id}
-	contact.Get(db)
+	group := models.Group{ID: id}
+	group.Get(db)
 
-	if contact.User.ID == 0 {
-		utils.NotFoundResponse(w, "Contact not found")
+	if group.Name == "" {
+		utils.NotFoundResponse(w, "Contact Group not found")
 		return
 	}
 
-	res := utils.Response{Result: "success", Data: contact}
+	res := utils.Response{Result: "success", Data: group}
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
 func ContactGroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	type Data struct {
-		Name  string
-		Email string
-	}
-	d := Data{}
-	if err := utils.DecodePayload(r, &d); err != nil {
+	g := models.Group{}
+	if err := utils.DecodePayload(r, &g); err != nil {
 		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
 
-	contact := models.Contact{}
-	contact.Name = d.Name
-	contact.User.Email = d.Email
-
-	errors := contact.Validate()
+	errors := g.Validate()
 	if len(errors) > 0 {
 		res := utils.Response{Result: "error", Messages: errors}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 
-	contact.User.GetByEmail(db)
-	if contact.User.ID == 0 {
-		contact.User.Create(db)
+	gl := models.ContactGroupGetAll(db)
+	f := false
+	for _, v := range gl {
+		if v.Name == g.Name {
+			f = true
+		}
 	}
-	contact.GetByUser(db)
-	if contact.ID != 0 {
+	if f {
 		utils.BadRequestResponse(
 			w,
-			"Contact already exists for this email address.",
+			"Contact Group with this name already exists.",
 		)
 		return
 	}
-	if contact.Create(db) {
-		m := utils.Message{Type: "success", Content: "Contact data added."}
+	if g.Create(db) {
+		m := utils.Message{
+			Type:    "success",
+			Content: "Contact Group data added.",
+		}
 		res := utils.Response{Result: "success", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusAccepted, res)
 	} else {
 		m := utils.Message{
 			Type:    "danger",
-			Content: "Failed to update contact.",
+			Content: "Failed to update Contact Group.",
 		}
 		res := utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusInternalServerError, res)
@@ -94,39 +91,40 @@ func ContactGroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 func ContactGroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	// get id of contact to be updated
+	// get id of contact group to be updated
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		utils.NotFoundResponse(w, "Contact not found.")
+		utils.NotFoundResponse(w, "Contact Group not found.")
 		return
 	}
 
 	// set contact with current data
-	contact := models.Contact{
-		ID: id,
-	}
-	contact.Get(db)
+	g := models.Group{ID: id}
+	g.Get(db)
 
 	// update data with new data and ensure it is valid
-	if err := utils.DecodePayload(r, &contact); err != nil {
+	if err := utils.DecodePayload(r, &g); err != nil {
 		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
-	errors := contact.Validate()
+	errors := g.Validate()
 	if len(errors) > 0 {
 		res := utils.Response{Result: "error", Messages: errors}
 		utils.EncodePayload(w, http.StatusBadRequest, res)
 		return
 	}
 
-	if contact.Update(db) {
-		m := utils.Message{Type: "success", Content: "Contact data updated."}
+	if g.Update(db) {
+		m := utils.Message{
+			Type:    "success",
+			Content: "Contact Group data updated.",
+		}
 		res := utils.Response{Result: "success", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusAccepted, res)
 	} else {
 		m := utils.Message{
 			Type:    "danger",
-			Content: "Failed to update contact.",
+			Content: "Failed to update Contact Group.",
 		}
 		res := utils.Response{Result: "error", Messages: []utils.Message{m}}
 		utils.EncodePayload(w, http.StatusInternalServerError, res)
@@ -138,12 +136,12 @@ func ContactGroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
 	if err != nil {
-		utils.NotFoundResponse(w, "Contact not found.")
+		utils.NotFoundResponse(w, "Contact Group not found.")
 		return
 	}
 
-	contact := models.Contact{ID: id}
-	contact.Delete(db)
+	g := models.Group{ID: id}
+	g.Delete(db)
 
 	res := utils.Response{Result: "success"}
 	utils.EncodePayload(w, http.StatusOK, res)
