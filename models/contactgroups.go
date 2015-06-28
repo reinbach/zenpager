@@ -65,8 +65,8 @@ func (g *Group) Validate() []utils.Message {
 }
 
 func (g *Group) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO contact_group (name) VALUES($1)",
-		g.Name)
+	err := db.QueryRow("INSERT INTO contact_group (name) VALUES($1) RETURNING id",
+		g.Name).Scan(&g.ID)
 	if err != nil {
 		log.Printf("Failed to create contact group record. ", err)
 		return false
