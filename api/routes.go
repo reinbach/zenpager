@@ -67,12 +67,12 @@ func ContactRoutes() *web.Mux {
 	api.Delete("/:id", ContactDelete)
 
 	// contact groups
-	api.Get("/groups/", GroupList)
-	api.Get("/groups/:id", GroupItem)
-	api.Post("/groups/", GroupAdd)
-	api.Put("/groups/:id", GroupUpdate)
-	api.Patch("/groups/:id", GroupUpdate)
-	api.Delete("/groups/:id", GroupDelete)
+	api.Get("/groups/", ContactGroupList)
+	api.Get("/groups/:id", ContactGroupItem)
+	api.Post("/groups/", ContactGroupAdd)
+	api.Put("/groups/:id", ContactGroupUpdate)
+	api.Patch("/groups/:id", ContactGroupUpdate)
+	api.Delete("/groups/:id", ContactGroupDelete)
 
 	return api
 }
