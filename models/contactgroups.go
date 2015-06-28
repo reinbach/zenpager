@@ -81,3 +81,37 @@ func (g *Group) Create(db *sql.DB) bool {
 
 	return true
 }
+
+func (g *Group) Get(db *sql.DB) {
+	err := db.QueryRow(
+		"SELECT name FROM contact_group WHERE id = $1",
+		g.ID,
+	).Scan(&g.Name)
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("Contact Group not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+}
+
+func (g *Group) Update(db *sql.DB) bool {
+	_, err := db.Exec("UPDATE contact_group SET name = $1 WHERE id = $2",
+		g.Name, g.ID)
+	if err != nil {
+		log.Printf("Failed to update contact group record. ", err)
+		return false
+	}
+	return true
+}
+
+func (g *Group) Delete(db *sql.DB) bool {
+	_, err := db.Exec("DELETE FROM contact_group WHERE id = $1",
+		g.ID)
+	if err != nil {
+		log.Printf("Failed to delete contact group record. ", err)
+		return false
+	}
+	return true
+}

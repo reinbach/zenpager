@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/reinbach/zenpager/database"
@@ -101,11 +100,89 @@ func TestContactGroupLinkCreate(t *testing.T) {
 	g.Create(db)
 
 	cg := ContactGroup{Contact: &c, Group: &g}
-	fmt.Println("Contact ID: ", cg.Contact.ID)
-	fmt.Println("Group ID: ", cg.Group.ID)
 	r := cg.Create(db)
 
 	if r != true {
 		t.Errorf("Exepected success on contact group relation, got %v", r)
+	}
+}
+
+// get contact group
+func TestContactGroupGet(t *testing.T) {
+	db := database.Connect()
+
+	g := Group{Name: "G6"}
+
+	r := g.Create(db)
+	if r != true {
+		t.Errorf("Expected success on contact group create, got %v", r)
+	}
+
+	ng := Group{ID: 1234}
+	ng.Get(db)
+
+	if ng.Name == g.Name {
+		t.Errorf("Expected to NOT get contact group data")
+	}
+
+	ng.ID = g.ID
+	ng.Get(db)
+
+	if ng.Name != g.Name {
+		t.Errorf("Expected to get contact group data")
+	}
+}
+
+// update contact group
+func TestContactGroupUpdate(t *testing.T) {
+	db := database.Connect()
+
+	g := Group{Name: "G7"}
+
+	r := g.Create(db)
+	if r != true {
+		t.Errorf("Expected success on contact group create, got %v", r)
+	}
+
+	g.Name = "G8"
+	r = g.Update(db)
+	if r != true {
+		t.Errorf("Expected success from contact group update, got %v", r)
+	}
+
+	ng := Group{ID: g.ID}
+
+	ng.Get(db)
+
+	if ng.Name != "G8" {
+		t.Errorf("Expected contact group data to be updated, still %v",
+			ng.Name,
+		)
+	}
+}
+
+// delete contact group
+func TestContactGroupDelete(t *testing.T) {
+	db := database.Connect()
+
+	g := Group{Name: "G9"}
+
+	r := g.Create(db)
+	if r != true {
+		t.Errorf("Expected success on contact group create, got %v", r)
+	}
+
+	r = g.Delete(db)
+	if r != true {
+		t.Errorf("Expected success from contact group delete, got %v", r)
+	}
+
+	ng := Group{ID: g.ID}
+	ng.Get(db)
+
+	if ng.Name != "" {
+		t.Errorf("Expected contact group to be deleted, still exists (%v)",
+			ng.Name,
+		)
 	}
 }
