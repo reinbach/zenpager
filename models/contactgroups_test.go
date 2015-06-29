@@ -186,3 +186,44 @@ func TestContactGroupDelete(t *testing.T) {
 		)
 	}
 }
+
+// get contacts for contact group
+func TestContactGroupContacts(t *testing.T) {
+	db := database.Connect()
+
+	g := Group{Name: "G10"}
+	g.Create(db)
+
+	g.GetContacts(db)
+
+	if len(g.Contacts) != 0 {
+		t.Errorf("Expected no contact group contacts, got %v", g.Contacts)
+	}
+
+	u1 := User{Email: "cg3@example.com"}
+	u1.Create(db)
+
+	c1 := Contact{Name: "CG3", User: u1}
+	c1.Create(db)
+
+	cg1 := ContactGroup{Contact: &c1, Group: &g}
+	cg1.Create(db)
+
+	u2 := User{Email: "cg4@example.com"}
+	u2.Create(db)
+
+	c2 := Contact{Name: "CG4", User: u2}
+	c2.Create(db)
+
+	cg2 := ContactGroup{Contact: &c2, Group: &g}
+	cg2.Create(db)
+
+	r := g.GetContacts(db)
+	if r != true {
+		t.Errorf("Expected success from contact group contacts, got %v", r)
+	}
+
+	if len(g.Contacts) != 2 {
+		t.Errorf("Expected 2 contact group contacts, got %v", g.Contacts)
+	}
+}

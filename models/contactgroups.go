@@ -115,3 +115,28 @@ func (g *Group) Delete(db *sql.DB) bool {
 	}
 	return true
 }
+
+func (g *Group) GetContacts(db *sql.DB) bool {
+	rows, err := db.Query("SELECT c.id, c.name, u.email FROM contact_contact as c JOIN auth_user AS u on c.user_id = u.id JOIN contact_contactgroup AS cg ON c.id = cg.contact_id WHERE cg.group_id = $1 ORDER BY c.name",
+		g.ID,
+	)
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("Contact Group's Contacts not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var c Contact
+		err = rows.Scan(&c.ID, &c.Name, &c.User.Email)
+		if err != nil {
+			log.Println("Failed to get contact group contacts data: ", err)
+		}
+		g.Contacts = append(g.Contacts, c)
+	}
+
+	return true
+}
