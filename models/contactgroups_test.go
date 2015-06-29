@@ -86,8 +86,8 @@ func TestContactGroupGetAll(t *testing.T) {
 	}
 }
 
-// create contact group relation
-func TestContactGroupLinkCreate(t *testing.T) {
+// add contact to group
+func TestContactGroupAddContact(t *testing.T) {
 	db := database.Connect()
 
 	u := User{Email: "cg1@example.com"}
@@ -99,11 +99,10 @@ func TestContactGroupLinkCreate(t *testing.T) {
 	g := Group{Name: "G4"}
 	g.Create(db)
 
-	cg := ContactGroup{Contact: &c, Group: &g}
-	r := cg.Create(db)
+	r := g.AddContact(db, &c)
 
 	if r != true {
-		t.Errorf("Exepected success on contact group relation, got %v", r)
+		t.Errorf("Expected success on adding contact to group, got %v", r)
 	}
 }
 
@@ -206,8 +205,7 @@ func TestContactGroupContacts(t *testing.T) {
 	c1 := Contact{Name: "CG3", User: u1}
 	c1.Create(db)
 
-	cg1 := ContactGroup{Contact: &c1, Group: &g}
-	cg1.Create(db)
+	g.AddContact(db, &c1)
 
 	u2 := User{Email: "cg4@example.com"}
 	u2.Create(db)
@@ -215,8 +213,7 @@ func TestContactGroupContacts(t *testing.T) {
 	c2 := Contact{Name: "CG4", User: u2}
 	c2.Create(db)
 
-	cg2 := ContactGroup{Contact: &c2, Group: &g}
-	cg2.Create(db)
+	g.AddContact(db, &c2)
 
 	r := g.GetContacts(db)
 	if r != true {
@@ -241,8 +238,7 @@ func TestContactGroupRemoveContact(t *testing.T) {
 	c1 := Contact{Name: "CG5", User: u1}
 	c1.Create(db)
 
-	cg1 := ContactGroup{Contact: &c1, Group: &g}
-	cg1.Create(db)
+	g.AddContact(db, &c1)
 
 	u2 := User{Email: "cg6@example.com"}
 	u2.Create(db)
@@ -250,8 +246,7 @@ func TestContactGroupRemoveContact(t *testing.T) {
 	c2 := Contact{Name: "CG6", User: u2}
 	c2.Create(db)
 
-	cg2 := ContactGroup{Contact: &c2, Group: &g}
-	cg2.Create(db)
+	g.AddContact(db, &c2)
 
 	g.GetContacts(db)
 

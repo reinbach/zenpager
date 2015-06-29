@@ -7,22 +7,6 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
-type ContactGroup struct {
-	Contact *Contact
-	Group   *Group
-}
-
-func (cg *ContactGroup) Create(db *sql.DB) bool {
-	_, err := db.Exec("INSERT INTO contact_contactgroup (contact_id, group_id) VALUES($1, $2)",
-		cg.Contact.ID, cg.Group.ID)
-	if err != nil {
-		log.Printf("Failed to create contactgroup record. ", err)
-		return false
-	}
-	log.Printf("Created contactgroup record.")
-	return true
-}
-
 type Group struct {
 	ID       int64     `json:"id"`
 	Name     string    `json:"name"`
@@ -72,12 +56,6 @@ func (g *Group) Create(db *sql.DB) bool {
 		return false
 	}
 	log.Printf("Created contact group record.")
-
-	var cg ContactGroup
-	for _, c := range g.Contacts {
-		cg = ContactGroup{Contact: &c, Group: g}
-		cg.Create(db)
-	}
 
 	return true
 }
@@ -139,6 +117,17 @@ func (g *Group) GetContacts(db *sql.DB) bool {
 		g.Contacts = append(g.Contacts, c)
 	}
 
+	return true
+}
+
+func (g *Group) AddContact(db *sql.DB, c *Contact) bool {
+	_, err := db.Exec("INSERT INTO contact_contactgroup (contact_id, group_id) VALUES($1, $2)",
+		c.ID, g.ID)
+	if err != nil {
+		log.Printf("Failed to create contactgroup record. ", err)
+		return false
+	}
+	log.Printf("Created contactgroup record.")
 	return true
 }
 

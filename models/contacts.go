@@ -49,12 +49,6 @@ func (c *Contact) Create(db *sql.DB) bool {
 		return false
 	}
 
-	var cg ContactGroup
-	for _, g := range c.Groups {
-		cg = ContactGroup{Contact: c, Group: g}
-		cg.Create(db)
-	}
-
 	return true
 }
 
