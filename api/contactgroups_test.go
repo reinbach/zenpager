@@ -287,8 +287,8 @@ func TestContactGroupContacts(t *testing.T) {
 	}
 }
 
-// Contact Group Contact Add
-func TestContactGroupContactAdd(t *testing.T) {
+// Contact Group Add Contact
+func TestContactGroupAddContact(t *testing.T) {
 	db := database.Connect()
 	u := models.User{
 		Email: "contact-api-6@example.com",
@@ -317,21 +317,21 @@ func TestContactGroupContactAdd(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c := SetupWebContext()
-	ContactGroupContactAdd(c, w, r)
+	ContactGroupAddContact(c, w, r)
 	if w.Code != http.StatusNotFound {
 		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
 	}
 
 	w = httptest.NewRecorder()
 	c.URLParams = map[string]string{"id": fmt.Sprintf("%d", g.ID)}
-	ContactGroupContactAdd(c, w, r)
+	ContactGroupAddContact(c, w, r)
 	if w.Code != http.StatusOK {
 		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
 	}
 
 	w = httptest.NewRecorder()
 	c.URLParams = map[string]string{"id": "321"}
-	ContactGroupContactAdd(c, w, r)
+	ContactGroupAddContact(c, w, r)
 	if w.Code != http.StatusNotFound {
 		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
 	}

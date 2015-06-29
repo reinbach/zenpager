@@ -170,7 +170,7 @@ func ContactGroupContacts(c web.C, w http.ResponseWriter, r *http.Request) {
 	utils.EncodePayload(w, http.StatusOK, res)
 }
 
-func ContactGroupContactAdd(c web.C, w http.ResponseWriter, r *http.Request) {
+func ContactGroupAddContact(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
 	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
