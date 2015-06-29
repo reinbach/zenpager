@@ -1,3 +1,16 @@
+var settingsSideMenu = {
+    active: function(link) {
+        $(".nav-sidebar li a").removeClass("active");
+        var elem = ""
+        switch (link) {
+            case "contacts":
+                elem = $(".contacts-link");
+                break
+        }
+        elem.addClass("active");
+    }
+}
+
 var SettingsHolder = React.createClass({
     mixins: [AuthenticationMixin],
     render: function() {

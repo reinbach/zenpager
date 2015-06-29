@@ -1,9 +1,6 @@
 var SettingsContactsMixin = {
     componentDidMount: function() {
-        contacts.init();
-    },
-    componentWillUnmount: function() {
-        contacts.close();
+        settingsSideMenu.active("contacts");
     }
 };
 

@@ -93,6 +93,7 @@ var SettingsContactsForm = React.createClass({
         }
     },
     componentDidMount: function() {
+        settingsSideMenu.active("contacts");
         if (this.props.params.contactId != undefined) {
             var id = this.props.params.contactId;
             this.setState({

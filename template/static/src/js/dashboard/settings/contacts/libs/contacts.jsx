@@ -1,10 +1,4 @@
 var contacts = {
-    init: function() {
-        $(".contacts-link").addClass("active");
-    },
-    close: function() {
-        $(".contacts-link").removeClass("active");
-    },
     get: function(id, cb) {
         request.get("/api/v1/contacts/" + id, function(data) {
             if (data.Result === "success") {

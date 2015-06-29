@@ -68,7 +68,11 @@ var SettingsContactsGroupLine = React.createClass({
     render: function() {
         return (
             <tr>
-                <td>{this.props.group.name}</td>
+                <td>
+                    <Link to="s_contacts_group_detail"
+                          params={{"groupId": this.props.group.id}}
+                          >{this.props.group.name}</Link>
+                </td>
                 <td className="action-cell">
                     <Button bsSize="xsmall" bsStyle="danger"
                             onClick={this.handleDelete}>
@@ -94,6 +98,7 @@ var SettingsContactsGroupForm = React.createClass({
         }
     },
     componentDidMount: function() {
+        settingsSideMenu.active("contacts");
         if (this.props.params.groupId != undefined) {
             var id = this.props.params.groupId;
             this.setState({
@@ -184,5 +189,35 @@ var SettingsContactsGroupForm = React.createClass({
                 </form>
             </div>
         );
+    }
+});
+
+var SettingsContactsGroupDetail = React.createClass({
+    mixins: [AuthenticationMixin, SettingsContactsMixin],
+    getInitialState: function() {
+        return {
+            group: [],
+            messages: []
+        };
+    },
+    componentDidMount: function() {
+        settingsSideMenu.active("contacts");
+    },
+    componentWillMount: function() {
+        contactgroups.get(this.props.params.groupId, function(data, messages) {
+            this.setState({
+                group: data,
+                messages: messages
+            });
+        }.bind(this));
+    },
+    render: function() {
+        return(
+            <div>
+                <h2>Group: {this.state.group.name}</h2>
+                <Link to="s_contacts_list"
+                      className="btn btn-default">Back to Contacts</Link>
+            </div>
+        )
     }
 });
