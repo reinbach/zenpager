@@ -129,6 +129,7 @@ func (g *Group) GetContacts(db *sql.DB) bool {
 	}
 
 	defer rows.Close()
+	g.Contacts = []Contact{}
 	for rows.Next() {
 		var c Contact
 		err = rows.Scan(&c.ID, &c.Name, &c.User.Email)
@@ -138,5 +139,15 @@ func (g *Group) GetContacts(db *sql.DB) bool {
 		g.Contacts = append(g.Contacts, c)
 	}
 
+	return true
+}
+
+func (g *Group) RemoveContact(db *sql.DB, c *Contact) bool {
+	_, err := db.Exec("DELETE FROM contact_contactgroup WHERE contact_id = $1 AND group_id = $2",
+		c.ID, g.ID)
+	if err != nil {
+		log.Printf("Failed to remove contact from group. ", err)
+		return false
+	}
 	return true
 }

@@ -227,3 +227,46 @@ func TestContactGroupContacts(t *testing.T) {
 		t.Errorf("Expected 2 contact group contacts, got %v", g.Contacts)
 	}
 }
+
+// remove contact from contact group
+func TestContactGroupRemoveContact(t *testing.T) {
+	db := database.Connect()
+
+	g := Group{Name: "G11"}
+	g.Create(db)
+
+	u1 := User{Email: "cg5@example.com"}
+	u1.Create(db)
+
+	c1 := Contact{Name: "CG5", User: u1}
+	c1.Create(db)
+
+	cg1 := ContactGroup{Contact: &c1, Group: &g}
+	cg1.Create(db)
+
+	u2 := User{Email: "cg6@example.com"}
+	u2.Create(db)
+
+	c2 := Contact{Name: "CG6", User: u2}
+	c2.Create(db)
+
+	cg2 := ContactGroup{Contact: &c2, Group: &g}
+	cg2.Create(db)
+
+	g.GetContacts(db)
+
+	if len(g.Contacts) != 2 {
+		t.Errorf("Expected 2 contact group contacts, got %v", len(g.Contacts))
+	}
+
+	r := g.RemoveContact(db, &c1)
+	if r != true {
+		t.Errorf("Expected success removing contact from group, got %v", r)
+	}
+
+	g.GetContacts(db)
+
+	if len(g.Contacts) != 1 {
+		t.Errorf("Expected 1 contact in group, got %v", len(g.Contacts))
+	}
+}
