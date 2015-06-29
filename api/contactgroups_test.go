@@ -335,4 +335,69 @@ func TestContactGroupContactAdd(t *testing.T) {
 	if w.Code != http.StatusNotFound {
 		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
 	}
+
+	g.GetContacts(db)
+	if len(g.Contacts) != 1 {
+		t.Errorf("Expected a single contact to be in group, got %v",
+			len(g.Contacts))
+	}
+}
+
+// Contact Group Contact Delete
+func TestContactGroupContactDelete(t *testing.T) {
+	db := database.Connect()
+	u := models.User{
+		Email: "contact-api-7@example.com",
+	}
+	u.Create(db)
+	ut, _ := u.AddToken(db)
+
+	ct := models.Contact{
+		Name: "CGC3",
+		User: u,
+	}
+	ct.Create(db)
+
+	g := models.Group{Name: "ACG7"}
+	g.Create(db)
+
+	cg := models.ContactGroup{Contact: &ct, Group: &g}
+	cg.Create(db)
+
+	j, _ := json.Marshal(ct)
+	b := bytes.NewBuffer(j)
+
+	r, err := http.NewRequest("DELETE", fmt.Sprintf("/%d/contacts/", g.ID), b)
+	r.Header.Add("Content-Type", "application/json")
+	r.Header.Add("X-Access-Token", ut.Token)
+	if err != nil {
+		t.Errorf("Unexpected error", err)
+	}
+
+	w := httptest.NewRecorder()
+	c := SetupWebContext()
+	ContactGroupRemoveContact(c, w, r)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
+	}
+
+	w = httptest.NewRecorder()
+	c.URLParams = map[string]string{"id": fmt.Sprintf("%d", g.ID)}
+	ContactGroupRemoveContact(c, w, r)
+	if w.Code != http.StatusOK {
+		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
+	}
+
+	w = httptest.NewRecorder()
+	c.URLParams = map[string]string{"id": "321"}
+	ContactGroupRemoveContact(c, w, r)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
+	}
+
+	g.GetContacts(db)
+	if len(g.Contacts) != 0 {
+		t.Errorf("Expected contact to NOT be in group, got %v",
+			len(g.Contacts))
+	}
 }
