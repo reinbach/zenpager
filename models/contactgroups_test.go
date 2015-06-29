@@ -104,6 +104,10 @@ func TestContactGroupAddContact(t *testing.T) {
 	if r != true {
 		t.Errorf("Expected success on adding contact to group, got %v", r)
 	}
+
+	if len(g.Contacts) != 1 {
+		t.Errorf("Expected contact in by group contacts, got %v", g.Contacts)
+	}
 }
 
 // get contact group
@@ -215,11 +219,6 @@ func TestContactGroupContacts(t *testing.T) {
 
 	g.AddContact(db, &c2)
 
-	r := g.GetContacts(db)
-	if r != true {
-		t.Errorf("Expected success from contact group contacts, got %v", r)
-	}
-
 	if len(g.Contacts) != 2 {
 		t.Errorf("Expected 2 contact group contacts, got %v", g.Contacts)
 	}
@@ -247,8 +246,6 @@ func TestContactGroupRemoveContact(t *testing.T) {
 	c2.Create(db)
 
 	g.AddContact(db, &c2)
-
-	g.GetContacts(db)
 
 	if len(g.Contacts) != 2 {
 		t.Errorf("Expected 2 contact group contacts, got %v", len(g.Contacts))

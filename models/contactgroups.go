@@ -128,6 +128,9 @@ func (g *Group) AddContact(db *sql.DB, c *Contact) bool {
 		return false
 	}
 	log.Printf("Created contactgroup record.")
+
+	g.Contacts = append(g.Contacts, *c)
+
 	return true
 }
 
