@@ -69,7 +69,7 @@ var SettingsContactsGroupLine = React.createClass({
         return (
             <tr>
                 <td>
-                    <Link to="s_contacts_group_detail"
+                    <Link to="s_contacts_group_contacts"
                           params={{"groupId": this.props.group.id}}
                           >{this.props.group.name}</Link>
                 </td>
@@ -192,7 +192,7 @@ var SettingsContactsGroupForm = React.createClass({
     }
 });
 
-var SettingsContactsGroupDetail = React.createClass({
+var SettingsContactsGroupContacts = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     getInitialState: function() {
         return {
