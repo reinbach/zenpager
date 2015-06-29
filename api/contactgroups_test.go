@@ -339,8 +339,8 @@ func TestContactGroupAddContact(t *testing.T) {
 	}
 }
 
-// Contact Group Contact Delete
-func TestContactGroupContactDelete(t *testing.T) {
+// Contact Group Remove Contact
+func TestContactGroupRemoveContact(t *testing.T) {
 	db := database.Connect()
 	u := models.User{
 		Email: "contact-api-7@example.com",
