@@ -278,4 +278,11 @@ func TestContactGroupContacts(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
 	}
+
+	w = httptest.NewRecorder()
+	c.URLParams = map[string]string{"id": "321"}
+	ContactGroupContacts(c, w, r)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
+	}
 }

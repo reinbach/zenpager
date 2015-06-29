@@ -157,6 +157,13 @@ func ContactGroupContacts(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	g := models.Group{ID: id}
+	g.Get(db)
+
+	if g.Name == "" {
+		utils.NotFoundResponse(w, "Contact Group not found")
+		return
+	}
+
 	g.GetContacts(db)
 
 	res := utils.Response{Result: "success", Data: g}
