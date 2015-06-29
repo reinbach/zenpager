@@ -24,9 +24,9 @@ func (cg *ContactGroup) Create(db *sql.DB) bool {
 }
 
 type Group struct {
-	ID       int64  `json:"id"`
-	Name     string `json:"name"`
-	Contacts []Contact
+	ID       int64     `json:"id"`
+	Name     string    `json:"name"`
+	Contacts []Contact `json:"contacts"`
 }
 
 func ContactGroupGetAll(db *sql.DB) []Group {
