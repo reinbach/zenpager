@@ -227,7 +227,14 @@ func ContactGroupRemoveContact(c web.C, w http.ResponseWriter, r *http.Request) 
 
 	s := g.RemoveContact(db, &contact)
 	if s == true {
-		res := utils.Response{Result: "success"}
+		cs := []models.Contact{}
+		for _, ct := range g.Contacts {
+			if ct.ID != contact.ID {
+				cs = append(cs, ct)
+			}
+		}
+		g.Contacts = cs
+		res := utils.Response{Result: "success", Data: g}
 		utils.EncodePayload(w, http.StatusOK, res)
 	} else {
 		utils.BadRequestResponse(w, "Failed to remove contact from group.")
