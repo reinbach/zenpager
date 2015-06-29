@@ -146,3 +146,19 @@ func ContactGroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
 	res := utils.Response{Result: "success"}
 	utils.EncodePayload(w, http.StatusOK, res)
 }
+
+func ContactGroupContacts(c web.C, w http.ResponseWriter, r *http.Request) {
+	var db = database.FromContext(c)
+
+	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
+	if err != nil {
+		utils.NotFoundResponse(w, "Contact Group not found.")
+		return
+	}
+
+	g := models.Group{ID: id}
+	g.GetContacts(db)
+
+	res := utils.Response{Result: "success", Data: g}
+	utils.EncodePayload(w, http.StatusOK, res)
+}

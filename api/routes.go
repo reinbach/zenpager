@@ -74,5 +74,8 @@ func ContactRoutes() *web.Mux {
 	api.Patch("/groups/:id", ContactGroupUpdate)
 	api.Delete("/groups/:id", ContactGroupDelete)
 
+	// contact groups contacts
+	api.Get("/groups/:id/contacts", ContactGroupContacts)
+
 	return api
 }
