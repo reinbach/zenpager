@@ -204,12 +204,15 @@ var SettingsContactsGroupDetail = React.createClass({
         settingsSideMenu.active("contacts");
     },
     componentWillMount: function() {
-        contactgroups.get(this.props.params.groupId, function(data, messages) {
-            this.setState({
-                group: data,
-                messages: messages
-            });
-        }.bind(this));
+        contactgroups.getContacts(
+            this.props.params.groupId,
+            function(data, messages) {
+                this.setState({
+                    group: data,
+                    messages: messages
+                });
+            }.bind(this)
+        );
     },
     render: function() {
         return(
