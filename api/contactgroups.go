@@ -193,8 +193,7 @@ func ContactGroupAddContact(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gc := models.ContactGroup{Contact: &contact, Group: &g}
-	s := gc.Create(db)
+	s := g.AddContact(db, &contact)
 	if s == true {
 		res := utils.Response{Result: "success", Data: g}
 		utils.EncodePayload(w, http.StatusOK, res)

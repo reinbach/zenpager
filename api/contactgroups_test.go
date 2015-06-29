@@ -252,11 +252,7 @@ func TestContactGroupContacts(t *testing.T) {
 	g := models.Group{Name: "ACG5"}
 	g.Create(db)
 
-	cg := models.ContactGroup{
-		Contact: &ct,
-		Group:   &g,
-	}
-	cg.Create(db)
+	g.AddContact(db, &ct)
 
 	r, err := http.NewRequest("GET", fmt.Sprintf("/%d/contacts/", g.ID), nil)
 	r.Header.Add("Content-Type", "application/json")
@@ -361,8 +357,7 @@ func TestContactGroupContactDelete(t *testing.T) {
 	g := models.Group{Name: "ACG7"}
 	g.Create(db)
 
-	cg := models.ContactGroup{Contact: &ct, Group: &g}
-	cg.Create(db)
+	g.AddContact(db, &ct)
 
 	j, _ := json.Marshal(ct)
 	b := bytes.NewBuffer(j)
