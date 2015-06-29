@@ -75,5 +75,21 @@ var contactgroups = {
                 }
             }
         );
+    },
+    addContact: function(id, contact_id, cb) {
+        request.post(
+            "/api/v1/contacts/groups/" + id + "/contacts/",
+            {id: contact_id},
+            function(res) {
+                if (res.Result == "success") {
+                    if (cb) cb(true, [{
+                        Type: "success",
+                        Content: "Successfully added contact to group."
+                    }]);
+                } else {
+                    if (cb) cb(false, res.Messages);
+                }
+            }
+        );
     }
 }

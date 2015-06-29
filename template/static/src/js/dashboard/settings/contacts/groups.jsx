@@ -196,8 +196,9 @@ var SettingsContactsGroupContacts = React.createClass({
     mixins: [AuthenticationMixin, SettingsContactsMixin],
     getInitialState: function() {
         return {
-            group: [],
-            messages: []
+            group: {},
+            messages: [],
+            contacts: []
         };
     },
     componentDidMount: function() {
@@ -213,14 +214,99 @@ var SettingsContactsGroupContacts = React.createClass({
                 });
             }.bind(this)
         );
+        contacts.getAll(function(data, messages) {
+            this.setState({
+                contacts: data,
+                messages: messages
+            });
+        }.bind(this));
+    },
+    removeContact: function(contact) {
+        console.log("remove: " + contact);
+    },
+    addContact: function(contact) {
+        contactgroups.addContact(
+            this.props.params.groupId,
+            contact.id,
+            function(data, messages) {
+                console.log("mmmm");
+                this.setState({
+                    contacts: removeFromList(this.state.contacts, contact),
+                    messages: messages
+                });
+            }.bind(this)
+        );
     },
     render: function() {
+        var msgs = [];
+        this.state.messages.forEach(function(msg) {
+            msgs.push(<Messages type={msg.Type} message={msg.Content} />);
+        });
+        var available_contacts = [];
+        this.state.contacts.forEach(function(contact) {
+            available_contacts.push(
+                <SettingsContactsGroupContactLine contact={contact}
+                                                  state="available"
+                                                  removeContact={this.removeContact}
+                                                  addContact={this.addContact} />
+            );
+        }.bind(this));
+        var current_contacts = [];
+        if (this.state.group.contacts !== undefined) {
+            this.state.group.contacts.forEach(function(contact) {
+                current_contacts.push(
+                    <SettingsContactsGroupContactLine contact={contact}
+                                                      state="current"
+                                                      removeContact={this.removeContact}
+                                                      addContact={this.addContact} />
+                );
+            }.bind(this));
+        }
         return(
             <div>
-                <h2>Group: {this.state.group.name}</h2>
+                {msgs}
+                <div className="row">
+                    <div className="col-md-6">
+                        <h2>Group: {this.state.group.name}</h2>
+                        {current_contacts}
+                    </div>
+                    <div className="col-md-6">
+                        <h3>Available Contacts</h3>
+                        {available_contacts}
+                    </div>
+                </div>
                 <Link to="s_contacts_list"
                       className="btn btn-default">Back to Contacts</Link>
             </div>
         )
     }
 });
+
+var SettingsContactsGroupContactLine = React.createClass({
+    handleRemove: function() {
+        this.props.removeContact(this.props.contact);
+    },
+    handleAdd: function() {
+        this.props.addContact(this.props.contact);
+    },
+    render: function() {
+        var button = [];
+        if (this.props.state === "available") {
+            button.push(
+                <Button bsSize="xsmall" bsStyle="success"
+                        onClick={this.handleAdd}>Add</Button>
+            );
+        } else {
+            button.push(
+                <Button bsSize="xsmall" bsStyle="danger"
+                        onClick={this.handleRemove}>Remove</Button>
+            );
+        }
+        return (
+            <div>
+                {this.props.contact.name}
+                {button}
+            </div>
+        )
+    }
+})
