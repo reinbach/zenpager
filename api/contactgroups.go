@@ -169,3 +169,36 @@ func ContactGroupContacts(c web.C, w http.ResponseWriter, r *http.Request) {
 	res := utils.Response{Result: "success", Data: g}
 	utils.EncodePayload(w, http.StatusOK, res)
 }
+
+func ContactGroupContactAdd(c web.C, w http.ResponseWriter, r *http.Request) {
+	var db = database.FromContext(c)
+
+	id, err := strconv.ParseInt(c.URLParams["id"], 10, 64)
+	if err != nil {
+		utils.NotFoundResponse(w, "Contact Group not found.")
+		return
+	}
+
+	g := models.Group{ID: id}
+	g.Get(db)
+
+	if g.Name == "" {
+		utils.NotFoundResponse(w, "Contact Group not found")
+		return
+	}
+
+	contact := models.Contact{}
+	if err := utils.DecodePayload(r, &contact); err != nil {
+		utils.BadRequestResponse(w, "Data appears to be invalid.")
+		return
+	}
+
+	gc := models.ContactGroup{Contact: &contact, Group: &g}
+	s := gc.Create(db)
+	if s == true {
+		res := utils.Response{Result: "success", Data: g}
+		utils.EncodePayload(w, http.StatusOK, res)
+	} else {
+		utils.BadRequestResponse(w, "Failed to add contact.")
+	}
+}
