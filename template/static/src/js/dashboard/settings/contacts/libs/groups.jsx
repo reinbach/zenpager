@@ -82,9 +82,24 @@ var contactgroups = {
             {id: contact_id},
             function(res) {
                 if (res.Result == "success") {
-                    if (cb) cb(true, [{
+                    if (cb) cb(res.Data, [{
                         Type: "success",
                         Content: "Successfully added contact to group."
+                    }]);
+                } else {
+                    if (cb) cb(false, res.Messages);
+                }
+            }
+        );
+    },
+    removeContact: function(id, contact_id, cb) {
+        request.remove(
+            "/api/v1/contacts/groups/" + id + "/contacts/" + contact_id,
+            function(res) {
+                if (res.Result == "success") {
+                    if (cb) cb(res.Data, [{
+                        Type: "success",
+                        Content: "Successfully removed contact from group."
                     }]);
                 } else {
                     if (cb) cb(false, res.Messages);

@@ -224,16 +224,24 @@ var SettingsContactsGroupContacts = React.createClass({
         }.bind(this));
     },
     removeContact: function(contact) {
-        console.log("remove: " + contact);
+        contactgroups.removeContact(
+            this.props.params.groupId,
+            contact.id,
+            function(data, messages) {
+                this.setState({
+                    group: data,
+                    messages: messages
+                });
+            }.bind(this)
+        );
     },
     addContact: function(contact) {
         contactgroups.addContact(
             this.props.params.groupId,
             contact.id,
             function(data, messages) {
-                console.log("mmmm");
                 this.setState({
-                    contacts: removeFromList(this.state.contacts, contact),
+                    group: data,
                     messages: messages
                 });
             }.bind(this)
