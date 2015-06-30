@@ -192,9 +192,15 @@ func ContactGroupAddContact(c web.C, w http.ResponseWriter, r *http.Request) {
 		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
 	}
+	contact.Get(db)
+	if contact.Name == "" {
+		utils.NotFoundResponse(w, "Contact not found")
+		return
+	}
 
 	s := g.AddContact(db, &contact)
 	if s == true {
+		g.Contacts = append(g.Contacts, contact)
 		res := utils.Response{Result: "success", Data: g}
 		utils.EncodePayload(w, http.StatusOK, res)
 	} else {
