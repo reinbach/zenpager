@@ -211,17 +211,18 @@ func ContactGroupRemoveContact(c web.C, w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	g := models.Group{ID: id}
-	g.Get(db)
-
-	if g.Name == "" {
-		utils.NotFoundResponse(w, "Contact Group not found")
+	cid, err := strconv.ParseInt(c.URLParams["cid"], 10, 64)
+	if err != nil {
+		utils.NotFoundResponse(w, "Contact not found.")
 		return
 	}
 
-	contact := models.Contact{}
-	if err := utils.DecodePayload(r, &contact); err != nil {
-		utils.BadRequestResponse(w, "Data appears to be invalid.")
+	g := models.Group{ID: id}
+	contact := models.Contact{ID: cid}
+
+	g.Get(db)
+	if g.Name == "" {
+		utils.NotFoundResponse(w, "Contact Group not found")
 		return
 	}
 

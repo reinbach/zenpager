@@ -359,10 +359,11 @@ func TestContactGroupRemoveContact(t *testing.T) {
 
 	g.AddContact(db, &ct)
 
-	j, _ := json.Marshal(ct)
-	b := bytes.NewBuffer(j)
-
-	r, err := http.NewRequest("DELETE", fmt.Sprintf("/%d/contacts/", g.ID), b)
+	r, err := http.NewRequest(
+		"DELETE",
+		fmt.Sprintf("/%d/contacts/%d", g.ID, ct.ID),
+		nil,
+	)
 	r.Header.Add("Content-Type", "application/json")
 	r.Header.Add("X-Access-Token", ut.Token)
 	if err != nil {
@@ -371,23 +372,23 @@ func TestContactGroupRemoveContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	c := SetupWebContext()
+	c.URLParams = map[string]string{
+		"id":  "321",
+		"cid": fmt.Sprintf("%d", ct.ID),
+	}
 	ContactGroupRemoveContact(c, w, r)
 	if w.Code != http.StatusNotFound {
 		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
 	}
 
 	w = httptest.NewRecorder()
-	c.URLParams = map[string]string{"id": fmt.Sprintf("%d", g.ID)}
+	c.URLParams = map[string]string{
+		"id":  fmt.Sprintf("%d", g.ID),
+		"cid": fmt.Sprintf("%d", ct.ID),
+	}
 	ContactGroupRemoveContact(c, w, r)
 	if w.Code != http.StatusOK {
 		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
-	}
-
-	w = httptest.NewRecorder()
-	c.URLParams = map[string]string{"id": "321"}
-	ContactGroupRemoveContact(c, w, r)
-	if w.Code != http.StatusNotFound {
-		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
 	}
 
 	g.GetContacts(db)
