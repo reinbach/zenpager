@@ -284,11 +284,19 @@ var SettingsContactsGroupContacts = React.createClass({
                 <div className="row">
                     <div className="col-md-6">
                         <h2>Group: {this.state.group.name}</h2>
-                        {current_contacts}
+                        <table className="table table-striped table-condensed table-hover">
+                          <tbody>
+                            {current_contacts}
+                          </tbody>
+                        </table>
                     </div>
                     <div className="col-md-6">
-                        <h3>Available Contacts</h3>
-                        {available_contacts}
+                        <h2>Available Contacts</h2>
+                        <table className="table table-striped table-condensed table-hover">
+                          <tbody>
+                            {available_contacts}
+                          </tbody>
+                        </table>
                     </div>
                 </div>
                 <Link to="s_contacts_list"
@@ -321,10 +329,10 @@ var SettingsContactsGroupContactLine = React.createClass({
             );
         }
         return (
-            <div>
-                {this.props.contact.name}
-                {button}
-            </div>
+            <tr>
+                <td>{this.props.contact.name}</td>
+                <td>{button}</td>
+            </tr>
         )
     }
 })
