@@ -34,7 +34,7 @@ var SettingsContactsGroups = React.createClass({
         var groups = [];
         this.state.groups.forEach(function(group) {
             groups.push(
-                <SettingsContactsGroupLine group={group}
+                <SettingsContactsGroupLine key={group.id} group={group}
                                            removeGroup={this.removeGroup} />
             );
         }.bind(this));
@@ -203,22 +203,24 @@ var SettingsContactsGroupContacts = React.createClass({
     },
     componentDidMount: function() {
         settingsSideMenu.active("contacts");
-    },
-    componentWillMount: function() {
         contactgroups.getContacts(
             this.props.params.groupId,
             function(data, messages) {
-                this.setState({
-                    group: data,
-                    messages: messages
-                });
+                if (this.isMounted()) {
+                    this.setState({
+                        group: data,
+                        messages: messages
+                    });
+                }
             }.bind(this)
         );
         contacts.getAll(function(data, messages) {
-            this.setState({
-                contacts: data,
-                messages: messages
-            });
+            if (this.isMounted()) {
+                this.setState({
+                    contacts: data,
+                    messages: messages
+                });
+            }
         }.bind(this));
     },
     removeContact: function(contact) {
@@ -242,26 +244,32 @@ var SettingsContactsGroupContacts = React.createClass({
         this.state.messages.forEach(function(msg) {
             msgs.push(<Messages type={msg.Type} message={msg.Content} />);
         });
-        var available_contacts = [];
-        this.state.contacts.forEach(function(contact) {
-            available_contacts.push(
-                <SettingsContactsGroupContactLine contact={contact}
-                                                  state="available"
-                                                  removeContact={this.removeContact}
-                                                  addContact={this.addContact} />
-            );
-        }.bind(this));
         var current_contacts = [];
+        var used_contact_ids = [];
         if (this.state.group.contacts !== undefined) {
             this.state.group.contacts.forEach(function(contact) {
+                used_contact_ids.push(contact.id);
                 current_contacts.push(
-                    <SettingsContactsGroupContactLine contact={contact}
+                    <SettingsContactsGroupContactLine key={contact.id}
+                                                      contact={contact}
                                                       state="current"
                                                       removeContact={this.removeContact}
                                                       addContact={this.addContact} />
                 );
             }.bind(this));
         }
+        var available_contacts = [];
+        this.state.contacts.forEach(function(contact) {
+            if (used_contact_ids.indexOf(contact.id) === -1) {
+                available_contacts.push(
+                    <SettingsContactsGroupContactLine key={contact.id}
+                                                      contact={contact}
+                                                      state="available"
+                                                      removeContact={this.removeContact}
+                                                      addContact={this.addContact} />
+                );
+            }
+        }.bind(this));
         return(
             <div>
                 {msgs}
@@ -293,12 +301,14 @@ var SettingsContactsGroupContactLine = React.createClass({
         var button = [];
         if (this.props.state === "available") {
             button.push(
-                <Button bsSize="xsmall" bsStyle="success"
+                <Button key={this.props.contact.id} bsSize="xsmall"
+                        bsStyle="success"
                         onClick={this.handleAdd}>Add</Button>
             );
         } else {
             button.push(
-                <Button bsSize="xsmall" bsStyle="danger"
+                <Button key={this.props.contact.id} bsSize="xsmall"
+                        bsStyle="danger"
                         onClick={this.handleRemove}>Remove</Button>
             );
         }

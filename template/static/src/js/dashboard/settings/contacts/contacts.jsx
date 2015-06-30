@@ -33,7 +33,10 @@ var SettingsContactsList = React.createClass({
         });
         var contacts = [];
         this.state.contacts.forEach(function(contact) {
-            contacts.push(<SettingsContactsLine contact={contact} removeContact={this.removeContact} />);
+            contacts.push(
+                <SettingsContactsLine key={contact.id} contact={contact}
+                                      removeContact={this.removeContact} />
+            );
         }.bind(this));
         return (
             <div>
