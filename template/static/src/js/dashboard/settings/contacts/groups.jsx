@@ -228,8 +228,9 @@ var SettingsContactsGroupContacts = React.createClass({
             this.props.params.groupId,
             contact.id,
             function(data, messages) {
+                this.state.group.contacts = removeFromList(this.state.group.contacts, contact);
                 this.setState({
-                    group: data,
+                    group: this.state.group,
                     messages: messages
                 });
             }.bind(this)
@@ -240,8 +241,11 @@ var SettingsContactsGroupContacts = React.createClass({
             this.props.params.groupId,
             contact.id,
             function(data, messages) {
+                data.contacts.forEach(function(contact) {
+                    this.state.group.contacts.push(contact);
+                }.bind(this));
                 this.setState({
-                    group: data,
+                    group: this.state.group,
                     messages: messages
                 });
             }.bind(this)
