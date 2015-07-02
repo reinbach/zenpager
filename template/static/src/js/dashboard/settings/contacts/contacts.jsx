@@ -68,7 +68,11 @@ var SettingsContactsLine = React.createClass({
     render: function() {
         return (
             <tr>
-                <td>{this.props.contact.name}</td>
+                <td>
+                    <Link to="s_contacts_view"
+                          params={{contactId: this.props.contact.id}}>
+                    {this.props.contact.name}</Link>
+                </td>
                 <td>{this.props.contact.user.email}</td>
                 <td className="action-cell">
                     <Button bsSize="xsmall" bsStyle="danger"
@@ -208,5 +212,54 @@ var SettingsContactsForm = React.createClass({
                 </form>
             </div>
         );
+    }
+});
+
+var SettingsContactsView = React.createClass({
+    mixins: [AuthenticationMixin, SettingsContactsMixin],
+    getInitialState: function() {
+        return {
+            contact: {},
+            groups: []
+        }
+    },
+    componentDidMount: function() {
+        settingsSideMenu.active("contacts");
+        contacts.get(this.props.params.contactId, function(data, messages) {
+            this.setState({
+                contact: data,
+                messages: messages
+            })
+        }.bind(this));
+    },
+    render: function() {
+        var msg = [];
+        var current_groups = [];
+        var available_groups = [];
+        return (
+            <div>
+                {msg}
+                <div className="row">
+                    <div className="col-md-6">
+                        <h2>{this.state.contact.name}</h2>
+                        <table className="table table-striped table-condensed table-hover">
+                          <tbody>
+                            {current_groups}
+                          </tbody>
+                        </table>
+                    </div>
+                    <div className="col-md-6">
+                        <h2>Available Groups</h2>
+                        <table className="table table-striped table-condensed table-hover">
+                          <tbody>
+                            {available_groups}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+                <Link to="s_contacts_list"
+                      className="btn btn-default">Back to List of Contacts</Link>
+            </div>
+        )
     }
 });

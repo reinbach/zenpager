@@ -111,6 +111,8 @@ var routes = (
                        handler={SettingsContactsForm} />
                 <Route name="s_contacts_update" path="update/:contactId"
                        handler={SettingsContactsForm} />
+                <Route name="s_contacts_view" path=":contactId"
+                       handler={SettingsContactsView} />
                 <Route name="s_contacts_group_add" path="group/add"
                        handler={SettingsContactsGroupForm} />
                 <Route name="s_contacts_group_update"
