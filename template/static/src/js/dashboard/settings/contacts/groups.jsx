@@ -252,6 +252,9 @@ var SettingsContactsGroupContacts = React.createClass({
         );
     },
     render: function() {
+        // TODO need to move the render of line item to separate function
+        // and combine, passing in state
+        // Need better handling of adding/removing elements from list
         var msgs = [];
         this.state.messages.forEach(function(msg) {
             msgs.push(<Messages type={msg.Type} message={msg.Content} />);
@@ -287,7 +290,7 @@ var SettingsContactsGroupContacts = React.createClass({
                 {msgs}
                 <div className="row">
                     <div className="col-md-6">
-                        <h2>Group: {this.state.group.name}</h2>
+                        <h2>{this.state.group.name}</h2>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
                             {current_contacts}
@@ -295,7 +298,7 @@ var SettingsContactsGroupContacts = React.createClass({
                         </table>
                     </div>
                     <div className="col-md-6">
-                        <h2>Available Contacts</h2>
+                        <h3 className="side-list-header">Available Contacts</h3>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
                             {available_contacts}
