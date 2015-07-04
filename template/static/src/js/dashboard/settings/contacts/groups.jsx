@@ -270,6 +270,12 @@ var SettingsContactsGroupContacts = React.createClass({
         )
     },
     setContacts: function(current, all) {
+        if (current.length == 0) {
+            current = this.state.current_contacts;
+        }
+        if (all.length == 0) {
+            all = this.state.all_contacts;
+        }
         this.setState({
             all_contacts: excludeByKey(all, current),
             current_contacts: current
