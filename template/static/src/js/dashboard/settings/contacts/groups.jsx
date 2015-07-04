@@ -214,14 +214,14 @@ var SettingsContactsGroupContacts = React.createClass({
                     });
                     this.setContacts(data.contacts.map(function(obj) {
                         return this.renderContact(obj, "current");
-                    }.bind(this)), []);
+                    }.bind(this)), undefined);
                 }
             }.bind(this)
         );
         contacts.getAll(function(data, messages) {
             if (this.isMounted()) {
                 this.setState({messages: messages});
-                this.setContacts([], data.map(function(obj) {
+                this.setContacts(undefined, data.map(function(obj) {
                     return this.renderContact(obj, "available");
                 }.bind(this)));
             }
@@ -270,10 +270,10 @@ var SettingsContactsGroupContacts = React.createClass({
         )
     },
     setContacts: function(current, all) {
-        if (current.length == 0) {
+        if (current === undefined) {
             current = this.state.current_contacts;
         }
-        if (all.length == 0) {
+        if (all === undefined) {
             all = this.state.all_contacts;
         }
         this.setState({
