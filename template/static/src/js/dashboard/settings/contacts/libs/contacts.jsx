@@ -63,5 +63,17 @@ var contacts = {
                 }
             }
         );
-    }
+    },
+    getGroups: function(id, cb) {
+        request.get(
+            "/api/v1/contacts/" + id + "/groups/",
+            function(data) {
+                if (data.Result === "success") {
+                    cb(data.Data, []);
+                } else {
+                    cb([], data.Messages);
+                }
+            }
+        );
+    },
 }
