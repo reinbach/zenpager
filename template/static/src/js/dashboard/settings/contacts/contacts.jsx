@@ -220,39 +220,112 @@ var SettingsContactsView = React.createClass({
     getInitialState: function() {
         return {
             contact: {},
-            groups: []
+            all_groups: [],
+            current_groups: [],
+            messages: []
         }
     },
     componentDidMount: function() {
         settingsSideMenu.active("contacts");
-        contacts.get(this.props.params.contactId, function(data, messages) {
-            this.setState({
-                contact: data,
-                messages: messages
-            })
+        contacts.getGroups(
+            this.props.params.contactId,
+            function(data, messages) {
+                if (this.isMounted()) {
+                    this.setState({
+                        contact: data,
+                        messages: messages
+                    });
+                    this.setGroups(data.groups.map(function(obj) {
+                        return this.renderGroup(obj, "current");
+                    }.bind(this)), undefined);
+                }
+            }.bind(this)
+        );
+        contactgroups.getAll(function(data, messages) {
+            if (this.isMounted()) {
+                this.setState({messages: messages});
+                this.setGroups(undefined, data.map(function(obj) {
+                    return this.renderGroup(obj, "available");
+                }.bind(this)));
+            }
         }.bind(this));
     },
+    removeGroup: function(group) {
+        contactgroups.removeContact(
+            group.id,
+            this.props.params.contactId,
+            function(data, messages) {
+                this.setState({
+                    messages: messages
+                });
+            }.bind(this)
+        );
+        var current = removeFromListByKey(this.state.current_groups,
+                                          group);
+        var all = this.state.all_groups.concat(
+            this.renderGroup(group, "available")
+        );
+        this.setGroups(current, all);
+    },
+    addGroup: function(group) {
+        contactgroups.addContact(
+            group.id,
+            this.props.params.contactId,
+            function(data, messages) {
+                this.setState({
+                    messages: messages
+                });
+            }.bind(this)
+        );
+        var current = this.state.current_groups.concat(
+            this.renderGroup(group, "current")
+        );
+        var all = removeFromListByKey(this.state.all_groups, group);
+        this.setGroups(current, all);
+    },
+    renderGroup: function(group, state) {
+        return (
+            <SettingsContactsGroupElement key={group.id}
+                                          group={group}
+                                          state={state}
+                                          removeGroup={this.removeGroup}
+                                          addGroup={this.addGroup} />
+        )
+    },
+    setGroups: function(current, all) {
+        if (current === undefined) {
+            current = this.state.current_groups;
+        }
+        if (all === undefined) {
+            all = this.state.all_groups;
+        }
+        this.setState({
+            all_groups: excludeByKey(all, current),
+            current_groups: current
+        });
+    },
     render: function() {
-        var msg = [];
-        var current_groups = [];
-        var available_groups = [];
+        var msgs = [];
+        this.state.messages.forEach(function(msg) {
+            msgs.push(<Messages type={msg.Type} message={msg.Content} />);
+        });
         return (
             <div>
-                {msg}
+                {msgs}
                 <div className="row">
                     <div className="col-md-6">
                         <h2>{this.state.contact.name}</h2>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
-                            {current_groups}
+                            {this.state.current_groups}
                           </tbody>
                         </table>
                     </div>
                     <div className="col-md-6">
-                        <h2>Available Groups</h2>
+                        <h3 className="side-list-header">Available Groups</h3>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
-                            {available_groups}
+                            {this.state.all_groups}
                           </tbody>
                         </table>
                     </div>
@@ -263,3 +336,34 @@ var SettingsContactsView = React.createClass({
         )
     }
 });
+
+var SettingsContactsGroupElement = React.createClass({
+    handleRemove: function() {
+        this.props.removeGroup(this.props.group);
+    },
+    handleAdd: function() {
+        this.props.addGroup(this.props.group);
+    },
+    render: function() {
+        var button = [];
+        if (this.props.state === "available") {
+            button.push(
+                <Button key={this.props.group.id} bsSize="xsmall"
+                        bsStyle="success"
+                        onClick={this.handleAdd}>Add</Button>
+            );
+        } else {
+            button.push(
+                <Button key={this.props.group.id} bsSize="xsmall"
+                        bsStyle="danger"
+                        onClick={this.handleRemove}>Remove</Button>
+            );
+        }
+        return (
+            <tr>
+                <td>{this.props.group.name}</td>
+                <td>{button}</td>
+            </tr>
+        )
+    }
+})
