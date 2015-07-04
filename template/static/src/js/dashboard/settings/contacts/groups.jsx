@@ -210,22 +210,20 @@ var SettingsContactsGroupContacts = React.createClass({
                 if (this.isMounted()) {
                     this.setState({
                         group: data,
-                        current_contacts: data.contacts.map(function(obj) {
-                            return this.renderContact(obj, "current");
-                        }.bind(this)),
                         messages: messages
                     });
+                    this.setContacts(data.contacts.map(function(obj) {
+                        return this.renderContact(obj, "current");
+                    }.bind(this)), []);
                 }
             }.bind(this)
         );
         contacts.getAll(function(data, messages) {
             if (this.isMounted()) {
-                this.setState({
-                    all_contacts: data.map(function(obj) {
-                        return this.renderContact(obj, "available");
-                    }.bind(this)),
-                    messages: messages
-                });
+                this.setState({messages: messages});
+                this.setContacts([], data.map(function(obj) {
+                    return this.renderContact(obj, "available");
+                }.bind(this)));
             }
         }.bind(this));
     },
@@ -239,13 +237,12 @@ var SettingsContactsGroupContacts = React.createClass({
                 });
             }.bind(this)
         );
-        this.setState({
-            current_contacts: removeFromListByKey(this.state.current_contacts,
-                                                  contact),
-            all_contacts: this.state.all_contacts.concat(
-                this.renderContact(contact, "available")
-            )
-        });
+        var current = removeFromListByKey(this.state.current_contacts,
+                                          contact);
+        var all = this.state.all_contacts.concat(
+            this.renderContact(contact, "available")
+        );
+        this.setContacts(current, all);
     },
     addContact: function(contact) {
         contactgroups.addContact(
@@ -257,12 +254,11 @@ var SettingsContactsGroupContacts = React.createClass({
                 });
             }.bind(this)
         );
-        this.setState({
-            current_contacts: this.state.current_contacts.concat(
-                this.renderContact(contact, "current")
-            ),
-            all_contacts: removeFromListByKey(this.state.all_contacts, contact)
-        });
+        var current = this.state.current_contacts.concat(
+            this.renderContact(contact, "current")
+        );
+        var all = removeFromListByKey(this.state.all_contacts, contact);
+        this.setContacts(current, all);
     },
     renderContact: function(contact, state) {
         return (
@@ -273,15 +269,17 @@ var SettingsContactsGroupContacts = React.createClass({
                                               addContact={this.addContact} />
         )
     },
+    setContacts: function(current, all) {
+        this.setState({
+            all_contacts: excludeByKey(all, current),
+            current_contacts: current
+        });
+    },
     render: function() {
         var msgs = [];
         this.state.messages.forEach(function(msg) {
             msgs.push(<Messages type={msg.Type} message={msg.Content} />);
         });
-        all_contacts = excludeByKey(
-            this.state.all_contacts,
-            this.state.current_contacts
-        );
         return(
             <div>
                 {msgs}
@@ -298,7 +296,7 @@ var SettingsContactsGroupContacts = React.createClass({
                         <h3 className="side-list-header">Available Contacts</h3>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
-                            {all_contacts}
+                            {this.state.all_contacts}
                           </tbody>
                         </table>
                     </div>
