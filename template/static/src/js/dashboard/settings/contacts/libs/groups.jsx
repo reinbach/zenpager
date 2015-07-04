@@ -79,7 +79,7 @@ var contactgroups = {
     addContact: function(id, contact_id, cb) {
         request.post(
             "/api/v1/contacts/groups/" + id + "/contacts/",
-            {id: contact_id},
+            {id: parseInt(contact_id, 10)},
             function(res) {
                 if (res.Result == "success") {
                     if (cb) cb(res.Data, [{
