@@ -235,3 +235,36 @@ func TestContactGetAll(t *testing.T) {
 		t.Errorf("Expected to get contacts")
 	}
 }
+
+// get groups for contact
+func TestContactGetGroups(t *testing.T) {
+	db := database.Connect()
+
+	u := User{
+		Email: "contacttest7@example.com",
+	}
+	u.Create(db)
+
+	c := Contact{
+		Name: "Joe",
+		User: u,
+	}
+	c.Create(db)
+
+	g1 := Group{Name: "CG12"}
+	g1.Create(db)
+	g1.AddContact(db, &c)
+
+	g2 := Group{Name: "CG13"}
+	g2.Create(db)
+	g2.AddContact(db, &c)
+
+	r := c.GetGroups(db)
+	if r != true {
+		t.Errorf("Expected success in getting groups for contact, got %v", r)
+	}
+
+	if len(c.Groups) != 2 {
+		t.Errorf("Expected 2 groups for contact, got %v", len(c.Groups))
+	}
+}

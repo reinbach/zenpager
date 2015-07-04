@@ -8,10 +8,10 @@ import (
 )
 
 type Contact struct {
-	ID     int64    `json:"id"`
-	Name   string   `json:"name"`
-	User   User     `json:"user"`
-	Groups []*Group `json:"groups"`
+	ID     int64   `json:"id"`
+	Name   string  `json:"name"`
+	User   User    `json:"user"`
+	Groups []Group `json:"groups"`
 }
 
 func ContactGetAll(db *sql.DB) []Contact {
@@ -108,5 +108,31 @@ func (c *Contact) Delete(db *sql.DB) bool {
 		log.Printf("Failed to delete contact record. ", err)
 		return false
 	}
+	return true
+}
+
+func (c *Contact) GetGroups(db *sql.DB) bool {
+	rows, err := db.Query("SELECT g.id, g.name FROM contact_group as g JOIN contact_contactgroup AS cg ON g.id = cg.group_id WHERE cg.contact_id = $1 ORDER BY g.name",
+		c.ID,
+	)
+
+	switch {
+	case err == sql.ErrNoRows:
+		log.Println("Contact Group's Contacts not found.")
+	case err != nil:
+		log.Fatal(err)
+	}
+
+	defer rows.Close()
+	c.Groups = []Group{}
+	for rows.Next() {
+		var g Group
+		err = rows.Scan(&g.ID, &g.Name)
+		if err != nil {
+			log.Println("Failed to get contact groups data: ", err)
+		}
+		c.Groups = append(c.Groups, g)
+	}
+
 	return true
 }
