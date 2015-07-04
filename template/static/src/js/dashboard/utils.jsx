@@ -53,7 +53,7 @@ function removeFromList(l, o) {
 function removeFromListByKey(l, o) {
     var n = [];
     for (var i = 0; i < l.length; i++) {
-        if (l[i].key != o.id) {
+        if (parseInt(l[i].key, 10) !== parseInt(o.id, 10)) {
             n.push(l[i]);
         }
     }
