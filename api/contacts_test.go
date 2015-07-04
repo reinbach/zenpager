@@ -271,3 +271,55 @@ func TestContactDelete(t *testing.T) {
 		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
 	}
 }
+
+// Contact Get Groups
+func TestContactGetGroups(t *testing.T) {
+	db := database.Connect()
+	u := models.User{
+		Email: "contact-api-8@example.com",
+	}
+	u.Create(db)
+	ut, _ := u.AddToken(db)
+
+	ct := models.Contact{
+		Name: "Joe",
+		User: u,
+	}
+	ct.Create(db)
+
+	g1 := models.Group{Name: "CG5"}
+	g1.Create(db)
+	g1.AddContact(db, &ct)
+
+	g2 := models.Group{Name: "CG6"}
+	g2.Create(db)
+	g2.AddContact(db, &ct)
+
+	r, err := http.NewRequest("GET", fmt.Sprintf("/%d/groups/", ct.ID), nil)
+	r.Header.Add("Content-Type", "application/json")
+	r.Header.Add("X-Access-Token", ut.Token)
+	if err != nil {
+		t.Errorf("Unexpected error", err)
+	}
+
+	w := httptest.NewRecorder()
+	c := SetupWebContext()
+	ContactGroups(c, w, r)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
+	}
+
+	w = httptest.NewRecorder()
+	c.URLParams = map[string]string{"id": fmt.Sprintf("%d", ct.ID)}
+	ContactGroups(c, w, r)
+	if w.Code != http.StatusOK {
+		t.Errorf("%v expected, got %v instead", http.StatusOK, w.Code)
+	}
+
+	w = httptest.NewRecorder()
+	c.URLParams = map[string]string{"id": "321"}
+	ContactGroups(c, w, r)
+	if w.Code != http.StatusNotFound {
+		t.Errorf("%v expected, got %v instead", http.StatusNotFound, w.Code)
+	}
+}
