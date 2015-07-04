@@ -49,3 +49,29 @@ function removeFromList(l, o) {
     }
     return n;
 }
+
+function removeFromListByKey(l, o) {
+    var n = [];
+    for (var i = 0; i < l.length; i++) {
+        if (l[i].key != o.id) {
+            n.push(l[i]);
+        }
+    }
+    return n;
+}
+
+function excludeByKey(l, o) {
+    var n = [];
+    var k = [];
+    for (var i = 0; i < o.length; i++) {
+        k.push(o[i].key);
+    }
+
+    for (var j = 0; j < l.length; j++) {
+        if (k.indexOf(l[j].key) === -1) {
+            n.push(l[j]);
+        }
+    }
+
+    return n;
+}
