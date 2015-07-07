@@ -23,3 +23,8 @@ func TestUserRoutes(t *testing.T) {
 func TestContactRoutes(t *testing.T) {
 	ContactRoutes()
 }
+
+// Server Routes
+func TestServerRoutes(t *testing.T) {
+	ServerRoutes()
+}

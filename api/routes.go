@@ -20,6 +20,9 @@ func Routes(p string) *web.Mux {
 	api.Handle(fmt.Sprintf("%s/contacts/*", p), ContactRoutes())
 	api.Get("/contacts",
 		http.RedirectHandler("/contacts/", 301))
+	api.Handle(fmt.Sprintf("%s/servers/*", p), ServerRoutes())
+	api.Get("/servers",
+		http.RedirectHandler("/servers/", 301))
 
 	return api
 }
@@ -79,6 +82,36 @@ func ContactRoutes() *web.Mux {
 	api.Get("/groups/:id/contacts/", ContactGroupContacts)
 	api.Post("/groups/:id/contacts/", ContactGroupAddContact)
 	api.Delete("/groups/:id/contacts/:cid", ContactGroupRemoveContact)
+
+	return api
+}
+
+func ServerRoutes() *web.Mux {
+	api := web.New()
+	api.Use(middleware.SubRouter)
+	api.Use(mw.Authenticate)
+
+	// servers
+	api.Get("/", ServerList)
+	api.Get("/:id", ServerItem)
+	api.Post("/", ServerAdd)
+	api.Put("/:id", ServerUpdate)
+	api.Patch("/:id", ServerUpdate)
+	api.Delete("/:id", ServerDelete)
+	// servers groups
+	api.Get("/:id/groups/", ServerGroups)
+
+	// server groups
+	api.Get("/groups/", ServerGroupList)
+	api.Get("/groups/:id", ServerGroupItem)
+	api.Post("/groups/", ServerGroupAdd)
+	api.Put("/groups/:id", ServerGroupUpdate)
+	api.Patch("/groups/:id", ServerGroupUpdate)
+	api.Delete("/groups/:id", ServerGroupDelete)
+	// server groups servers
+	api.Get("/groups/:id/servers/", ServerGroupServers)
+	api.Post("/groups/:id/servers/", ServerGroupAddServer)
+	api.Delete("/groups/:id/servers/:sid", ServerGroupRemoveServer)
 
 	return api
 }
