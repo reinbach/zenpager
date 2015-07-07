@@ -287,11 +287,11 @@ func TestContactGetGroups(t *testing.T) {
 	}
 	ct.Create(db)
 
-	g1 := models.Group{Name: "CG5"}
+	g1 := models.ContactGroup{Name: "CG5"}
 	g1.Create(db)
 	g1.AddContact(db, &ct)
 
-	g2 := models.Group{Name: "CG6"}
+	g2 := models.ContactGroup{Name: "CG6"}
 	g2.Create(db)
 	g2.AddContact(db, &ct)
 

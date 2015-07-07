@@ -8,10 +8,10 @@ import (
 )
 
 type Contact struct {
-	ID     int64   `json:"id"`
-	Name   string  `json:"name"`
-	User   User    `json:"user"`
-	Groups []Group `json:"groups"`
+	ID     int64          `json:"id"`
+	Name   string         `json:"name"`
+	User   User           `json:"user"`
+	Groups []ContactGroup `json:"groups"`
 }
 
 func ContactGetAll(db *sql.DB) []Contact {
@@ -124,9 +124,9 @@ func (c *Contact) GetGroups(db *sql.DB) bool {
 	}
 
 	defer rows.Close()
-	c.Groups = []Group{}
+	c.Groups = []ContactGroup{}
 	for rows.Next() {
-		var g Group
+		var g ContactGroup
 		err = rows.Scan(&g.ID, &g.Name)
 		if err != nil {
 			log.Println("Failed to get contact groups data: ", err)

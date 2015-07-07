@@ -36,7 +36,7 @@ func TestContactGroupItem(t *testing.T) {
 	u.Create(db)
 	ut, _ := u.AddToken(db)
 
-	g := models.Group{Name: "ACG1"}
+	g := models.ContactGroup{Name: "ACG1"}
 	g.Create(db)
 
 	r, err := http.NewRequest("POST", fmt.Sprintf("/%d", g.ID), nil)
@@ -166,7 +166,7 @@ func TestContactGroupUpdate(t *testing.T) {
 	u.Create(db)
 	ut, _ := u.AddToken(db)
 
-	g := models.Group{Name: "ACG3"}
+	g := models.ContactGroup{Name: "ACG3"}
 	g.Create(db)
 
 	g.Name = "ACG4"
@@ -209,7 +209,7 @@ func TestContactGroupDelete(t *testing.T) {
 	u.Create(db)
 	ut, _ := u.AddToken(db)
 
-	g := models.Group{Name: "ACG5"}
+	g := models.ContactGroup{Name: "ACG5"}
 	g.Create(db)
 
 	r, err := http.NewRequest("DELETE", fmt.Sprintf("/%d", g.ID), nil)
@@ -249,7 +249,7 @@ func TestContactGroupContacts(t *testing.T) {
 	}
 	ct.Create(db)
 
-	g := models.Group{Name: "ACG5"}
+	g := models.ContactGroup{Name: "ACG5"}
 	g.Create(db)
 
 	g.AddContact(db, &ct)
@@ -298,7 +298,7 @@ func TestContactGroupAddContact(t *testing.T) {
 	}
 	ct.Create(db)
 
-	g := models.Group{Name: "ACG6"}
+	g := models.ContactGroup{Name: "ACG6"}
 	g.Create(db)
 
 	j, _ := json.Marshal(ct)
@@ -354,7 +354,7 @@ func TestContactGroupRemoveContact(t *testing.T) {
 	}
 	ct.Create(db)
 
-	g := models.Group{Name: "ACG7"}
+	g := models.ContactGroup{Name: "ACG7"}
 	g.Create(db)
 
 	g.AddContact(db, &ct)

@@ -29,7 +29,7 @@ func ContactGroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	group := models.Group{ID: id}
+	group := models.ContactGroup{ID: id}
 	group.Get(db)
 
 	if group.Name == "" {
@@ -44,7 +44,7 @@ func ContactGroupItem(c web.C, w http.ResponseWriter, r *http.Request) {
 func ContactGroupAdd(c web.C, w http.ResponseWriter, r *http.Request) {
 	var db = database.FromContext(c)
 
-	g := models.Group{}
+	g := models.ContactGroup{}
 	if err := utils.DecodePayload(r, &g); err != nil {
 		utils.BadRequestResponse(w, "Data appears to be invalid.")
 		return
@@ -99,7 +99,7 @@ func ContactGroupUpdate(c web.C, w http.ResponseWriter, r *http.Request) {
 	}
 
 	// set contact with current data
-	g := models.Group{ID: id}
+	g := models.ContactGroup{ID: id}
 	g.Get(db)
 
 	// update data with new data and ensure it is valid
@@ -140,7 +140,7 @@ func ContactGroupDelete(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	g := models.Group{ID: id}
+	g := models.ContactGroup{ID: id}
 	g.Delete(db)
 
 	res := utils.Response{Result: "success"}
@@ -156,7 +156,7 @@ func ContactGroupContacts(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	g := models.Group{ID: id}
+	g := models.ContactGroup{ID: id}
 	g.Get(db)
 
 	if g.Name == "" {
@@ -179,7 +179,7 @@ func ContactGroupAddContact(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	g := models.Group{ID: id}
+	g := models.ContactGroup{ID: id}
 	g.Get(db)
 
 	if g.Name == "" {
@@ -223,7 +223,7 @@ func ContactGroupRemoveContact(c web.C, w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	g := models.Group{ID: id}
+	g := models.ContactGroup{ID: id}
 	contact := models.Contact{ID: cid}
 
 	g.Get(db)

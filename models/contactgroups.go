@@ -7,14 +7,14 @@ import (
 	"github.com/reinbach/zenpager/utils"
 )
 
-type Group struct {
+type ContactGroup struct {
 	ID       int64     `json:"id"`
 	Name     string    `json:"name"`
 	Contacts []Contact `json:"contacts"`
 }
 
-func ContactGroupGetAll(db *sql.DB) []Group {
-	groups := []Group{}
+func ContactGroupGetAll(db *sql.DB) []ContactGroup {
+	groups := []ContactGroup{}
 	rows, err := db.Query("SELECT id, name FROM contact_group ORDER BY name")
 
 	switch {
@@ -26,7 +26,7 @@ func ContactGroupGetAll(db *sql.DB) []Group {
 
 	defer rows.Close()
 	for rows.Next() {
-		var g Group
+		var g ContactGroup
 		err = rows.Scan(&g.ID, &g.Name)
 		if err != nil {
 			log.Println("Failed to get contact group data: ", err)
@@ -37,7 +37,7 @@ func ContactGroupGetAll(db *sql.DB) []Group {
 	return groups
 }
 
-func (g *Group) Validate() []utils.Message {
+func (g *ContactGroup) Validate() []utils.Message {
 	var errors []utils.Message
 	if len(g.Name) < 1 {
 		errors = append(
@@ -48,7 +48,7 @@ func (g *Group) Validate() []utils.Message {
 	return errors
 }
 
-func (g *Group) Create(db *sql.DB) bool {
+func (g *ContactGroup) Create(db *sql.DB) bool {
 	err := db.QueryRow("INSERT INTO contact_group (name) VALUES($1) RETURNING id",
 		g.Name).Scan(&g.ID)
 	if err != nil {
@@ -60,7 +60,7 @@ func (g *Group) Create(db *sql.DB) bool {
 	return true
 }
 
-func (g *Group) Get(db *sql.DB) {
+func (g *ContactGroup) Get(db *sql.DB) {
 	err := db.QueryRow(
 		"SELECT name FROM contact_group WHERE id = $1",
 		g.ID,
@@ -74,7 +74,7 @@ func (g *Group) Get(db *sql.DB) {
 	}
 }
 
-func (g *Group) Update(db *sql.DB) bool {
+func (g *ContactGroup) Update(db *sql.DB) bool {
 	_, err := db.Exec("UPDATE contact_group SET name = $1 WHERE id = $2",
 		g.Name, g.ID)
 	if err != nil {
@@ -84,7 +84,7 @@ func (g *Group) Update(db *sql.DB) bool {
 	return true
 }
 
-func (g *Group) Delete(db *sql.DB) bool {
+func (g *ContactGroup) Delete(db *sql.DB) bool {
 	_, err := db.Exec("DELETE FROM contact_group WHERE id = $1",
 		g.ID)
 	if err != nil {
@@ -94,7 +94,7 @@ func (g *Group) Delete(db *sql.DB) bool {
 	return true
 }
 
-func (g *Group) GetContacts(db *sql.DB) bool {
+func (g *ContactGroup) GetContacts(db *sql.DB) bool {
 	rows, err := db.Query("SELECT c.id, c.name, u.email FROM contact_contact as c JOIN auth_user AS u on c.user_id = u.id JOIN contact_contactgroup AS cg ON c.id = cg.contact_id WHERE cg.group_id = $1 ORDER BY c.name",
 		g.ID,
 	)
@@ -120,7 +120,7 @@ func (g *Group) GetContacts(db *sql.DB) bool {
 	return true
 }
 
-func (g *Group) AddContact(db *sql.DB, c *Contact) bool {
+func (g *ContactGroup) AddContact(db *sql.DB, c *Contact) bool {
 	_, err := db.Exec("INSERT INTO contact_contactgroup (contact_id, group_id) VALUES($1, $2)",
 		c.ID, g.ID)
 	if err != nil {
@@ -134,7 +134,7 @@ func (g *Group) AddContact(db *sql.DB, c *Contact) bool {
 	return true
 }
 
-func (g *Group) RemoveContact(db *sql.DB, c *Contact) bool {
+func (g *ContactGroup) RemoveContact(db *sql.DB, c *Contact) bool {
 	_, err := db.Exec("DELETE FROM contact_contactgroup WHERE contact_id = $1 AND group_id = $2",
 		c.ID, g.ID)
 	if err != nil {

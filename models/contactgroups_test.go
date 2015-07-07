@@ -8,7 +8,7 @@ import (
 
 // validate contact group
 func TestContactGroupValidate(t *testing.T) {
-	g := Group{}
+	g := ContactGroup{}
 
 	m := g.Validate()
 	if len(m) == 0 {
@@ -26,7 +26,7 @@ func TestContactGroupValidate(t *testing.T) {
 func TestContactGroupCreate(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G1"}
+	g := ContactGroup{Name: "G1"}
 
 	r := g.Create(db)
 	if r != true {
@@ -48,7 +48,7 @@ func TestContactGroupWithContactsCreate(t *testing.T) {
 	c := Contact{Name: "CG2", User: u}
 	c.Create(db)
 
-	g := Group{Name: "G5", Contacts: []Contact{c}}
+	g := ContactGroup{Name: "G5", Contacts: []Contact{c}}
 
 	r := g.Create(db)
 	if r != true {
@@ -64,14 +64,14 @@ func TestContactGroupWithContactsCreate(t *testing.T) {
 func TestContactGroupGetAll(t *testing.T) {
 	db := database.Connect()
 
-	g1 := Group{Name: "G2"}
+	g1 := ContactGroup{Name: "G2"}
 
 	r := g1.Create(db)
 	if r != true {
 		t.Errorf("Expected success on contact group create, got %v", r)
 	}
 
-	g2 := Group{
+	g2 := ContactGroup{
 		Name: "G3",
 	}
 
@@ -96,7 +96,7 @@ func TestContactGroupAddContact(t *testing.T) {
 	c := Contact{Name: "CG1", User: u}
 	c.Create(db)
 
-	g := Group{Name: "G4"}
+	g := ContactGroup{Name: "G4"}
 	g.Create(db)
 
 	r := g.AddContact(db, &c)
@@ -114,14 +114,14 @@ func TestContactGroupAddContact(t *testing.T) {
 func TestContactGroupGet(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G6"}
+	g := ContactGroup{Name: "G6"}
 
 	r := g.Create(db)
 	if r != true {
 		t.Errorf("Expected success on contact group create, got %v", r)
 	}
 
-	ng := Group{ID: 1234}
+	ng := ContactGroup{ID: 1234}
 	ng.Get(db)
 
 	if ng.Name == g.Name {
@@ -140,7 +140,7 @@ func TestContactGroupGet(t *testing.T) {
 func TestContactGroupUpdate(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G7"}
+	g := ContactGroup{Name: "G7"}
 
 	r := g.Create(db)
 	if r != true {
@@ -153,7 +153,7 @@ func TestContactGroupUpdate(t *testing.T) {
 		t.Errorf("Expected success from contact group update, got %v", r)
 	}
 
-	ng := Group{ID: g.ID}
+	ng := ContactGroup{ID: g.ID}
 
 	ng.Get(db)
 
@@ -168,7 +168,7 @@ func TestContactGroupUpdate(t *testing.T) {
 func TestContactGroupDelete(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G9"}
+	g := ContactGroup{Name: "G9"}
 
 	r := g.Create(db)
 	if r != true {
@@ -180,7 +180,7 @@ func TestContactGroupDelete(t *testing.T) {
 		t.Errorf("Expected success from contact group delete, got %v", r)
 	}
 
-	ng := Group{ID: g.ID}
+	ng := ContactGroup{ID: g.ID}
 	ng.Get(db)
 
 	if ng.Name != "" {
@@ -194,7 +194,7 @@ func TestContactGroupDelete(t *testing.T) {
 func TestContactGroupContacts(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G10"}
+	g := ContactGroup{Name: "G10"}
 	g.Create(db)
 
 	g.GetContacts(db)
@@ -228,7 +228,7 @@ func TestContactGroupContacts(t *testing.T) {
 func TestContactGroupRemoveContact(t *testing.T) {
 	db := database.Connect()
 
-	g := Group{Name: "G11"}
+	g := ContactGroup{Name: "G11"}
 	g.Create(db)
 
 	u1 := User{Email: "cg5@example.com"}

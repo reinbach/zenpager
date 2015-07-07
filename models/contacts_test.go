@@ -251,11 +251,11 @@ func TestContactGetGroups(t *testing.T) {
 	}
 	c.Create(db)
 
-	g1 := Group{Name: "CG12"}
+	g1 := ContactGroup{Name: "CG12"}
 	g1.Create(db)
 	g1.AddContact(db, &c)
 
-	g2 := Group{Name: "CG13"}
+	g2 := ContactGroup{Name: "CG13"}
 	g2.Create(db)
 	g2.AddContact(db, &c)
 
