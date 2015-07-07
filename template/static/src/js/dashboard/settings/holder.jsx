@@ -24,7 +24,7 @@ var SettingsHolder = React.createClass({
                                       className="contacts-link">Contacts</Link>
                             </li>
                             <li>
-                                <Link to="s_servers"
+                                <Link to="s_servers_list"
                                       className="servers-link">Servers</Link>
                             </li>
                             <li>
@@ -53,20 +53,6 @@ var SettingsCommands = React.createClass({
         return (
             <div>
                 Settings Commands...
-            </div>
-        );
-    }
-});
-
-var SettingsServers = React.createClass({
-    mixins: [AuthenticationMixin],
-    componentDidMount: function() {
-        settingsSideMenu.active("servers");
-    },
-    render: function() {
-        return (
-            <div>
-                Settings Servers...
             </div>
         );
     }

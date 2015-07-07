@@ -101,9 +101,11 @@ var routes = (
             <Route name="d_apps" path="apps" handler={DashboardApps} />
             <Redirect from="/dashboard" to="d_overview" />
         </Route>
+        // Settings
         <Route name="settings" handler={SettingsHolder}>
             <Route name="s_commands" path="commands"
                    handler={SettingsCommands} />
+            // Contacts
             <Route name="contacts" handler={SettingsContactsHolder}>
                 <Route name="s_contacts_list" path="list"
                        handler={SettingsContacts} />
@@ -122,7 +124,25 @@ var routes = (
                        handler={SettingsContactsGroupContacts} />
                 <Redirect from="/contacts" to="s_contacts_list" />
             </Route>
-            <Route name="s_servers" path="servers" handler={SettingsServers} />
+            // Servers
+            <Route name="servers" handler={SettingsServersHolder}>
+                <Route name="s_servers_list" path="list"
+                       handler={SettingsServers} />
+                <Route name="s_servers_add" path="add"
+                       handler={SettingsServersForm} />
+                <Route name="s_servers_update" path="update/:serverId"
+                       handler={SettingsServersForm} />
+                <Route name="s_servers_view" path=":serverId"
+                       handler={SettingsServersView} />
+                <Route name="s_servers_group_add" path="group/add"
+                       handler={SettingsServersGroupForm} />
+                <Route name="s_servers_group_update"
+                       path="group/update/:groupId"
+                       handler={SettingsServersGroupForm} />
+                <Route name="s_servers_group_servers" path="group/:groupId"
+                       handler={SettingsServersGroupServers} />
+                <Redirect from="/servers" to="s_servers_list" />
+            </Route>
             <Route name="s_timeperiods" path="timeperiods"
                    handler={SettingsTimePeriods} />
             <Redirect from="/settings" to="s_commands" />
