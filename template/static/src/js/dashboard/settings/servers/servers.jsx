@@ -46,7 +46,7 @@ var SettingsServersList = React.createClass({
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Url</th>
+                            <th>Address</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -154,7 +154,7 @@ var SettingsServersForm = React.createClass({
         }
         if (this.state.url.length < 1) {
             this.setState({
-                messages: [{Type: "danger", Content: "Url is required."}]
+                messages: [{Type: "danger", Content: "Address is required."}]
             });
             return ;
         }
@@ -202,7 +202,7 @@ var SettingsServersForm = React.createClass({
                            placeholder="LAMP Server" value={this.state.name}
                            autoFocus hasFeedback bsStyle={this.validateNameState()}
                            onChange={this.handleChange} />
-                    <Input label="Url" type="text" ref="url"
+                    <Input label="Address" type="text" ref="url"
                            placeholder="127.0.0.1" value={this.state.url}
                            hasFeedback bsStyle={this.validateUrlState()}
                            onChange={this.handleChange} />
@@ -315,7 +315,7 @@ var SettingsServersView = React.createClass({
                 {msgs}
                 <div className="row">
                     <div className="col-md-6">
-                        <h2>{this.state.server.name}</h2>
+                        <h2>{this.state.server.name} <small>({this.state.server.url})</small></h2>
                         <table className="table table-striped table-condensed table-hover">
                           <tbody>
                             {this.state.current_groups}
