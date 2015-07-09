@@ -28,3 +28,8 @@ func TestContactRoutes(t *testing.T) {
 func TestServerRoutes(t *testing.T) {
 	ServerRoutes()
 }
+
+// Command Routes
+func TestCommandRoutes(t *testing.T) {
+	CommandRoutes()
+}

@@ -23,6 +23,9 @@ func Routes(p string) *web.Mux {
 	api.Handle(fmt.Sprintf("%s/servers/*", p), ServerRoutes())
 	api.Get("/servers",
 		http.RedirectHandler("/servers/", 301))
+	api.Handle(fmt.Sprintf("%s/commands/*", p), CommandRoutes())
+	api.Get("/commands",
+		http.RedirectHandler("/commands/", 301))
 
 	return api
 }
@@ -112,6 +115,36 @@ func ServerRoutes() *web.Mux {
 	api.Get("/groups/:id/servers/", ServerGroupServers)
 	api.Post("/groups/:id/servers/", ServerGroupAddServer)
 	api.Delete("/groups/:id/servers/:sid", ServerGroupRemoveServer)
+
+	return api
+}
+
+func CommandRoutes() *web.Mux {
+	api := web.New()
+	api.Use(middleware.SubRouter)
+	api.Use(mw.Authenticate)
+
+	// commands
+	api.Get("/", CommandList)
+	api.Get("/:id", CommandItem)
+	api.Post("/", CommandAdd)
+	api.Put("/:id", CommandUpdate)
+	api.Patch("/:id", CommandUpdate)
+	api.Delete("/:id", CommandDelete)
+	// commands groups
+	api.Get("/:id/groups/", CommandGroups)
+
+	// command groups
+	api.Get("/groups/", CommandGroupList)
+	api.Get("/groups/:id", CommandGroupItem)
+	api.Post("/groups/", CommandGroupAdd)
+	api.Put("/groups/:id", CommandGroupUpdate)
+	api.Patch("/groups/:id", CommandGroupUpdate)
+	api.Delete("/groups/:id", CommandGroupDelete)
+	// command groups commands
+	api.Get("/groups/:id/commands/", CommandGroupCommands)
+	api.Post("/groups/:id/commands/", CommandGroupAddCommand)
+	api.Delete("/groups/:id/commands/:sid", CommandGroupRemoveCommand)
 
 	return api
 }
