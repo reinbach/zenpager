@@ -103,8 +103,25 @@ var routes = (
         </Route>
         // Settings
         <Route name="settings" handler={SettingsHolder}>
-            <Route name="s_commands" path="commands"
-                   handler={SettingsCommands} />
+            // Commands
+            <Route name="commands" handler={SettingsCommandsHolder}>
+                <Route name="s_commands_list" path="list"
+                       handler={SettingsCommands} />
+                <Route name="s_commands_add" path="add"
+                       handler={SettingsCommandsForm} />
+                <Route name="s_commands_update" path="update/:commandId"
+                       handler={SettingsCommandsForm} />
+                <Route name="s_commands_view" path=":commandId"
+                       handler={SettingsCommandsView} />
+                <Route name="s_commands_group_add" path="group/add"
+                       handler={SettingsCommandsGroupForm} />
+                <Route name="s_commands_group_update"
+                       path="group/update/:groupId"
+                       handler={SettingsCommandsGroupForm} />
+                <Route name="s_commands_group_commands" path="group/:groupId"
+                       handler={SettingsCommandsGroupCommands} />
+                <Redirect from="/commands" to="s_commands_list" />
+            </Route>
             // Contacts
             <Route name="contacts" handler={SettingsContactsHolder}>
                 <Route name="s_contacts_list" path="list"
@@ -145,7 +162,7 @@ var routes = (
             </Route>
             <Route name="s_timeperiods" path="timeperiods"
                    handler={SettingsTimePeriods} />
-            <Redirect from="/settings" to="s_commands" />
+            <Redirect from="/settings" to="s_commands_list" />
         </Route>
         <Route name="profile" handler={ProfileHolder}>
             <Route name="p_password" path="password"

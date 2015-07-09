@@ -14,3 +14,8 @@ function validateUrl(url) {
     var re = /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/;
     return re.test(url);
 }
+
+function validateCommand(cmd) {
+    var re = /\$HOSTADDRESS\${1}/;
+    return re.test(cmd);
+}

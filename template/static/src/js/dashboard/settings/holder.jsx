@@ -16,7 +16,7 @@ var SettingsHolder = React.createClass({
                         <h1>Settings</h1>
                         <ul className="nav nav-sidebar">
                             <li>
-                                <Link to="s_commands"
+                                <Link to="s_commands_list"
                                       className="commands-link">Commands</Link>
                             </li>
                             <li>
